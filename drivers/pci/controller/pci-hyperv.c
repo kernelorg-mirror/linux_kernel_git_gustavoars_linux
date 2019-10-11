@@ -265,7 +265,7 @@ struct pci_packet {
 				int resp_packet_size);
 	void *compl_ctxt;
 
-	struct pci_message message[0];
+	struct pci_message message[];
 };
 
 /*
@@ -301,7 +301,7 @@ struct pci_bus_d0_entry {
 struct pci_bus_relations {
 	struct pci_incoming_message incoming;
 	u32 device_count;
-	struct pci_function_description func[0];
+	struct pci_function_description func[];
 } __packed;
 
 struct pci_q_res_req_response {
@@ -510,7 +510,7 @@ struct hv_dr_work {
 struct hv_dr_state {
 	struct list_head list_entry;
 	u32 device_count;
-	struct pci_function_description func[0];
+	struct pci_function_description func[];
 };
 
 enum hv_pcichild_state {

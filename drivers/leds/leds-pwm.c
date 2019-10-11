@@ -29,7 +29,7 @@ struct led_pwm_data {
 
 struct led_pwm_priv {
 	int num_leds;
-	struct led_pwm_data leds[0];
+	struct led_pwm_data leds[];
 };
 
 static void __led_pwm_set(struct led_pwm_data *led_dat)

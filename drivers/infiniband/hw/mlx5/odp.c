@@ -1591,7 +1591,7 @@ struct prefetch_mr_work {
 	struct ib_pd *pd;
 	u32 pf_flags;
 	u32 num_sge;
-	struct ib_sge sg_list[0];
+	struct ib_sge sg_list[];
 };
 
 static void num_pending_prefetch_dec(struct mlx5_ib_dev *dev,

@@ -54,7 +54,7 @@ struct htab_elem {
 		struct bpf_lru_node lru_node;
 	};
 	u32 hash;
-	char key[0] __aligned(8);
+	char key[] __aligned(8);
 };
 
 static bool htab_lru_map_delete_node(void *arg, struct bpf_lru_node *node);
