@@ -65,7 +65,7 @@ struct debug_htt_stats_req {
 	u8 peer_addr[ETH_ALEN];
 	struct completion cmpln;
 	u32 buf_len;
-	u8 buf[0];
+	u8 buf[];
 };
 
 #define ATH11K_HTT_STATS_BUF_SIZE (1024 * 512)

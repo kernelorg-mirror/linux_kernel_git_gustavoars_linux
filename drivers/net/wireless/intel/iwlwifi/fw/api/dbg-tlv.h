@@ -77,7 +77,7 @@ struct iwl_fw_ini_hcmd {
 	u8 id;
 	u8 group;
 	__le16 reserved;
-	u8 data[0];
+	u8 data[];
 } __packed; /* FW_DEBUG_TLV_HCMD_DATA_API_S_VER_1 */
 
 /**

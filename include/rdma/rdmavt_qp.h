@@ -191,7 +191,7 @@ struct rvt_swqe {
 	u32 ssn;                /* send sequence number */
 	u32 length;             /* total length of data in sg_list */
 	void *priv;             /* driver dependent field */
-	struct rvt_sge sg_list[0];
+	struct rvt_sge sg_list[];
 };
 
 /**
@@ -440,7 +440,7 @@ struct rvt_qp {
 	/*
 	 * This sge list MUST be last. Do not add anything below here.
 	 */
-	struct rvt_sge r_sg_list[0] /* verified SGEs */
+	struct rvt_sge r_sg_list[] /* verified SGEs */
 		____cacheline_aligned_in_smp;
 };
 

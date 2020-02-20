@@ -462,7 +462,7 @@ struct mmc_host {
 	bool			cqe_enabled;
 	bool			cqe_on;
 
-	unsigned long		private[0] ____cacheline_aligned;
+	unsigned long		private[] ____cacheline_aligned;
 };
 
 struct device_node;

@@ -449,7 +449,7 @@ struct perf_event_query_bpf {
 	/*
 	 * User provided buffer to store program ids
 	 */
-	__u32	ids[0];
+	__u32	ids[];
 };
 
 /*

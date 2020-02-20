@@ -230,7 +230,7 @@ struct ieee80211_chanctx_conf {
 
 	bool radar_enabled;
 
-	u8 drv_priv[0] __aligned(sizeof(void *));
+	u8 drv_priv[] __aligned(sizeof(void *));
 };
 
 /**
@@ -1649,7 +1649,7 @@ struct ieee80211_vif {
 	bool txqs_stopped[IEEE80211_NUM_ACS];
 
 	/* must be last */
-	u8 drv_priv[0] __aligned(sizeof(void *));
+	u8 drv_priv[] __aligned(sizeof(void *));
 };
 
 static inline bool ieee80211_vif_is_mesh(struct ieee80211_vif *vif)
@@ -1777,7 +1777,7 @@ struct ieee80211_key_conf {
 	s8 keyidx;
 	u16 flags;
 	u8 keylen;
-	u8 key[0];
+	u8 key[];
 };
 
 #define IEEE80211_MAX_PN_LEN	16
@@ -2031,7 +2031,7 @@ struct ieee80211_sta {
 	struct ieee80211_txq *txq[IEEE80211_NUM_TIDS + 1];
 
 	/* must be last */
-	u8 drv_priv[0] __aligned(sizeof(void *));
+	u8 drv_priv[] __aligned(sizeof(void *));
 };
 
 /**
@@ -2077,7 +2077,7 @@ struct ieee80211_txq {
 	u8 ac;
 
 	/* must be last */
-	u8 drv_priv[0] __aligned(sizeof(void *));
+	u8 drv_priv[] __aligned(sizeof(void *));
 };
 
 /**

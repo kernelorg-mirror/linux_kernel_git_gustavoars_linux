@@ -107,7 +107,7 @@ struct fft_sample_ath10k {
 	u8 avgpwr_db;
 	u8 max_exp;
 
-	u8 data[0];
+	u8 data[];
 } __packed;
 
 #endif /* SPECTRAL_COMMON_H */
