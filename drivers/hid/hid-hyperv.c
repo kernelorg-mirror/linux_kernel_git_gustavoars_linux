@@ -61,7 +61,7 @@ struct synthhid_msg_hdr {
 
 struct synthhid_msg {
 	struct synthhid_msg_hdr header;
-	char data[1]; /* Enclosed message */
+	char data[]; /* Enclosed message */
 };
 
 union synthhid_version {
@@ -99,7 +99,7 @@ struct synthhid_device_info_ack {
 
 struct synthhid_input_report {
 	struct synthhid_msg_hdr header;
-	char buffer[1];
+	char buffer[];
 };
 
 #pragma pack(pop)
@@ -118,7 +118,7 @@ enum pipe_prot_msg_type {
 struct pipe_prt_msg {
 	enum pipe_prot_msg_type type;
 	u32 size;
-	char data[1];
+	char data[];
 };
 
 struct  mousevsc_prt_msg {

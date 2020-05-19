@@ -290,7 +290,7 @@ struct vmtransfer_page_packet_header {
 	u8  sender_owns_set;
 	u8 reserved;
 	u32 range_cnt;
-	struct vmtransfer_page_range ranges[1];
+	struct vmtransfer_page_range ranges[];
 } __packed;
 
 struct vmgpadl_packet_header {
@@ -327,7 +327,7 @@ struct vmestablish_gpadl {
 	struct vmpacket_descriptor d;
 	u32 gpadl;
 	u32 range_cnt;
-	struct gpa_range range[1];
+	struct gpa_range range[];
 } __packed;
 
 /*
@@ -348,7 +348,7 @@ struct vmdata_gpa_direct {
 	struct vmpacket_descriptor d;
 	u32 reserved;
 	u32 range_cnt;
-	struct gpa_range range[1];
+	struct gpa_range range[];
 } __packed;
 
 /* This is the format for a Additional Data Packet. */
@@ -357,7 +357,7 @@ struct vmadditional_data {
 	u64 total_bytes;
 	u32 offset;
 	u32 byte_cnt;
-	unsigned char data[1];
+	unsigned char data[];
 } __packed;
 
 union vmpacket_largest_possible_header {
@@ -1464,7 +1464,7 @@ struct icmsg_negotiate {
 	u16 icframe_vercnt;
 	u16 icmsg_vercnt;
 	u32 reserved;
-	struct ic_version icversion_data[1]; /* any size array */
+	struct ic_version icversion_data[]; /* any size array */
 } __packed;
 
 struct shutdown_msg_data {

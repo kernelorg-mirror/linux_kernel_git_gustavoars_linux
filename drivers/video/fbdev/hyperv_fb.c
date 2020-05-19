@@ -169,7 +169,7 @@ struct video_output_situation {
 struct synthvid_situation_update {
 	u64 user_ctx;
 	u8 video_output_count;
-	struct video_output_situation video_output[1];
+	struct video_output_situation video_output[];
 } __packed;
 
 struct synthvid_situation_update_ack {
@@ -215,7 +215,7 @@ struct rect {
 struct synthvid_dirt {
 	u8 video_output;
 	u8 dirt_count;
-	struct rect rect[1];
+	struct rect rect[];
 } __packed;
 
 struct synthvid_msg {
