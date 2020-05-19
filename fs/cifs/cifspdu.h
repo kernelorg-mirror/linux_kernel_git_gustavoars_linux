@@ -506,7 +506,7 @@ put_bcc(__u16 count, struct smb_hdr *hdr)
 typedef struct negotiate_req {
 	struct smb_hdr hdr;	/* wct = 0 */
 	__le16 ByteCount;
-	unsigned char DialectsArray[1];
+	unsigned char DialectsArray[];
 } __attribute__((packed)) NEGOTIATE_REQ;
 
 /* Dialect index is 13 for LANMAN */
@@ -530,7 +530,7 @@ typedef struct lanman_neg_rsp {
 	__le16 EncryptionKeyLength;
 	__le16 Reserved;
 	__u16  ByteCount;
-	unsigned char EncryptionKey[1];
+	unsigned char EncryptionKey[];
 } __attribute__((packed)) LANMAN_NEG_RSP;
 
 #define READ_RAW_ENABLE 1
@@ -737,7 +737,7 @@ typedef struct smb_com_tconx_req {
 	__le16 Flags;		/* see below */
 	__le16 PasswordLength;
 	__le16 ByteCount;
-	unsigned char Password[1];	/* followed by */
+	unsigned char Password[];	/* followed by */
 /* STRING Path    *//* \\server\share name */
 	/* STRING Service */
 } __attribute__((packed)) TCONX_REQ;
@@ -749,7 +749,7 @@ typedef struct smb_com_tconx_rsp {
 	__le16 AndXOffset;
 	__le16 OptionalSupport;	/* see below */
 	__u16 ByteCount;
-	unsigned char Service[1];	/* always ASCII, not Unicode */
+	unsigned char Service[];	/* always ASCII, not Unicode */
 	/* STRING NativeFileSystem */
 } __attribute__((packed)) TCONX_RSP;
 
@@ -762,7 +762,7 @@ typedef struct smb_com_tconx_rsp_ext {
 	__le32 MaximalShareAccessRights;
 	__le32 GuestMaximalShareAccessRights;
 	__u16 ByteCount;
-	unsigned char Service[1];	/* always ASCII, not Unicode */
+	unsigned char Service[];	/* always ASCII, not Unicode */
 	/* STRING NativeFileSystem */
 } __attribute__((packed)) TCONX_RSP_EXT;
 
@@ -799,14 +799,14 @@ typedef struct smb_com_echo_req {
 	struct	smb_hdr hdr;
 	__le16	EchoCount;
 	__le16	ByteCount;
-	char	Data[1];
+	char	Data[];
 } __attribute__((packed)) ECHO_REQ;
 
 typedef struct smb_com_echo_rsp {
 	struct	smb_hdr hdr;
 	__le16	SequenceNumber;
 	__le16	ByteCount;
-	char	Data[1];
+	char	Data[];
 } __attribute__((packed)) ECHO_RSP;
 
 typedef struct smb_com_logoff_andx_req {
@@ -906,7 +906,7 @@ typedef struct smb_com_open_req {	/* also handles create */
 	__le32 ImpersonationLevel;
 	__u8 SecurityFlags;
 	__le16 ByteCount;
-	char fileName[1];
+	char fileName[];
 } __attribute__((packed)) OPEN_REQ;
 
 /* open response: oplock levels */
@@ -981,7 +981,7 @@ typedef struct smb_com_openx_req {
 	__le32 Timeout;
 	__le32 Reserved;
 	__le16  ByteCount;  /* file name follows */
-	char   fileName[1];
+	char   fileName[];
 } __attribute__((packed)) OPENX_REQ;
 
 typedef struct smb_com_openx_rsp {
@@ -1129,7 +1129,7 @@ typedef struct smb_com_lock_req {
 	__le16 NumberOfUnlocks;
 	__le16 NumberOfLocks;
 	__le16 ByteCount;
-	LOCKING_ANDX_RANGE Locks[1];
+	LOCKING_ANDX_RANGE Locks[];
 } __attribute__((packed)) LOCK_REQ;
 
 /* lock type */
@@ -1158,7 +1158,7 @@ typedef struct smb_com_rename_req {
 	__le16 SearchAttributes;	/* target file attributes */
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
-	unsigned char OldFileName[1];
+	unsigned char OldFileName[];
 	/* followed by __u8 BufferFormat2 */
 	/* followed by NewFileName */
 } __attribute__((packed)) RENAME_REQ;
@@ -1178,7 +1178,7 @@ typedef struct smb_com_copy_req {
 	__le16 Flags;
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
-	unsigned char OldFileName[1];
+	unsigned char OldFileName[];
 	/* followed by __u8 BufferFormat2 */
 	/* followed by NewFileName string */
 } __attribute__((packed)) COPY_REQ;
@@ -1188,7 +1188,7 @@ typedef struct smb_com_copy_rsp {
 	__le16 CopyCount;    /* number of files copied */
 	__u16 ByteCount;    /* may be zero */
 	__u8 BufferFormat;  /* 0x04 - only present if errored file follows */
-	unsigned char ErrorFileName[1]; /* only present if error in copy */
+	unsigned char ErrorFileName[]; /* only present if error in copy */
 } __attribute__((packed)) COPY_RSP;
 
 #define CREATE_HARD_LINK		0x103
@@ -1202,7 +1202,7 @@ typedef struct smb_com_nt_rename_req {	/* A5 - also used for create hardlink */
 	__le32 ClusterCount;
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
-	unsigned char OldFileName[1];
+	unsigned char OldFileName[];
 	/* followed by __u8 BufferFormat2 */
 	/* followed by NewFileName */
 } __attribute__((packed)) NT_RENAME_REQ;
@@ -1217,7 +1217,7 @@ typedef struct smb_com_delete_file_req {
 	__le16 SearchAttributes;
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII */
-	unsigned char fileName[1];
+	unsigned char fileName[];
 } __attribute__((packed)) DELETE_FILE_REQ;
 
 typedef struct smb_com_delete_file_rsp {
@@ -1229,7 +1229,7 @@ typedef struct smb_com_delete_directory_req {
 	struct smb_hdr hdr;	/* wct = 0 */
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII */
-	unsigned char DirName[1];
+	unsigned char DirName[];
 } __attribute__((packed)) DELETE_DIRECTORY_REQ;
 
 typedef struct smb_com_delete_directory_rsp {
@@ -1241,7 +1241,7 @@ typedef struct smb_com_create_directory_req {
 	struct smb_hdr hdr;	/* wct = 0 */
 	__le16 ByteCount;
 	__u8 BufferFormat;	/* 4 = ASCII */
-	unsigned char DirName[1];
+	unsigned char DirName[];
 } __attribute__((packed)) CREATE_DIRECTORY_REQ;
 
 typedef struct smb_com_create_directory_rsp {
@@ -1253,7 +1253,7 @@ typedef struct smb_com_query_information_req {
 	struct smb_hdr hdr;     /* wct = 0 */
 	__le16 ByteCount;	/* 1 + namelen + 1 */
 	__u8 BufferFormat;      /* 4 = ASCII */
-	unsigned char FileName[1];
+	unsigned char FileName[];
 } __attribute__((packed)) QUERY_INFORMATION_REQ;
 
 typedef struct smb_com_query_information_rsp {
@@ -1273,7 +1273,7 @@ typedef struct smb_com_setattr_req {
 	__le16 reserved[5]; /* must be zero */
 	__u16  ByteCount;
 	__u8   BufferFormat; /* 4 = ASCII */
-	unsigned char fileName[1];
+	unsigned char fileName[];
 } __attribute__((packed)) SETATTR_REQ;
 
 typedef struct smb_com_setattr_rsp {
@@ -1355,7 +1355,7 @@ typedef struct smb_com_transaction_ioctl_req {
 	__u8 IsRootFlag; /* 1 = apply command to root of share (must be DFS) */
 	__le16 ByteCount;
 	__u8 Pad[3];
-	__u8 Data[1];
+	__u8 Data[];
 } __attribute__((packed)) TRANSACT_IOCTL_REQ;
 
 typedef struct smb_com_transaction_compr_ioctl_req {
@@ -1563,7 +1563,7 @@ struct cifs_quota_data {
 	__u64	space_used;
 	__u64	soft_limit;
 	__u64	hard_limit;
-	char	sid[1];  /* variable size? */
+	char	sid[];  /* variable size? */
 } __attribute__((packed));
 
 /* quota sub commands */
@@ -1715,7 +1715,7 @@ typedef struct smb_com_transaction2_qpi_req {
 	__u8 Pad;
 	__le16 InformationLevel;
 	__u32 Reserved4;
-	char FileName[1];
+	char FileName[];
 } __attribute__((packed)) TRANSACTION2_QPI_REQ;
 
 typedef struct smb_com_transaction2_qpi_rsp {
@@ -1748,7 +1748,7 @@ typedef struct smb_com_transaction2_spi_req {
 	__u16 Pad1;
 	__le16 InformationLevel;
 	__u32 Reserved4;
-	char FileName[1];
+	char FileName[];
 } __attribute__((packed)) TRANSACTION2_SPI_REQ;
 
 typedef struct smb_com_transaction2_spi_rsp {
@@ -1854,7 +1854,7 @@ typedef struct smb_com_transaction2_ffirst_req {
 	__le16 SearchFlags;
 	__le16 InformationLevel;
 	__le32 SearchStorageType;
-	char FileName[1];
+	char FileName[];
 } __attribute__((packed)) TRANSACTION2_FFIRST_REQ;
 
 typedef struct smb_com_transaction2_ffirst_rsp {
@@ -1896,7 +1896,7 @@ typedef struct smb_com_transaction2_fnext_req {
 	__le16 InformationLevel;
 	__u32 ResumeKey;
 	__le16 SearchFlags;
-	char ResumeFileName[1];
+	char ResumeFileName[];
 } __attribute__((packed)) TRANSACTION2_FNEXT_REQ;
 
 typedef struct smb_com_transaction2_fnext_rsp {
@@ -2065,7 +2065,7 @@ typedef struct smb_com_transaction2_get_dfs_refer_req {
 				   perhaps?) followed by one byte pad - doesn't
 				   seem to matter though */
 	__le16 MaxReferralLevel;
-	char RequestFileName[1];
+	char RequestFileName[];
 } __attribute__((packed)) TRANSACTION2_GET_DFS_REFER_REQ;
 
 #define DFS_VERSION cpu_to_le16(0x0003)
@@ -2094,7 +2094,7 @@ struct get_dfs_referral_rsp {
 	__le16 PathConsumed;
 	__le16 NumberOfReferrals;
 	__le32 DFSFlags;
-	REFERRAL3 referrals[1];	/* array of level 3 dfs_referral structures */
+	REFERRAL3 referrals[];	/* array of level 3 dfs_referral structures */
 	/* followed by the strings pointed to by the referral structures */
 } __packed;
 
@@ -2620,19 +2620,19 @@ struct win_dev {
 
 struct gea {
 	unsigned char name_len;
-	char name[1];
+	char name[];
 } __attribute__((packed));
 
 struct gealist {
 	unsigned long list_len;
-	struct gea list[1];
+	struct gea list[];
 } __attribute__((packed));
 
 struct fea {
 	unsigned char EA_flags;
 	__u8 name_len;
 	__le16 value_len;
-	char name[1];
+	char name[];
 	/* optionally followed by value */
 } __attribute__((packed));
 /* flags for _FEA.fEA */
@@ -2640,7 +2640,7 @@ struct fea {
 
 struct fealist {
 	__le32 list_len;
-	struct fea list[1];
+	struct fea list[];
 } __attribute__((packed));
 
 /* used to hold an arbitrary blob of data */
