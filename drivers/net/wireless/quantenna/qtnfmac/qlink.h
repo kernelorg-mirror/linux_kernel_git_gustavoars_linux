@@ -118,7 +118,7 @@ struct qlink_intf_info {
 	__le16 vlanid;
 	u8 mac_addr[ETH_ALEN];
 	u8 use4addr;
-	u8 rsvd[1];
+	u8 rsvd[];
 } __packed;
 
 enum qlink_sta_flags {
@@ -407,7 +407,7 @@ struct qlink_cmd_mgmt_frame_register {
 	struct qlink_cmd chdr;
 	__le16 frame_type;
 	u8 do_register;
-	u8 rsvd[1];
+	u8 rsvd[];
 } __packed;
 
 /**
@@ -495,7 +495,7 @@ struct qlink_cmd_set_def_key {
 	u8 key_index;
 	u8 unicast;
 	u8 multicast;
-	u8 rsvd[1];
+	u8 rsvd[];
 } __packed;
 
 /**
@@ -918,7 +918,7 @@ struct qlink_cmd_ndev_changeupper {
 	__le32 netspace_id;
 	__le16 vlanid;
 	u8 upper_type;
-	u8 rsvd[1];
+	u8 rsvd[];
 } __packed;
 
 /**
@@ -1835,7 +1835,7 @@ struct qlink_sta_stats {
 	u8 plink_state;
 	u8 signal;
 	u8 signal_avg;
-	u8 rsvd[1];
+	u8 rsvd[];
 };
 
 /**
