@@ -223,7 +223,7 @@ struct bd_resc_page {
 	struct list_head link;
 	u32 max_ptrs;
 	u32 num_valid;
-	void *page[1];
+	void *page[];
 };
 
 
