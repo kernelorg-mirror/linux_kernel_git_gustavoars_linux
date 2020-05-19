@@ -73,7 +73,7 @@ struct SVGAEscapeVideoSetRegs {
    struct {
       uint32 registerId;
       uint32 value;
-   } items[1];
+   } items[];
 } SVGAEscapeVideoSetRegs;
 
 typedef
