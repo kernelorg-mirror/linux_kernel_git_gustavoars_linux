@@ -115,7 +115,7 @@ struct hwcfg_intersil {
 	u8 cr58_values[14];
 	u8 pidvid[4];
 	u8 regulatory_domain;
-	u8 reserved[1];
+	u8 reserved[];
 } __packed;
 
 union at76_hwcfg {
