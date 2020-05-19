@@ -53,7 +53,7 @@ struct mwifiex_fw_header {
 struct mwifiex_fw_data {
 	struct mwifiex_fw_header header;
 	__le32 seq_num;
-	u8 data[1];
+	u8 data[];
 } __packed;
 
 struct mwifiex_fw_dump_header {
@@ -652,7 +652,7 @@ struct mwifiex_ie_types_header {
 
 struct mwifiex_ie_types_data {
 	struct mwifiex_ie_types_header header;
-	u8 data[1];
+	u8 data[];
 } __packed;
 
 #define MWIFIEX_TxPD_POWER_MGMT_NULL_PACKET 0x01
@@ -790,7 +790,7 @@ struct mwifiex_ie_types_rxba_sync {
 	u8 reserved;
 	__le16 seq_num;
 	__le16 bitmap_len;
-	u8 bitmap[1];
+	u8 bitmap[];
 } __packed;
 
 struct chan_band_param_set {
@@ -800,17 +800,17 @@ struct chan_band_param_set {
 
 struct mwifiex_ie_types_chan_band_list_param_set {
 	struct mwifiex_ie_types_header header;
-	struct chan_band_param_set chan_band_param[1];
+	struct chan_band_param_set chan_band_param[];
 } __packed;
 
 struct mwifiex_ie_types_rates_param_set {
 	struct mwifiex_ie_types_header header;
-	u8 rates[1];
+	u8 rates[];
 } __packed;
 
 struct mwifiex_ie_types_ssid_param_set {
 	struct mwifiex_ie_types_header header;
-	u8 ssid[1];
+	u8 ssid[];
 } __packed;
 
 struct mwifiex_ie_types_num_probes {
@@ -852,13 +852,13 @@ struct mwifiex_ietypes_chanstats {
 struct mwifiex_ie_types_wildcard_ssid_params {
 	struct mwifiex_ie_types_header header;
 	u8 max_ssid_length;
-	u8 ssid[1];
+	u8 ssid[];
 } __packed;
 
 #define TSF_DATA_SIZE            8
 struct mwifiex_ie_types_tsf_timestamp {
 	struct mwifiex_ie_types_header header;
-	u8 tsf_data[1];
+	u8 tsf_data[];
 } __packed;
 
 struct mwifiex_cf_param_set {
@@ -918,7 +918,7 @@ struct mwifiex_ie_types_tdls_idle_timeout {
 
 struct mwifiex_ie_types_rsn_param_set {
 	struct mwifiex_ie_types_header header;
-	u8 rsn_ie[1];
+	u8 rsn_ie[];
 } __packed;
 
 #define KEYPARAMSET_FIXED_LEN 6
@@ -1340,7 +1340,7 @@ struct host_cmd_ds_802_11_snmp_mib {
 	__le16 query_type;
 	__le16 oid;
 	__le16 buf_size;
-	u8 value[1];
+	u8 value[];
 } __packed;
 
 struct mwifiex_rate_scope {
@@ -1437,7 +1437,7 @@ struct mwifiex_tdls_stop_cs_params {
 
 struct host_cmd_ds_tdls_config {
 	__le16 tdls_action;
-	u8 tdls_data[1];
+	u8 tdls_data[];
 } __packed;
 
 struct mwifiex_chan_desc {
@@ -1508,7 +1508,7 @@ struct mwifiex_scan_cmd_config {
 	 *  TLV_TYPE_CHANLIST, mwifiex_ie_types_chan_list_param_set
 	 *  WLAN_EID_SSID, mwifiex_ie_types_ssid_param_set
 	 */
-	u8 tlv_buf[1];	/* SSID TLV(s) and ChanList TLVs are stored
+	u8 tlv_buf[];	/* SSID TLV(s) and ChanList TLVs are stored
 				   here */
 } __packed;
 
@@ -1578,18 +1578,18 @@ struct ie_body {
 struct host_cmd_ds_802_11_scan {
 	u8 bss_mode;
 	u8 bssid[ETH_ALEN];
-	u8 tlv_buffer[1];
+	u8 tlv_buffer[];
 } __packed;
 
 struct host_cmd_ds_802_11_scan_rsp {
 	__le16 bss_descript_size;
 	u8 number_of_sets;
-	u8 bss_desc_and_tlv_buffer[1];
+	u8 bss_desc_and_tlv_buffer[];
 } __packed;
 
 struct host_cmd_ds_802_11_scan_ext {
 	u32   reserved;
-	u8    tlv_buffer[1];
+	u8    tlv_buffer[];
 } __packed;
 
 struct mwifiex_ie_types_bss_mode {
@@ -1600,7 +1600,7 @@ struct mwifiex_ie_types_bss_mode {
 struct mwifiex_ie_types_bss_scan_rsp {
 	struct mwifiex_ie_types_header header;
 	u8 bssid[ETH_ALEN];
-	u8 frame_body[1];
+	u8 frame_body[];
 } __packed;
 
 struct mwifiex_ie_types_bss_scan_info {
@@ -1640,7 +1640,7 @@ struct host_cmd_ds_802_11_bg_scan_query_rsp {
 struct mwifiex_ietypes_domain_param_set {
 	struct mwifiex_ie_types_header header;
 	u8 country_code[IEEE80211_COUNTRY_STRING_LEN];
-	struct ieee80211_country_ie_triplet triplet[1];
+	struct ieee80211_country_ie_triplet triplet[];
 } __packed;
 
 struct host_cmd_ds_802_11d_domain_info {
@@ -1737,7 +1737,7 @@ struct mwifiex_ie_types_local_pwr_constraint {
 
 struct mwifiex_ie_types_wmm_param_set {
 	struct mwifiex_ie_types_header header;
-	u8 wmm_ie[1];
+	u8 wmm_ie[];
 } __packed;
 
 struct mwifiex_ie_types_mgmt_frame {
@@ -1963,7 +1963,7 @@ struct host_cmd_tlv_wep_key {
 	struct mwifiex_ie_types_header header;
 	u8 key_index;
 	u8 is_default;
-	u8 key[1];
+	u8 key[];
 };
 
 struct host_cmd_tlv_auth_type {

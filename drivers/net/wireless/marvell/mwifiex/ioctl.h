@@ -30,7 +30,7 @@ enum {
 
 struct mwifiex_user_scan {
 	u32 scan_cfg_len;
-	u8 scan_cfg_buf[1];
+	u8 scan_cfg_buf[];
 };
 
 #define MWIFIEX_PROMISC_MODE            1
