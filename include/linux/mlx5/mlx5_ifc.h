@@ -1069,7 +1069,7 @@ struct mlx5_ifc_calc_op {
 	u8        op_or[0x1];
 	u8        op_and[0x1];
 	u8        op_max[0x1];
-	u8        op_add[0x1];
+	u8        op_add[];
 };
 
 struct mlx5_ifc_vector_calc_cap_bits {
@@ -9095,12 +9095,12 @@ struct mlx5_ifc_qcam_access_reg_cap_mask {
 	u8         qdpm[0x1];
 	u8         qpts[0x1];
 	u8         qcap[0x1];
-	u8         qcam_access_reg_cap_mask_0[0x1];
+	u8         qcam_access_reg_cap_mask_0[];
 };
 
 struct mlx5_ifc_qcam_qos_feature_cap_mask {
 	u8         qcam_qos_feature_cap_mask_127_to_1[0x7F];
-	u8         qpts_trust_both[0x1];
+	u8         qpts_trust_both[];
 };
 
 struct mlx5_ifc_qcam_reg_bits {
@@ -9292,7 +9292,7 @@ struct mlx5_ifc_eqe_bits {
 	u8         reserved_at_1e0[0x10];
 	u8         signature[0x8];
 	u8         reserved_at_1f8[0x7];
-	u8         owner[0x1];
+	u8         owner[];
 };
 
 enum {
@@ -9325,7 +9325,7 @@ struct mlx5_ifc_cmd_queue_entry_bits {
 	u8         signature[0x8];
 	u8         reserved_at_1f0[0x8];
 	u8         status[0x7];
-	u8         ownership[0x1];
+	u8         ownership[];
 };
 
 struct mlx5_ifc_cmd_out_bits {
@@ -9371,7 +9371,7 @@ struct mlx5_ifc_mtt_bits {
 	u8         ptag_31_8[0x18];
 	u8         reserved_at_38[0x6];
 	u8         wr_en[0x1];
-	u8         rd_en[0x1];
+	u8         rd_en[];
 };
 
 struct mlx5_ifc_query_wol_rol_out_bits {
