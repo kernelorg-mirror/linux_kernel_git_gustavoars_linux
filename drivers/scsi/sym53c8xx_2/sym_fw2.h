@@ -185,7 +185,7 @@ struct SYM_FWB_SCR {
 	u32 pm1_data_addr	[  1];
 	u32 done_pos		[  1];
 	u32 startpos		[  1];
-	u32 targtbl		[  1];
+	u32 targtbl		[  ];
 };
 
 /*

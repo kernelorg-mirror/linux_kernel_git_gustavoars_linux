@@ -192,7 +192,7 @@ struct SYM_FWB_SCR {
 	u32 done_pos		[  1];
 	u32 nextjob		[  1];
 	u32 startpos		[  1];
-	u32 targtbl		[  1];
+	u32 targtbl		[  ];
 };
 
 /*
