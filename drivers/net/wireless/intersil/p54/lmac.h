@@ -476,7 +476,7 @@ struct p54_psm {
 	u8 beacon_rssi_skip_max;
 	u8 rssi_delta_threshold;
 	u8 nr;
-	u8 exclude[1];
+	u8 exclude[];
 } __packed;
 
 #define MC_FILTER_ADDRESS_NUM 4
