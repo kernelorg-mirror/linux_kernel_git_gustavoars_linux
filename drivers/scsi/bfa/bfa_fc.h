@@ -815,7 +815,7 @@ struct fc_rscn_pl_s {
 	u8	command;
 	u8	pagelen;
 	__be16	payldlen;
-	struct fc_rscn_event_s event[1];
+	struct fc_rscn_event_s event[];
 };
 
 /*
@@ -960,7 +960,7 @@ struct fc_rpsc2_cmd_s {
 	struct  {
 		u32	rsvd1:8;
 		u32	pid:24;		/* port identifier */
-	} pid_list[1];
+	} pid_list[];
 };
 
 enum fc_rpsc2_port_type {
@@ -990,7 +990,7 @@ struct fc_rpsc2_acc_s {
 	u8        els_cmd;
 	u8        resvd;
 	__be16    num_pids; /* Number of pids in the request */
-	struct fc_rpsc2_port_info_s port_info[1]; /* port information */
+	struct fc_rpsc2_port_info_s port_info[]; /* port information */
 };
 
 /*
@@ -1563,7 +1563,7 @@ enum fdmi_port_attribute_type {
 struct fdmi_attr_s {
 	__be16        type;
 	__be16        len;
-	u8         value[1];
+	u8         value[];
 };
 
 /*

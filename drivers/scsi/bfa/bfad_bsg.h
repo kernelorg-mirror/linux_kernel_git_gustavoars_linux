@@ -474,7 +474,7 @@ struct bfa_bsg_pcifn_s {
 	u16			bw_max;
 	u8			port;
 	enum bfi_pcifn_class	pcifn_class;
-	u8			rsvd[1];
+	u8			rsvd[];
 };
 
 struct bfa_bsg_adapter_cfg_mode_s {
