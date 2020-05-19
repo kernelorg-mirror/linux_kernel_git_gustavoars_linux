@@ -64,7 +64,7 @@ struct nouveau_svm {
 			struct nouveau_svmm *svmm;
 		} **fault;
 		int fault_nr;
-	} buffer[1];
+	} buffer[];
 };
 
 #define SVM_DBG(s,f,a...) NV_DEBUG((s)->drm, "svm: "f"\n", ##a)
