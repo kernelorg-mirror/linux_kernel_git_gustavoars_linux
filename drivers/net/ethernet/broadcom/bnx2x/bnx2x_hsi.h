@@ -1789,7 +1789,7 @@ struct dcbx_ets_feature {
 	 */
 	u32 enabled;
 	u32  pg_bw_tbl[2];
-	u32  pri_pg_tbl[1];
+	u32  pri_pg_tbl[];
 };
 
 /* Driver structure in LE */
