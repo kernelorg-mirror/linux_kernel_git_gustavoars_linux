@@ -309,7 +309,7 @@ struct cdit_header {
 	uint32_t	creator_revision;
 	uint32_t	total_entries;
 	uint16_t	num_domains;
-	uint8_t		entry[1];
+	uint8_t		entry[];
 };
 
 #pragma pack()
