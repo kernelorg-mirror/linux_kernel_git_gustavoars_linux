@@ -65,7 +65,7 @@ struct report_list {
 	struct {
 		uint16_t	size_of_report;
 		uint8_t report[1];
-	} __packed reports[1];
+	} __packed reports[];
 } __packed;
 
 /* HOSTIF commands */
