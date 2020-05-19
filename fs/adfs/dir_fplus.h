@@ -21,7 +21,7 @@ struct adfs_bigdirheader {
 	__le32	bigdirentries;
 	__le32	bigdirnamesize;
 	__le32	bigdirparent;
-	char	bigdirname[1];
+	char	bigdirname[];
 } __attribute__((packed, aligned(4)));
 
 struct adfs_bigdirentry {
