@@ -340,7 +340,7 @@ enum wake_event_bits {
 struct netdev_desc {
 	__le32 next_desc;
 	__le32 status;
-	struct desc_frag { __le32 addr, length; } frag[1];
+	struct desc_frag { __le32 addr, length; } frag[];
 };
 
 /* Bits in netdev_desc.status */
