@@ -190,7 +190,7 @@ struct cfi_intelext_regioninfo {
 	uint8_t  NumOpAllowedSimProgMode;
 	uint8_t  NumOpAllowedSimEraMode;
 	uint8_t  NumBlockTypes;
-	struct cfi_intelext_blockinfo BlockTypes[1];
+	struct cfi_intelext_blockinfo BlockTypes[];
 } __packed;
 
 struct cfi_intelext_programming_regioninfo {
@@ -242,13 +242,13 @@ struct cfi_pri_atmel {
 
 struct cfi_pri_query {
 	uint8_t  NumFields;
-	uint32_t ProtField[1]; /* Not host ordered */
+	uint32_t ProtField[]; /* Not host ordered */
 } __packed;
 
 struct cfi_bri_query {
 	uint8_t  PageModeReadCap;
 	uint8_t  NumFields;
-	uint32_t ConfField[1]; /* Not host ordered */
+	uint32_t ConfField[]; /* Not host ordered */
 } __packed;
 
 #define P_ID_NONE               0x0000
