@@ -71,7 +71,7 @@ struct smi_cmd {
 	__u16 command_address;
 	__u8 command_code;
 	__u8 reserved;
-	__u8 command_buffer[1];
+	__u8 command_buffer[];
 } __attribute__ ((packed));
 
 struct apm_cmd {
