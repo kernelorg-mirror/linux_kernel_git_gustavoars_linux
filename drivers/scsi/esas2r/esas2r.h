@@ -517,7 +517,7 @@ struct esas2r_ioctl_fs {
 	u8 driver_ver;
 	u8 reserved[11];
 	struct esas2r_ioctlfs_command command;
-	u8 data[1];
+	u8 data[];
 };
 
 struct esas2r_sas_nvram {
