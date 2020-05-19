@@ -745,7 +745,7 @@ struct MR_PD_ADDRESS {
 struct MR_PD_LIST {
 	__le32		size;
 	__le32		count;
-	struct MR_PD_ADDRESS   addr[1];
+	struct MR_PD_ADDRESS   addr[];
 } __packed;
 
 struct megasas_pd_list {
@@ -812,7 +812,7 @@ struct MR_HOST_DEVICE_LIST {
 	__le32			size;
 	__le32			count;
 	__le32			reserved[2];
-	struct MR_HOST_DEVICE_LIST_ENTRY	host_device_list[1];
+	struct MR_HOST_DEVICE_LIST_ENTRY	host_device_list[];
 } __packed;
 
 #define HOST_DEVICE_LIST_SZ (sizeof(struct MR_HOST_DEVICE_LIST) +	       \
@@ -2453,7 +2453,7 @@ struct MR_LD_VF_MAP {
 	union MR_LD_REF ref;
 	u8 ldVfCount;
 	u8 reserved[6];
-	u8 policy[1];
+	u8 policy[];
 };
 
 struct MR_LD_VF_AFFILIATION {
@@ -2462,7 +2462,7 @@ struct MR_LD_VF_AFFILIATION {
 	u8 vfCount;
 	u8 thisVf;
 	u8 reserved[9];
-	struct MR_LD_VF_MAP map[1];
+	struct MR_LD_VF_MAP map[];
 };
 
 /* Plasma 1.11 FW backward compatibility structures */
