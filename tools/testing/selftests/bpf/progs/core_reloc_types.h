@@ -349,7 +349,7 @@ struct core_reloc_arrays___diff_arr_dim {
 	char b[3][4][5];
 	struct core_reloc_arrays_substruct c[4];
 	struct core_reloc_arrays_substruct d[2][3];
-	struct core_reloc_arrays_substruct f[1][3];
+	struct core_reloc_arrays_substruct f[][3];
 };
 
 /* different size of array's value (struct) */
@@ -388,7 +388,7 @@ struct core_reloc_arrays___fixed_arr {
 	struct core_reloc_arrays_substruct c[3];
 	struct core_reloc_arrays_substruct d[1][2];
 	/* not a flexible array anymore, but within access bounds */
-	struct core_reloc_arrays_substruct f[1][2];
+	struct core_reloc_arrays_substruct f[][2];
 };
 
 struct core_reloc_arrays___err_too_small {
@@ -429,7 +429,7 @@ struct core_reloc_arrays___err_bad_zero_sz_arr {
 	int a[5];
 	char b[2][3][4];
 	struct core_reloc_arrays_substruct c[3];
-	struct core_reloc_arrays_substruct d[1][2];
+	struct core_reloc_arrays_substruct d[][2];
 };
 
 /*
