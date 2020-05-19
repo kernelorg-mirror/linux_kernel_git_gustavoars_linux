@@ -26,7 +26,7 @@ struct packet_command
 	unsigned char		data_direction;
 	int			quiet;
 	int			timeout;
-	void			*reserved[1];
+	void			*reserved[];
 };
 
 /*
