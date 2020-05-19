@@ -664,7 +664,7 @@ struct hid_descriptor {
 	__u8  bCountryCode;
 	__u8  bNumDescriptors;
 
-	struct hid_class_descriptor desc[1];
+	struct hid_class_descriptor desc[];
 } __attribute__ ((packed));
 
 #define HID_DEVICE(b, g, ven, prod)					\
