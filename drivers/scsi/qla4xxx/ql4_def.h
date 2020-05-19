@@ -535,7 +535,7 @@ struct	ql4_conn_info {
 
 struct ql4_boot_session_info {
 	u8	target_name[224];
-	struct	ql4_conn_info conn_list[1];
+	struct	ql4_conn_info conn_list[];
 };
 
 struct ql4_boot_tgt_info {
