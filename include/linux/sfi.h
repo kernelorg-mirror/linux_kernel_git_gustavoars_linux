@@ -103,7 +103,7 @@ struct sfi_table_header {
 
 struct sfi_table_simple {
 	struct sfi_table_header		header;
-	u64				pentry[1];
+	u64				pentry[];
 } __packed;
 
 /* Comply with UEFI spec 2.1 */

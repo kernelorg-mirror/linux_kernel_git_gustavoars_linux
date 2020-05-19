@@ -62,7 +62,7 @@ struct stack_record {
 	u32 hash;			/* Hash in the hastable */
 	u32 size;			/* Number of frames in the stack */
 	union handle_parts handle;
-	unsigned long entries[1];	/* Variable-sized array of entries. */
+	unsigned long entries[];	/* Variable-sized array of entries. */
 };
 
 static void *stack_slabs[STACK_ALLOC_MAX_SLABS];

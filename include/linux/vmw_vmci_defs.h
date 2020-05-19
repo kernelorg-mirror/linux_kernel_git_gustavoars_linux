@@ -550,7 +550,7 @@ struct vmci_resource_query_hdr {
 struct vmci_resource_query_msg {
 	u32 num_resources;
 	u32 _padding;
-	u32 resources[1];
+	u32 resources[];
 };
 
 /*
