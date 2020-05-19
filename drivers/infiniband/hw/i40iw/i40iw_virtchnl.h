@@ -46,7 +46,7 @@ struct i40iw_virtchnl_op_buf {
 	u16 rsvd;
 	u64 iw_chnl_op_ctx;
 	/* Member alignment MUST be maintained above this location */
-	u8 iw_chnl_buf[1];
+	u8 iw_chnl_buf[];
 };
 
 struct i40iw_virtchnl_resp_buf {
@@ -55,7 +55,7 @@ struct i40iw_virtchnl_resp_buf {
 	s16 iw_op_ret_code;
 	/* Member alignment MUST be maintained above this location */
 	u16 rsvd[2];
-	u8 iw_chnl_buf[1];
+	u8 iw_chnl_buf[];
 };
 
 enum i40iw_virtchnl_ops {
