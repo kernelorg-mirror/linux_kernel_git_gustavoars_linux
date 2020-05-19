@@ -1290,7 +1290,7 @@ struct p2p_ps_offload_t {
 
 struct iqk_matrix_regs {
 	bool iqk_done;
-	long value[1][IQK_MATRIX_REG_NUM];
+	long value[][IQK_MATRIX_REG_NUM];
 };
 
 struct phy_parameters {
