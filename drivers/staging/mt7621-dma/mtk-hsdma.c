@@ -137,7 +137,7 @@ struct mtk_hsdma_sg {
 struct mtk_hsdma_desc {
 	struct virt_dma_desc vdesc;
 	unsigned int num_sgs;
-	struct mtk_hsdma_sg sg[1];
+	struct mtk_hsdma_sg sg[];
 };
 
 struct mtk_hsdma_chan {
@@ -159,7 +159,7 @@ struct mtk_hsdam_engine {
 	struct tasklet_struct task;
 	volatile unsigned long chan_issued;
 
-	struct mtk_hsdma_chan chan[1];
+	struct mtk_hsdma_chan chan[];
 };
 
 static inline struct mtk_hsdam_engine *mtk_hsdma_chan_get_dev(
