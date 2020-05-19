@@ -25,37 +25,37 @@
 struct vendor {
 	struct vendor *next;
 	u_int16_t vendorid;
-	char name[1];
+	char name[];
 };
 
 struct product {
 	struct product *next;
 	u_int16_t vendorid, productid;
-	char name[1];
+	char name[];
 };
 
 struct class {
 	struct class *next;
 	u_int8_t classid;
-	char name[1];
+	char name[];
 };
 
 struct subclass {
 	struct subclass *next;
 	u_int8_t classid, subclassid;
-	char name[1];
+	char name[];
 };
 
 struct protocol {
 	struct protocol *next;
 	u_int8_t classid, subclassid, protocolid;
-	char name[1];
+	char name[];
 };
 
 struct genericstrtable {
 	struct genericstrtable *next;
 	unsigned int num;
-	char name[1];
+	char name[];
 };
 
 
