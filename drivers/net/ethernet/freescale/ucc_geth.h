@@ -634,7 +634,7 @@ struct ucc_geth_init_pram {
 	u8 res2[0x38 - 0x30];
 	u32 txglobal;		/* tx global */
 	u32 txthread[ENET_INIT_PARAM_MAX_ENTRIES_TX];	/* tx threads */
-	u8 res3[0x1];
+	u8 res3[];
 } __packed;
 
 #define ENET_INIT_PARAM_RGF_SHIFT               (32 - 4)
