@@ -23,7 +23,7 @@ enum ocelot_vcap_bit {
 
 struct ocelot_vcap_u8 {
 	u8 value[1];
-	u8 mask[1];
+	u8 mask[];
 };
 
 struct ocelot_vcap_u16 {
