@@ -321,7 +321,7 @@ struct aac_ciss_phys_luns_resp {
 		u8	level3[2];
 		u8	level2[2];
 		u8	node_ident[16];	/* phys. node identifier */
-	} lun[1];			/* List of phys. devices */
+	} lun[];			/* List of phys. devices */
 };
 
 /*
@@ -506,32 +506,32 @@ struct sge_ieee1212 {
 
 struct sgmap {
 	__le32		count;
-	struct sgentry	sg[1];
+	struct sgentry	sg[];
 };
 
 struct user_sgmap {
 	u32		count;
-	struct user_sgentry	sg[1];
+	struct user_sgentry	sg[];
 };
 
 struct sgmap64 {
 	__le32		count;
-	struct sgentry64 sg[1];
+	struct sgentry64 sg[];
 };
 
 struct user_sgmap64 {
 	u32		count;
-	struct user_sgentry64 sg[1];
+	struct user_sgentry64 sg[];
 };
 
 struct sgmapraw {
 	__le32		  count;
-	struct sgentryraw sg[1];
+	struct sgentryraw sg[];
 };
 
 struct user_sgmapraw {
 	u32		  count;
-	struct user_sgentryraw sg[1];
+	struct user_sgentryraw sg[];
 };
 
 struct creation_info
@@ -1929,7 +1929,7 @@ struct aac_raw_io2 {
 	u8		bpComplete;	/* reserved for F/W use */
 	u8		sgeFirstIndex;	/* reserved for F/W use */
 	u8		unused[4];
-	struct sge_ieee1212	sge[1];
+	struct sge_ieee1212	sge[];
 };
 
 #define CT_FLUSH_CACHE 129
@@ -2262,7 +2262,7 @@ struct aac_mount {
 	__le32		status;
 	__le32		type;           /* should be same as that requested */
 	__le32		count;
-	struct aac_mntent mnt[1];
+	struct aac_mntent mnt[];
 };
 
 #define CT_READ_NAME 130
@@ -2616,7 +2616,7 @@ struct aac_hba_info {
 struct aac_aifcmd {
 	__le32 command;		/* Tell host what type of notify this is */
 	__le32 seqnum;		/* To allow ordering of reports (if necessary) */
-	u8 data[1];		/* Undefined length (from kernel viewpoint) */
+	u8 data[];		/* Undefined length (from kernel viewpoint) */
 };
 
 /**
