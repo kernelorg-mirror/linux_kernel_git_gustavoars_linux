@@ -465,7 +465,7 @@ struct SIS_OH {
 
 struct SIS_OHALLOC {
 	struct SIS_OHALLOC *poha_next;
-	struct SIS_OH aoh[1];
+	struct SIS_OH aoh[];
 };
 
 struct SIS_HEAP {
