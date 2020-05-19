@@ -1082,7 +1082,7 @@ struct ipr_hostrcb_fabric_desc {
 #define IPR_PATH_FAILED			0x03
 
 	__be16 num_entries;
-	struct ipr_hostrcb_config_element elem[1];
+	struct ipr_hostrcb_config_element elem[];
 }__attribute__((packed, aligned (4)));
 
 struct ipr_hostrcb64_fabric_desc {
@@ -1096,7 +1096,7 @@ struct ipr_hostrcb64_fabric_desc {
 	u8 res_path[8];
 	u8 reserved3[6];
 	__be16 num_entries;
-	struct ipr_hostrcb64_config_element elem[1];
+	struct ipr_hostrcb64_config_element elem[];
 }__attribute__((packed, aligned (8)));
 
 #define for_each_hrrq(hrrq, ioa_cfg) \
@@ -1112,14 +1112,14 @@ struct ipr_hostrcb_type_20_error {
 	u8 failure_reason[64];
 	u8 reserved[3];
 	u8 num_entries;
-	struct ipr_hostrcb_fabric_desc desc[1];
+	struct ipr_hostrcb_fabric_desc desc[];
 }__attribute__((packed, aligned (4)));
 
 struct ipr_hostrcb_type_30_error {
 	u8 failure_reason[64];
 	u8 reserved[3];
 	u8 num_entries;
-	struct ipr_hostrcb64_fabric_desc desc[1];
+	struct ipr_hostrcb64_fabric_desc desc[];
 }__attribute__((packed, aligned (4)));
 
 struct ipr_hostrcb_type_41_error {
@@ -1264,7 +1264,7 @@ struct ipr_sdt {
 
 struct ipr_uc_sdt {
 	struct ipr_sdt_header hdr;
-	struct ipr_sdt_entry entry[1];
+	struct ipr_sdt_entry entry[];
 }__attribute__((packed, aligned (4)));
 
 /*
@@ -1748,7 +1748,7 @@ struct ipr_ucode_image_header {
 	u8 reserved[20];
 	char eyecatcher[16];
 	__be32 num_lids;
-	struct ipr_software_inq_lid_info lid[1];
+	struct ipr_software_inq_lid_info lid[];
 }__attribute__((packed, aligned (4)));
 
 /*
