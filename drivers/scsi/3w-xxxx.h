@@ -329,7 +329,7 @@ typedef struct TAG_TW_Ioctl {
 	unsigned char parameter_id;
 	unsigned char parameter_size_bytes;
 	unsigned char unit_index;
-	unsigned char data[1];
+	unsigned char data[];
 } TW_Ioctl;
 
 #pragma pack(1)
@@ -339,7 +339,7 @@ typedef struct TAG_TW_New_Ioctl {
 	unsigned int data_buffer_length;
 	unsigned char padding [508];
 	TW_Command firmware_command;
-	char data_buffer[1];
+	char data_buffer[];
 } TW_New_Ioctl;
 
 /* GetParam descriptor */
