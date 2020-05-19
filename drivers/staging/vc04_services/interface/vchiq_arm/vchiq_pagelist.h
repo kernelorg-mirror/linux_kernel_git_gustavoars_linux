@@ -12,7 +12,7 @@ struct pagelist {
 	u32 length;
 	u16 type;
 	u16 offset;
-	u32 addrs[1];	/* N.B. 12 LSBs hold the number
+	u32 addrs[];	/* N.B. 12 LSBs hold the number
 			 * of following pages at consecutive
 			 * addresses.
 			 */
