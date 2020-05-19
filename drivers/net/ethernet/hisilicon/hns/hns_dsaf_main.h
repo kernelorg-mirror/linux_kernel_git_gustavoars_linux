@@ -291,7 +291,7 @@ struct dsaf_int_stat {
 	struct dsaf_int_xge_src dsaf_int_xge_stat[DSAF_COMM_CHN];
 	struct dsaf_int_ppe_src dsaf_int_ppe_stat[DSAF_COMM_CHN];
 	struct dsaf_int_rocee_src dsaf_int_rocee_stat[DSAF_COMM_CHN];
-	struct dsaf_int_tbl_src dsaf_int_tbl_stat[1];
+	struct dsaf_int_tbl_src dsaf_int_tbl_stat[];
 
 };
 
