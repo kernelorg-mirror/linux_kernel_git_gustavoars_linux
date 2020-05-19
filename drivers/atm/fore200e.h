@@ -365,7 +365,7 @@ typedef struct stats_oc3 {
     __be32 path_febe_errors;       /* path far end block errors           */
     __be32 corr_hcs_errors;        /* correctable header check sequence   */
     __be32 ucorr_hcs_errors;       /* uncorrectable header check sequence */
-    __be32 pad[ 1 ];               /* i960 padding                        */
+    __be32 pad[ ];               /* i960 padding                        */
 } stats_oc3_t;
 
 
@@ -387,7 +387,7 @@ typedef struct stats_aal0 {
     __be32	cells_transmitted;    /* cells transmitted */
     __be32	cells_received;       /* cells received    */
     __be32	cells_dropped;        /* cells dropped     */
-    __be32	pad[ 1 ];             /* i960 padding      */
+    __be32	pad[ ];             /* i960 padding      */
 } stats_aal0_t;
 
 
