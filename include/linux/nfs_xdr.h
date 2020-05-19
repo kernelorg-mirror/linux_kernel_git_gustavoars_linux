@@ -394,7 +394,7 @@ struct nfs42_layout_error {
 	__u64 offset;
 	__u64 length;
 	nfs4_stateid stateid;
-	struct nfs42_device_error errors[1];
+	struct nfs42_device_error errors[];
 };
 
 #define NFS42_LAYOUTERROR_MAX 5
