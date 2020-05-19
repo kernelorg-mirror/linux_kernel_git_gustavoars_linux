@@ -467,7 +467,7 @@ struct compat_group_filter {
 		__aligned(4);
 	__u32				 gf_fmode;
 	__u32				 gf_numsrc;
-	struct __kernel_sockaddr_storage gf_slist[1]
+	struct __kernel_sockaddr_storage gf_slist[]
 		__aligned(4);
 } __packed;
 
