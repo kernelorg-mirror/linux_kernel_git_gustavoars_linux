@@ -509,7 +509,7 @@ struct be_cmd_req_get_fat {
 	u32 read_log_offset;
 	u32 read_log_length;
 	u32 data_buffer_size;
-	u32 data_buffer[1];
+	u32 data_buffer[];
 } __packed;
 
 struct be_cmd_resp_get_fat {
@@ -517,7 +517,7 @@ struct be_cmd_resp_get_fat {
 	u32 log_size;
 	u32 read_log_length;
 	u32 rsvd[2];
-	u32 data_buffer[1];
+	u32 data_buffer[];
 } __packed;
 
 
