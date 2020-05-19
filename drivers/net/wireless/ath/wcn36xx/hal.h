@@ -3238,7 +3238,7 @@ struct wcn36xx_hal_rem_bcn_filter_req {
 	struct wcn36xx_hal_msg_header header;
 
 	u8 ie_Count;
-	u8 rem_ie_id[1];
+	u8 rem_ie_id[];
 };
 
 #define WCN36XX_HAL_IPV4_ARP_REPLY_OFFLOAD                  0
@@ -4370,7 +4370,7 @@ struct wcn36xx_hal_sessionized_rcv_pkt_filter_cfg_type {
 	u8 params_count;
 	u32 coleasce_time;
 	u8 bss_index;
-	struct wcn36xx_hal_rcv_pkt_filter_params params[1];
+	struct wcn36xx_hal_rcv_pkt_filter_params params[];
 };
 
 struct wcn36xx_hal_set_rcv_pkt_filter_req_msg {
@@ -4380,7 +4380,7 @@ struct wcn36xx_hal_set_rcv_pkt_filter_req_msg {
 	u8 type;
 	u8 params_count;
 	u32 coalesce_time;
-	struct wcn36xx_hal_rcv_pkt_filter_params params[1];
+	struct wcn36xx_hal_rcv_pkt_filter_params params[];
 };
 
 struct wcn36xx_hal_rcv_flt_mc_addr_list_type {
