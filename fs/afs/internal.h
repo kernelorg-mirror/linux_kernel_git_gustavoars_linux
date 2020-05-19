@@ -265,7 +265,7 @@ struct afs_sysnames {
 	char			*subs[AFS_NR_SYSNAME];
 	refcount_t		usage;
 	unsigned short		nr;
-	char			blank[1];
+	char			blank[];
 };
 
 /*
