@@ -2482,7 +2482,7 @@ struct opa_port_data_counters_msg {
 			__be64 port_vl_mark_fecn;
 		} vls[0];
 		/* array size defined by #bits set in vl_select_mask*/
-	} port[1]; /* array size defined by  #ports in attribute modifier */
+	} port[]; /* array size defined by  #ports in attribute modifier */
 };
 
 struct opa_port_error_counters64_msg {
@@ -2515,7 +2515,7 @@ struct opa_port_error_counters64_msg {
 			__be64 port_vl_xmit_discards;
 		} vls[0];
 		/* array size defined by #bits set in vl_select_mask */
-	} port[1]; /* array size defined by #ports in attribute modifier */
+	} port[]; /* array size defined by #ports in attribute modifier */
 };
 
 struct opa_port_error_info_msg {
@@ -2586,7 +2586,7 @@ struct opa_port_error_info_msg {
 			u8 error_info;
 		} __packed fm_config_ei;
 		__u32 reserved9;
-	} port[1]; /* actual array size defined by #ports in attr modifier */
+	} port[]; /* actual array size defined by #ports in attr modifier */
 };
 
 /* opa_port_error_info_msg error_info_select_mask bit definitions */
