@@ -424,7 +424,7 @@ struct mgmt_session_info {
 	u8	target_name[224];
 	u8	initiator_iscsiname[224];
 	struct	mgmt_session_login_options negotiated_login_options;
-	struct	mgmt_conn_info	conn_list[1];
+	struct	mgmt_conn_info	conn_list[];
 } __packed;
 
 struct be_cmd_get_session_req {
@@ -1248,7 +1248,7 @@ struct be_fw_cfg {
 struct be_cmd_get_all_if_id_req {
 	struct be_cmd_req_hdr hdr;
 	u32 if_count;
-	u32 if_hndl_list[1];
+	u32 if_hndl_list[];
 } __packed;
 
 struct be_cmd_get_port_name {
