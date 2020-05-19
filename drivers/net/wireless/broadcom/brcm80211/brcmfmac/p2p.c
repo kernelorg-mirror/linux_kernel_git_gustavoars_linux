@@ -153,7 +153,7 @@ struct brcmf_p2p_pub_act_frame {
 	u8	oui_type;
 	u8	subtype;
 	u8	dialog_token;
-	u8	elts[1];
+	u8	elts[];
 };
 
 /**
@@ -172,7 +172,7 @@ struct brcmf_p2p_action_frame {
 	u8	type;
 	u8	subtype;
 	u8	dialog_token;
-	u8	elts[1];
+	u8	elts[];
 };
 
 /**
@@ -187,7 +187,7 @@ struct brcmf_p2psd_gas_pub_act_frame {
 	u8	category;
 	u8	action;
 	u8	dialog_token;
-	u8	query_data[1];
+	u8	query_data[];
 };
 
 /**

@@ -279,7 +279,7 @@ struct brcmf_pkt_filter_pattern_le {
 	 * Variable length mask and pattern data. mask starts at offset 0.
 	 * Pattern immediately follows mask.
 	 */
-	u8 mask_and_pattern[1];
+	u8 mask_and_pattern[];
 };
 
 /* IOVAR "pkt_filter_add" parameter. Used to install packet filters. */
@@ -383,7 +383,7 @@ struct brcmf_scan_params_le {
 				 * fixed parameter portion is assumed, otherwise
 				 * ssid in the fixed portion is ignored
 				 */
-	__le16 channel_list[1];	/* list of chanspecs */
+	__le16 channel_list[];	/* list of chanspecs */
 };
 
 struct brcmf_scan_results {
@@ -419,7 +419,7 @@ struct brcmf_assoc_params_le {
 	 * chanspec_list */
 	__le32 chanspec_num;
 	/* list of chanspecs */
-	__le16 chanspec_list[1];
+	__le16 chanspec_list[];
 };
 
 /**
@@ -640,7 +640,7 @@ struct brcmf_sta_info_le {
 
 struct brcmf_chanspec_list {
 	__le32	count;		/* # of entries */
-	__le32	element[1];	/* variable length uint32 list */
+	__le32	element[];	/* variable length uint32 list */
 };
 
 /*
@@ -915,7 +915,7 @@ struct brcmf_dload_data_le {
 	__le16 dload_type;
 	__le32 len;
 	__le32 crc;
-	u8 data[1];
+	u8 data[];
 };
 
 /**
@@ -1021,7 +1021,7 @@ struct brcmf_gscan_config {
 	u8 count_of_channel_buckets;
 	u8 retry_threshold;
 	__le16  lost_ap_window;
-	struct brcmf_gscan_bucket_config bucket[1];
+	struct brcmf_gscan_bucket_config bucket[];
 };
 
 #endif /* FWIL_TYPES_H_ */
