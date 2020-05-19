@@ -172,7 +172,7 @@ struct fifo {
     u64 tail;
     u8  pad_2[ILO_CACHE_SZ - (sizeof(u64))];
 
-    u64 fifobar[1];
+    u64 fifobar[];
 };
 
 /* convert between struct fifo, and the fifobar, which is saved in the ccb */
