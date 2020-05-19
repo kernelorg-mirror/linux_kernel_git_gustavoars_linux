@@ -541,7 +541,7 @@ struct ice_sw_rule_lkup_rx_tx {
 #define ICE_SINGLE_ACT_OTHER_ACTS		0x3
 #define ICE_SINGLE_OTHER_ACT_IDENTIFIER_S	17
 #define ICE_SINGLE_OTHER_ACT_IDENTIFIER_M	\
-				(0x3 << \ ICE_SINGLE_OTHER_ACT_IDENTIFIER_S)
+				(0x3 <<  ICE_SINGLE_OTHER_ACT_IDENTIFIER_S)
 
 	/* Bit 17:18 - Defines other actions */
 	/* Other action = 0 - Mirror VSI */
@@ -561,7 +561,7 @@ struct ice_sw_rule_lkup_rx_tx {
 	 * lookup-type
 	 */
 	__le16 hdr_len;
-	u8 hdr[1];
+	u8 hdr[];
 } __packed;
 
 /* Add/Update/Remove large action command/response entry
@@ -746,7 +746,7 @@ struct ice_aqc_txsched_topo_grp_info_hdr {
 
 struct ice_aqc_add_elem {
 	struct ice_aqc_txsched_topo_grp_info_hdr hdr;
-	struct ice_aqc_txsched_elem_data generic[1];
+	struct ice_aqc_txsched_elem_data generic[];
 };
 
 struct ice_aqc_conf_elem {
@@ -765,7 +765,7 @@ struct ice_aqc_get_topo_elem {
 
 struct ice_aqc_delete_elem {
 	struct ice_aqc_txsched_topo_grp_info_hdr hdr;
-	__le32 teid[1];
+	__le32 teid[];
 };
 
 /* Query Port ETS (indirect 0x040E)
@@ -1484,7 +1484,7 @@ struct ice_aqc_add_tx_qgrp {
 	__le32 parent_teid;
 	u8 num_txqs;
 	u8 rsvd[3];
-	struct ice_aqc_add_txqs_perq txqs[1];
+	struct ice_aqc_add_txqs_perq txqs[];
 };
 
 /* Disable Tx LAN Queues (indirect 0x0C31) */
@@ -1661,7 +1661,7 @@ struct ice_aqc_get_pkg_info {
 /* Get Package Info List response buffer format (0x0C43) */
 struct ice_aqc_get_pkg_info_resp {
 	__le32 count;
-	struct ice_aqc_get_pkg_info pkg_info[1];
+	struct ice_aqc_get_pkg_info pkg_info[];
 };
 
 /* Lan Queue Overflow Event (direct, 0x1001) */

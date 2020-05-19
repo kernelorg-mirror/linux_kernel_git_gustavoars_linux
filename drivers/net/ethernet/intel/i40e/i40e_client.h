@@ -53,7 +53,7 @@ struct i40e_qv_info {
 
 struct i40e_qvlist_info {
 	u32 num_vectors;
-	struct i40e_qv_info qv_info[1];
+	struct i40e_qv_info qv_info[];
 };
 
 #define I40E_CLIENT_MSIX_ALL 0xFFFFFFFF

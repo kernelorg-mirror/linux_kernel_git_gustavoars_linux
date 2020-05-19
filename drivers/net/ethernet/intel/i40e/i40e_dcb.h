@@ -87,7 +87,7 @@
 struct i40e_lldp_org_tlv {
 	__be16 typelength;
 	__be32 ouisubtype;
-	u8 tlvinfo[1];
+	u8 tlvinfo[];
 };
 
 struct i40e_cee_tlv_hdr {
@@ -109,7 +109,7 @@ struct i40e_cee_feat_tlv {
 #define I40E_CEE_FEAT_TLV_WILLING_MASK	0x40
 #define I40E_CEE_FEAT_TLV_ERR_MASK	0x20
 	u8 subtype;
-	u8 tlvinfo[1];
+	u8 tlvinfo[];
 };
 
 struct i40e_cee_app_prio {
