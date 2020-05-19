@@ -238,7 +238,7 @@ struct MPT3_IOCTL_EVENTS {
  */
 struct mpt3_ioctl_eventreport {
 	struct mpt3_ioctl_header hdr;
-	struct MPT3_IOCTL_EVENTS event_data[1];
+	struct MPT3_IOCTL_EVENTS event_data[];
 };
 
 /**
@@ -270,7 +270,7 @@ struct mpt3_ioctl_command {
 	uint32_t data_out_size;
 	uint32_t max_sense_bytes;
 	uint32_t data_sge_offset;
-	uint8_t mf[1];
+	uint8_t mf[];
 };
 
 #ifdef CONFIG_COMPAT
@@ -286,7 +286,7 @@ struct mpt3_ioctl_command32 {
 	uint32_t data_out_size;
 	uint32_t max_sense_bytes;
 	uint32_t data_sge_offset;
-	uint8_t mf[1];
+	uint8_t mf[];
 };
 #endif
 
@@ -427,7 +427,7 @@ struct mpt3_diag_read_buffer {
 	uint32_t starting_offset;
 	uint32_t bytes_to_read;
 	uint32_t unique_id;
-	uint32_t diagnostic_data[1];
+	uint32_t diagnostic_data[];
 };
 
 #endif /* MPT3SAS_CTL_H_INCLUDED */

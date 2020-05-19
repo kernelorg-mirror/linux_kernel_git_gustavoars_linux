@@ -500,7 +500,7 @@ typedef	struct _SpiCfgData {
 						 * is too short to check for SAF-TE
 						 */
 	u8		 bus_reset;		/* 1 to allow bus reset */
-	u8		 rsvd[1];
+	u8		 rsvd[];
 }SpiCfgData;
 
 typedef	struct _SasCfgData {

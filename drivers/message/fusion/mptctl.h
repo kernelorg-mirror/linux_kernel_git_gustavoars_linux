@@ -245,7 +245,7 @@ struct mpt_ioctl_iocinfo_rev0 {
 struct mpt_ioctl_targetinfo {
 	mpt_ioctl_header hdr;
 	int		 numDevices;	/* Num targets on this ioc */
-	int		 targetInfo[1];
+	int		 targetInfo[];
 };
 
 
@@ -275,7 +275,7 @@ typedef struct {
 
 struct mpt_ioctl_eventreport {
 	mpt_ioctl_header	hdr;
-	MPT_IOCTL_EVENTS	eventData[1];
+	MPT_IOCTL_EVENTS	eventData[];
 };
 
 #define MPT_MAX_NAME	32
@@ -293,7 +293,7 @@ struct mpt_ioctl_test {
 typedef struct mpt_ioctl_replace_fw {
 	mpt_ioctl_header hdr;
 	int		 newImageSize;
-	u8		 newImage[1];
+	u8		 newImage[];
 } mpt_ioctl_replace_fw_t;
 
 /* General MPT Pass through data strucutre
@@ -329,7 +329,7 @@ struct mpt_ioctl_command {
 	int		dataOutSize;
 	int		maxSenseBytes;
 	int		dataSgeOffset;
-	char		MF[1];
+	char		MF[];
 };
 
 /*
@@ -348,7 +348,7 @@ struct mpt_ioctl_command32 {
 	int	dataOutSize;
 	int	maxSenseBytes;
 	int	dataSgeOffset;
-	char	MF[1];
+	char	MF[];
 };
 #endif	/*}*/
 
