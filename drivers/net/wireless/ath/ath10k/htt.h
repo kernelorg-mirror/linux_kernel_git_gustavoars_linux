@@ -1002,7 +1002,7 @@ struct htt_data_tx_compl_ppdu_dur {
 
 struct htt_tx_compl_ind_base {
 	u32 hdr;
-	u16 payload[1/*or more*/];
+	u16 payload[/*or more*/];
 } __packed;
 
 struct htt_rc_tx_done_params {

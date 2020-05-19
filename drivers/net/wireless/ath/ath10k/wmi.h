@@ -3050,7 +3050,7 @@ struct host_memory_chunk {
 struct wmi_host_mem_chunks {
 	__le32 count;
 	/* some fw revisions require at least 1 chunk regardless of count */
-	struct host_memory_chunk items[1];
+	struct host_memory_chunk items[];
 } __packed;
 
 struct wmi_init_cmd {
@@ -4242,7 +4242,7 @@ struct wmi_pdev_chanlist_update_event {
 	/* number of channels */
 	__le32 num_chan;
 	/* array of channels */
-	struct wmi_channel channel_list[1];
+	struct wmi_channel channel_list[];
 } __packed;
 
 #define WMI_MAX_DEBUG_MESG (sizeof(u32) * 32)
@@ -5774,7 +5774,7 @@ struct wmi_bcn_tmpl_cmd {
 	/* beacon buffer length */
 	__le32 buf_len;
 	/* variable length data */
-	u8 data[1];
+	u8 data[];
 } __packed;
 
 struct wmi_prb_tmpl_cmd {
@@ -5785,7 +5785,7 @@ struct wmi_prb_tmpl_cmd {
 	/* beacon buffer length */
 	__le32 buf_len;
 	/* Variable length data */
-	u8 data[1];
+	u8 data[];
 } __packed;
 
 enum wmi_sta_ps_mode {
@@ -7164,7 +7164,7 @@ struct wmi_tdls_peer_capabilities {
 	__le32 is_peer_responder;
 	__le32 pref_offchan_num;
 	__le32 pref_offchan_bw;
-	struct wmi_channel peer_chan_list[1];
+	struct wmi_channel peer_chan_list[];
 } __packed;
 
 struct wmi_10_4_tdls_peer_update_cmd {
