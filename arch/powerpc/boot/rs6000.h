@@ -149,7 +149,7 @@ struct external_syment
   char e_scnum[2];
   char e_type[2];
   char e_sclass[1];
-  char e_numaux[1];
+  char e_numaux[];
 };
 
 
@@ -230,7 +230,7 @@ struct external_reloc {
   char r_vaddr[4];
   char r_symndx[4];
   char r_size[1];
-  char r_type[1];
+  char r_type[];
 };
 
 
