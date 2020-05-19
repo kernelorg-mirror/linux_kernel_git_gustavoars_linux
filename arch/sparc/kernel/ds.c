@@ -313,7 +313,7 @@ struct ds_shutdown_req {
 struct ds_shutdown_res {
 	__u64				req_num;
 	__u32				result;
-	char				reason[1];
+	char				reason[];
 };
 
 static void domain_shutdown_data(struct ds_info *dp,
@@ -353,7 +353,7 @@ struct ds_panic_req {
 struct ds_panic_res {
 	__u64				req_num;
 	__u32				result;
-	char				reason[1];
+	char				reason[];
 };
 
 static void domain_panic_data(struct ds_info *dp,
