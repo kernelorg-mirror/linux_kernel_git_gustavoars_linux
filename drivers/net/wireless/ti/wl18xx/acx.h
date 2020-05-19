@@ -383,7 +383,7 @@ struct acx_time_sync_cfg {
 	struct acx_header header;
 	u8 sync_mode;
 	u8 zone_mac_addr[ETH_ALEN];
-	u8 padding[1];
+	u8 padding[];
 } __packed;
 
 int wl18xx_acx_host_if_cfg_bitmap(struct wl1271 *wl, u32 host_cfg_bitmap,

@@ -223,7 +223,7 @@ struct acx_beacon_filter_option {
 	 * without the unicast TIM bit set are dropped.
 	 */
 	u8 max_num_beacons;
-	u8 pad[1];
+	u8 pad[];
 } __packed;
 
 /*
@@ -321,7 +321,7 @@ struct acx_beacon_broadcast {
 
 	/* Consecutive PS Poll failures before updating the host */
 	u8 ps_poll_threshold;
-	u8 pad[1];
+	u8 pad[];
 } __packed;
 
 struct acx_event_mask {
@@ -363,7 +363,7 @@ struct acx_wake_up_condition {
 	u8 role_id;
 	u8 wake_up_event; /* Only one bit can be set */
 	u8 listen_interval;
-	u8 pad[1];
+	u8 pad[];
 } __packed;
 
 struct acx_aid {
@@ -532,7 +532,7 @@ struct wl1271_acx_bet_enable {
 	u8 role_id;
 	u8 enable;
 	u8 max_consecutive;
-	u8 padding[1];
+	u8 padding[];
 } __packed;
 
 #define ACX_IPV4_VERSION 4
@@ -638,7 +638,7 @@ struct wl1271_acx_rssi_snr_trigger {
 	u8 hysteresis;
 	u8 index;
 	u8 enable;
-	u8 padding[1];
+	u8 padding[];
 };
 
 struct wl1271_acx_rssi_snr_avg_weights {

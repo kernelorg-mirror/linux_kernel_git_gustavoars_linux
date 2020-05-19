@@ -77,7 +77,7 @@ struct wl18xx_mac_and_phy_params {
 	s8 med_power_val_2nd;
 	s8 high_power_val_2nd;
 
-	u8 padding[1];
+	u8 padding[];
 } __packed;
 
 enum wl18xx_ht_mode {

@@ -547,7 +547,7 @@ struct wl12xx_cmd_set_peer_state {
 	 * the add_peer command.
 	 */
 	u8 wmm;
-	u8 padding[1];
+	u8 padding[];
 } __packed;
 
 struct wl12xx_cmd_roc {
