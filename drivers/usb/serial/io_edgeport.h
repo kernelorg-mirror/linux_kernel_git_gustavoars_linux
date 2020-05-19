@@ -121,7 +121,7 @@ struct edgeport_product_info {
 
 struct string_block {
 	__u16	NumStrings;			/* Number of strings in block */
-	__u16	Strings[1];			/* Start of string block */
+	__u16	Strings[];			/* Start of string block */
 };
 
 
