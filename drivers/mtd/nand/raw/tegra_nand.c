@@ -183,7 +183,7 @@ struct tegra_nand_chip {
 	u32 config;
 	u32 config_ecc;
 	u32 bch_config;
-	int cs[1];
+	int cs[];
 };
 
 static inline struct tegra_nand_controller *
