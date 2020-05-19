@@ -1040,7 +1040,7 @@ struct pmcraid_passthrough_ioctl_buffer {
 	struct pmcraid_ioctl_header ioctl_header;
 	struct pmcraid_ioarcb ioarcb;
 	struct pmcraid_ioasa  ioasa;
-	u8  request_buffer[1];
+	u8  request_buffer[];
 } __attribute__ ((packed));
 
 /*

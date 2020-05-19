@@ -211,7 +211,7 @@ struct hpt_iop_request_block_command {
 	__le16 command; /* IOP_BLOCK_COMMAND_{READ,WRITE} */
 	__le16 sectors;
 	__le64 lba;
-	struct hpt_iopsg sg_list[1];
+	struct hpt_iopsg sg_list[];
 };
 
 #define IOP_BLOCK_COMMAND_READ     1
@@ -228,7 +228,7 @@ struct hpt_iop_request_scsi_command {
 	u8     pad1;
 	u8     cdb[16];
 	__le32 dataxfer_length;
-	struct hpt_iopsg sg_list[1];
+	struct hpt_iopsg sg_list[];
 };
 
 struct hpt_iop_request_ioctl_command {
@@ -237,7 +237,7 @@ struct hpt_iop_request_ioctl_command {
 	__le32 inbuf_size;
 	__le32 outbuf_size;
 	__le32 bytes_returned;
-	u8     buf[1];
+	u8     buf[];
 	/* out data should be put at buf[(inbuf_size+3)&~3] */
 };
 

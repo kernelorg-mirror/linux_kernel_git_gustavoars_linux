@@ -346,7 +346,7 @@ struct pqi_event_config {
 	u8	reserved[2];
 	u8	num_event_descriptors;
 	u8	reserved1;
-	struct pqi_event_descriptor descriptors[1];
+	struct pqi_event_descriptor descriptors[];
 };
 
 #define PQI_MAX_EVENT_DESCRIPTORS	255
@@ -453,7 +453,7 @@ struct pqi_ofa_memory {
 	__le32	bytes_allocated;	/* total allocated memory in bytes */
 	__le16	num_memory_descriptors;
 	u8	reserved1[2];
-	struct pqi_sg_descriptor sg_descriptor[1];
+	struct pqi_sg_descriptor sg_descriptor[];
 };
 
 struct pqi_aio_error_info {
@@ -849,7 +849,7 @@ struct report_log_lun_extended_entry {
 
 struct report_log_lun_extended {
 	struct report_lun_header header;
-	struct report_log_lun_extended_entry lun_entries[1];
+	struct report_log_lun_extended_entry lun_entries[];
 };
 
 struct report_phys_lun_extended_entry {
@@ -867,7 +867,7 @@ struct report_phys_lun_extended_entry {
 
 struct report_phys_lun_extended {
 	struct report_lun_header header;
-	struct report_phys_lun_extended_entry lun_entries[1];
+	struct report_phys_lun_extended_entry lun_entries[];
 };
 
 struct raid_map_disk_data {
