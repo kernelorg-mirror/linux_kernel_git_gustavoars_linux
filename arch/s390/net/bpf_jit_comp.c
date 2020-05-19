@@ -49,7 +49,7 @@ struct bpf_jit {
 	int r1_thunk_ip;	/* Address of expoline thunk for 'br %r1' */
 	int r14_thunk_ip;	/* Address of expoline thunk for 'br %r14' */
 	int tail_call_start;	/* Tail call start offset */
-	int labels[1];		/* Labels for local jumps */
+	int labels[];		/* Labels for local jumps */
 };
 
 #define SEEN_MEM	BIT(0)		/* use mem[] for temporary storage */
