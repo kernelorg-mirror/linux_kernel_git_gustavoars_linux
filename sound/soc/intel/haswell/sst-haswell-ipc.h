@@ -220,7 +220,7 @@ struct sst_hsw_module_entry {
 /* Module map - alignement matches DSP */
 struct sst_hsw_module_map {
 	u8 module_entries_count;
-	struct sst_hsw_module_entry module_entries[1];
+	struct sst_hsw_module_entry module_entries[];
 } __attribute__((packed));
 
 struct sst_hsw_memory_info {
