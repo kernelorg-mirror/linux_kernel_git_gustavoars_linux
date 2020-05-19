@@ -2691,7 +2691,7 @@ struct serial_struct32 {
         unsigned short  iomem_reg_shift;
         unsigned int    port_high;
      /* compat_ulong_t  iomap_base FIXME */
-        compat_int_t    reserved[1];
+        compat_int_t    reserved[];
 };
 
 static int compat_tty_tiocsserial(struct tty_struct *tty,
