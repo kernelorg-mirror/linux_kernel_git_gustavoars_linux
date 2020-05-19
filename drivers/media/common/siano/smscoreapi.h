@@ -621,7 +621,7 @@ struct sms_msg_hdr {
 
 struct sms_msg_data {
 	struct sms_msg_hdr x_msg_header;
-	u32 msg_data[1];
+	u32 msg_data[];
 };
 
 struct sms_msg_data2 {
@@ -671,7 +671,7 @@ struct sms_firmware {
 	u32			check_sum;
 	u32			length;
 	u32			start_address;
-	u8			payload[1];
+	u8			payload[];
 };
 
 /* statistics information returned as response for
@@ -1051,13 +1051,13 @@ struct sms_i2c_req {
 	u32	device_address; /* I2c device address */
 	u32	write_count; /* number of bytes to write */
 	u32	read_count; /* number of bytes to read */
-	u8	Data[1];
+	u8	Data[];
 };
 
 struct sms_i2c_res {
 	u32	status; /* non-zero value in case of failure */
 	u32	read_count; /* number of bytes read */
-	u8	Data[1];
+	u8	Data[];
 };
 
 
