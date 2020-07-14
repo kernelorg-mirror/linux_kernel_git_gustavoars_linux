@@ -3086,7 +3086,7 @@ struct wmi_scheduling_scheme_event {
 	/* wmi_sched_scheme_failure_type */
 	u8 failure_type;
 	/* alignment to 32b */
-	u8 reserved[1];
+	u8 reserved;
 } __packed;
 
 /* WMI_RS_CFG_CMDID - deprecated */
