@@ -163,6 +163,9 @@
 				HWSTATUS_RBSY_MASK(NAND_STATUS_READY) | \
 				HWSTATUS_RBSY_VALUE(NAND_STATUS_READY))
 
+/* Number of Chip Selects. Currently, only one. */
+#define CS_N			1
+
 struct tegra_nand_controller {
 	struct nand_controller controller;
 	struct device *dev;
@@ -183,7 +186,7 @@ struct tegra_nand_chip {
 	u32 config;
 	u32 config_ecc;
 	u32 bch_config;
-	int cs[1];
+	int cs[];
 };
 
 static inline struct tegra_nand_controller *
@@ -1081,14 +1084,14 @@ static int tegra_nand_chips_init(struct device *dev,
 		return -EINVAL;
 	}
 
-	/* Retrieve CS id, currently only single die NAND supported */
+	/* Retrieve CS id, currently only single-die NAND supported */
 	ret = of_property_read_u32(np_nand, "reg", &cs);
 	if (ret) {
 		dev_err(dev, "could not retrieve reg property: %d\n", ret);
 		return ret;
 	}
 
-	nand = devm_kzalloc(dev, sizeof(*nand), GFP_KERNEL);
+	nand = devm_kzalloc(dev, struct_size(nand, cs, CS_N), GFP_KERNEL);
 	if (!nand)
 		return -ENOMEM;
 
