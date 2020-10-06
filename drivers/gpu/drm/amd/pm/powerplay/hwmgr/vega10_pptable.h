@@ -163,7 +163,7 @@ typedef struct _ATOM_Vega10_MCLK_Dependency_Record {
 typedef struct _ATOM_Vega10_GFXCLK_Dependency_Table {
     UCHAR ucRevId;
     UCHAR ucNumEntries;                                         /* Number of entries. */
-    ATOM_Vega10_GFXCLK_Dependency_Record entries[1];            /* Dynamically allocate entries. */
+    ATOM_Vega10_GFXCLK_Dependency_Record entries[];             /* Dynamically allocate entries. */
 } ATOM_Vega10_GFXCLK_Dependency_Table;
 
 typedef struct _ATOM_Vega10_MCLK_Dependency_Table {
