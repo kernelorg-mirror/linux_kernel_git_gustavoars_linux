@@ -5416,6 +5416,7 @@ static void gaudi_handle_ecc_event(struct hl_device *hdev, u16 event_type,
 		params.num_memories = 33;
 		params.derr = true;
 		params.disable_clock_gating = true;
+		fallthrough;
 	default:
 		return;
 	}

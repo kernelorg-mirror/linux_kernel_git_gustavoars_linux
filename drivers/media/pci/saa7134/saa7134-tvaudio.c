@@ -884,6 +884,7 @@ void saa7134_enable_i2s(struct saa7134_dev *dev)
 	    saa_writeb(SAA7134_I2S_OUTPUT_FORMAT, i2s_format);
 	    saa_writeb(SAA7134_I2S_OUTPUT_LEVEL,  0x0F);
 	    saa_writeb(SAA7134_I2S_AUDIO_OUTPUT,  0x01);
+	    break;
 
 	default:
 	    break;

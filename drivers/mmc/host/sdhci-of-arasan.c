@@ -627,6 +627,7 @@ static int sdhci_zynqmp_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
 	case MMC_TIMING_MMC_HS200:
 		/* For 200MHz clock, 8 Taps are available */
 		tap_max = 8;
+		break;
 	default:
 		break;
 	}
@@ -695,6 +696,7 @@ static int sdhci_zynqmp_sampleclk_set_phase(struct clk_hw *hw, int degrees)
 	case MMC_TIMING_MMC_HS200:
 		/* For 200MHz clock, 30 Taps are available */
 		tap_max = 30;
+		break;
 	default:
 		break;
 	}
@@ -760,6 +762,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
 	case MMC_TIMING_MMC_HS200:
 		/* For 200MHz clock, 8 Taps are available */
 		tap_max = 8;
+		break;
 	default:
 		break;
 	}

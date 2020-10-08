@@ -949,6 +949,7 @@ do_reboot:
 		dev_err(dev, "device boot: tried all the echo/acks, could "
 			"not get device to respond; giving up");
 		result = -ESHUTDOWN;
+		goto error_dev_gone;
 	case -EPROTO:
 	case -ESHUTDOWN:	/* dev is gone */
 	case -EINTR:		/* user cancelled */
