@@ -1090,7 +1090,7 @@ ehl_get_combo_buf_trans(struct intel_encoder *encoder, int type, int rate,
 				return icl_combo_phy_ddi_translations_edp_hbr2;
 			}
 		}
-		/* fall through */
+		fallthrough;
 	default:
 		/* All combo DP and eDP ports that do not support low_vswing */
 		*n_entries = ARRAY_SIZE(ehl_combo_phy_ddi_translations_dp);
@@ -1126,7 +1126,7 @@ tgl_get_combo_buf_trans(struct intel_encoder *encoder, int type, int rate,
 			*n_entries = ARRAY_SIZE(icl_combo_phy_ddi_translations_edp_hbr2);
 			return icl_combo_phy_ddi_translations_edp_hbr2;
 		}
-		/* fall through */
+		fallthrough;
 	default:
 		/* All combo DP and eDP ports that do not support low_vswing */
 		if (rate > 270000) {
