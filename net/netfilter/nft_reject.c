@@ -50,6 +50,7 @@ int nft_reject_init(const struct nft_ctx *ctx,
 		if (tb[NFTA_REJECT_ICMP_CODE] == NULL)
 			return -EINVAL;
 		priv->icmp_code = nla_get_u8(tb[NFTA_REJECT_ICMP_CODE]);
+		break;
 	case NFT_REJECT_TCP_RST:
 		break;
 	default:
