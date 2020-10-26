@@ -294,7 +294,7 @@ static long gntalloc_ioctl_alloc(struct gntalloc_file_private_data *priv,
 		goto out;
 	}
 
-	gref_ids = kcalloc(op.count, sizeof(gref_ids[0]), GFP_KERNEL);
+	gref_ids = kzalloc(array_size(op.count, sizeof(*gref_ids)), GFP_KERNEL);
 	if (!gref_ids) {
 		rc = -ENOMEM;
 		goto out;
@@ -331,8 +331,8 @@ static long gntalloc_ioctl_alloc(struct gntalloc_file_private_data *priv,
 		rc = -EFAULT;
 		goto out_free;
 	}
-	if (copy_to_user(arg->gref_ids, gref_ids,
-			sizeof(gref_ids[0]) * op.count)) {
+	if (copy_to_user(arg->gref_ids_flex, gref_ids,
+			 flex_array_size(arg, gref_ids_flex, op.count))) {
 		rc = -EFAULT;
 		goto out_free;
 	}

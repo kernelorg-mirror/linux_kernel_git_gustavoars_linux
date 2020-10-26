@@ -19,19 +19,38 @@
 #define IOCTL_GNTALLOC_ALLOC_GREF \
 _IOC(_IOC_NONE, 'G', 5, sizeof(struct ioctl_gntalloc_alloc_gref))
 struct ioctl_gntalloc_alloc_gref {
-	/* IN parameters */
-	/* The ID of the domain to be given access to the grants. */
-	__u16 domid;
-	/* Flags for this mapping */
-	__u16 flags;
-	/* Number of pages to map */
-	__u32 count;
-	/* OUT parameters */
-	/* The offset to be used on a subsequent call to mmap(). */
-	__u64 index;
-	/* The grant references of the newly created grant, one per page */
-	/* Variable size, depending on count */
-	__u32 gref_ids[1];
+	union {
+		struct {
+			/* IN parameters */
+			/* The ID of the domain to be given access to the grants. */
+			__u16 domid_v1;
+			/* Flags for this mapping */
+			__u16 flags_v1;
+			/* Number of pages to map */
+			__u32 count_v1;
+			/* OUT parameters */
+			/* The offset to be used on a subsequent call to mmap(). */
+			__u64 index_v1;
+			/* The grant references of the newly created grant, one per page */
+			/* Variable size, depending on count */
+			__u32 gref_ids[1];
+		};
+		struct {
+			/* IN parameters */
+			/* The ID of the domain to be given access to the grants. */
+			__u16 domid;
+			/* Flags for this mapping */
+			__u16 flags;
+			/* Number of pages to map */
+			__u32 count;
+			/* OUT parameters */
+			/* The offset to be used on a subsequent call to mmap(). */
+			__u64 index;
+			/* The grant references of the newly created grant, one per page */
+			/* Variable size, depending on count */
+			__u32 gref_ids_flex[];
+		};
+	};
 };
 
 #define GNTALLOC_FLAG_WRITABLE 1
