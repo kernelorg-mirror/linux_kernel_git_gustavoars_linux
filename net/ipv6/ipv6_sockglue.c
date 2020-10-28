@@ -225,7 +225,7 @@ static int ipv6_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
 	if (GROUP_FILTER_SIZE(gsf->gf_numsrc) > optlen)
 		goto out_free_gsf;
 
-	ret = ip6_mc_msfilter(sk, gsf, gsf->gf_slist);
+	ret = ip6_mc_msfilter(sk, gsf, gsf->gf_slist_flex);
 out_free_gsf:
 	kfree(gsf);
 	return ret;
@@ -1048,7 +1048,7 @@ static int ipv6_getsockopt_sticky(struct sock *sk, struct ipv6_txoptions *opt,
 static int ipv6_get_msfilter(struct sock *sk, void __user *optval,
 		int __user *optlen, int len)
 {
-	const int size0 = offsetof(struct group_filter, gf_slist);
+	const int size0 = offsetof(struct group_filter, gf_slist_flex);
 	struct group_filter __user *p = optval;
 	struct group_filter gsf;
 	int num;
@@ -1062,7 +1062,7 @@ static int ipv6_get_msfilter(struct sock *sk, void __user *optval,
 		return -EADDRNOTAVAIL;
 	num = gsf.gf_numsrc;
 	lock_sock(sk);
-	err = ip6_mc_msfget(sk, &gsf, p->gf_slist);
+	err = ip6_mc_msfget(sk, &gsf, p->gf_slist_flex);
 	if (!err) {
 		if (num > gsf.gf_numsrc)
 			num = gsf.gf_numsrc;
