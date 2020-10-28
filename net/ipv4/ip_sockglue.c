@@ -684,7 +684,7 @@ static int set_mcast_msfilter(struct sock *sk, int ifindex,
 
 		if (psin->sin_family != AF_INET)
 			goto Eaddrnotavail;
-		msf->imsf_slist[i] = psin->sin_addr.s_addr;
+		msf->imsf_slist_flex[i] = psin->sin_addr.s_addr;
 	}
 	err = ip_mc_msfilter(sk, msf, ifindex);
 	kfree(msf);
