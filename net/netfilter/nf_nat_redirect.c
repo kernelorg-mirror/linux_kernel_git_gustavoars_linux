@@ -64,11 +64,11 @@ nf_nat_redirect_ipv4(struct sk_buff *skb,
 	/* Transfer from original range. */
 	memset(&newrange.min_addr, 0, sizeof(newrange.min_addr));
 	memset(&newrange.max_addr, 0, sizeof(newrange.max_addr));
-	newrange.flags	     = mr->range[0].flags | NF_NAT_RANGE_MAP_IPS;
+	newrange.flags	     = mr->range_legacy.flags | NF_NAT_RANGE_MAP_IPS;
 	newrange.min_addr.ip = newdst;
 	newrange.max_addr.ip = newdst;
-	newrange.min_proto   = mr->range[0].min;
-	newrange.max_proto   = mr->range[0].max;
+	newrange.min_proto   = mr->range_legacy.min;
+	newrange.max_proto   = mr->range_legacy.max;
 
 	/* Hand modified range to generic setup. */
 	return nf_nat_setup_info(ct, &newrange, NF_NAT_MANIP_DST);

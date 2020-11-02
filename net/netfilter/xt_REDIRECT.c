@@ -51,7 +51,7 @@ static int redirect_tg4_check(const struct xt_tgchk_param *par)
 {
 	const struct nf_nat_ipv4_multi_range_compat *mr = par->targinfo;
 
-	if (mr->range[0].flags & NF_NAT_RANGE_MAP_IPS) {
+	if (mr->range_legacy.flags & NF_NAT_RANGE_MAP_IPS) {
 		pr_debug("bad MAP_IPS.\n");
 		return -EINVAL;
 	}

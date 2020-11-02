@@ -61,7 +61,7 @@ xt_snat_target_v0(struct sk_buff *skb, const struct xt_action_param *par)
 		 (ctinfo == IP_CT_NEW || ctinfo == IP_CT_RELATED ||
 		  ctinfo == IP_CT_RELATED_REPLY)));
 
-	xt_nat_convert_range(&range, &mr->range[0]);
+	xt_nat_convert_range(&range, &mr->range_legacy);
 	return nf_nat_setup_info(ct, &range, NF_NAT_MANIP_SRC);
 }
 
@@ -77,7 +77,7 @@ xt_dnat_target_v0(struct sk_buff *skb, const struct xt_action_param *par)
 	WARN_ON(!(ct != NULL &&
 		 (ctinfo == IP_CT_NEW || ctinfo == IP_CT_RELATED)));
 
-	xt_nat_convert_range(&range, &mr->range[0]);
+	xt_nat_convert_range(&range, &mr->range_legacy);
 	return nf_nat_setup_info(ct, &range, NF_NAT_MANIP_DST);
 }
 

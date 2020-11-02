@@ -32,7 +32,10 @@ struct nf_nat_ipv4_range {
 
 struct nf_nat_ipv4_multi_range_compat {
 	unsigned int			rangesize;
-	struct nf_nat_ipv4_range	range[1];
+	union {
+		struct nf_nat_ipv4_range	range[1];
+		struct nf_nat_ipv4_range	range_legacy;
+	};
 };
 
 struct nf_nat_range {

@@ -20,7 +20,7 @@ static int masquerade_tg_check(const struct xt_tgchk_param *par)
 {
 	const struct nf_nat_ipv4_multi_range_compat *mr = par->targinfo;
 
-	if (mr->range[0].flags & NF_NAT_RANGE_MAP_IPS) {
+	if (mr->range_legacy.flags & NF_NAT_RANGE_MAP_IPS) {
 		pr_debug("bad MAP_IPS.\n");
 		return -EINVAL;
 	}
@@ -38,9 +38,9 @@ masquerade_tg(struct sk_buff *skb, const struct xt_action_param *par)
 	const struct nf_nat_ipv4_multi_range_compat *mr;
 
 	mr = par->targinfo;
-	range.flags = mr->range[0].flags;
-	range.min_proto = mr->range[0].min;
-	range.max_proto = mr->range[0].max;
+	range.flags = mr->range_legacy.flags;
+	range.min_proto = mr->range_legacy.min;
+	range.max_proto = mr->range_legacy.max;
 
 	return nf_nat_masquerade_ipv4(skb, xt_hooknum(par), &range,
 				      xt_out(par));

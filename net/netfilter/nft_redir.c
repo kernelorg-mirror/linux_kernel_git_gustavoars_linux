@@ -111,14 +111,14 @@ static void nft_redir_ipv4_eval(const struct nft_expr *expr,
 
 	memset(&mr, 0, sizeof(mr));
 	if (priv->sreg_proto_min) {
-		mr.range[0].min.all = (__force __be16)nft_reg_load16(
+		mr.range_legacy.min.all = (__force __be16)nft_reg_load16(
 			&regs->data[priv->sreg_proto_min]);
-		mr.range[0].max.all = (__force __be16)nft_reg_load16(
+		mr.range_legacy.max.all = (__force __be16)nft_reg_load16(
 			&regs->data[priv->sreg_proto_max]);
-		mr.range[0].flags |= NF_NAT_RANGE_PROTO_SPECIFIED;
+		mr.range_legacy.flags |= NF_NAT_RANGE_PROTO_SPECIFIED;
 	}
 
-	mr.range[0].flags |= priv->flags;
+	mr.range_legacy.flags |= priv->flags;
 
 	regs->verdict.code = nf_nat_redirect_ipv4(pkt->skb, &mr, nft_hook(pkt));
 }
