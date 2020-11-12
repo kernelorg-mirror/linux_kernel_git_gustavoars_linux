@@ -57,6 +57,7 @@ reject_tg(struct sk_buff *skb, const struct xt_action_param *par)
 		break;
 	case IPT_TCP_RESET:
 		nf_send_reset(xt_net(par), skb, hook);
+		break;
 	case IPT_ICMP_ECHOREPLY:
 		/* Doesn't happen. */
 		break;
