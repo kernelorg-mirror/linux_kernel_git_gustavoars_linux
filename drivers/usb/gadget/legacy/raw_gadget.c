@@ -63,7 +63,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
 		spin_unlock_irqrestore(&queue->lock, flags);
 		return -ENOMEM;
 	}
-	event = kmalloc(sizeof(*event) + length, GFP_ATOMIC);
+	event = kmalloc(struct_size(event, data_flex, length), GFP_ATOMIC);
 	if (!event) {
 		spin_unlock_irqrestore(&queue->lock, flags);
 		return -ENOMEM;
@@ -71,7 +71,8 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
 	event->type = type;
 	event->length = length;
 	if (event->length)
-		memcpy(&event->data[0], data, length);
+		memcpy(event->data_flex, data,
+		       flex_array_size(event, data_flex, length));
 	queue->events[queue->size] = event;
 	queue->size++;
 	up(&queue->sema);
@@ -106,7 +107,7 @@ static struct usb_raw_event *raw_event_queue_fetch(
 	event = queue->events[0];
 	queue->size--;
 	memmove(&queue->events[0], &queue->events[1],
-			queue->size * sizeof(queue->events[0]));
+		array_size(queue->size, sizeof(queue->events[0])));
 	spin_unlock_irqrestore(&queue->lock, flags);
 	return event;
 }

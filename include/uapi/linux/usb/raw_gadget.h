@@ -58,9 +58,18 @@ enum usb_raw_event_type {
  * and contains struct usb_ctrlrequest for USB_RAW_EVENT_CONTROL.
  */
 struct usb_raw_event {
-	__u32		type;
-	__u32		length;
-	__u8		data[0];
+	union {
+		struct {
+			__u32		type_0;
+			__u32		length_0;
+			__u8		data[0];
+		};
+		struct {
+			__u32		type;
+			__u32		length;
+			__u8		data_flex[0];
+		};
+	};
 };
 
 #define USB_RAW_IO_FLAGS_ZERO	0x0001
