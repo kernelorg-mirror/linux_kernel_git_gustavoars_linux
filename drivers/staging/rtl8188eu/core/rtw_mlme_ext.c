@@ -3381,6 +3381,7 @@ static unsigned int OnAssocRsp(struct adapter *padapter,
 			break;
 		case WLAN_EID_ERP_INFO:
 			ERP_IE_handler(padapter, pIE);
+			break;
 		default:
 			break;
 		}
