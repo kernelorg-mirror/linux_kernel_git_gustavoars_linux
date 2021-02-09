@@ -68,7 +68,7 @@ struct nfs_fhbase_new {
 	__u8		fb_auth_type;
 	__u8		fb_fsid_type;
 	__u8		fb_fileid_type;
-	__u32		fb_auth[1];
+	__u32		fb_auth[];
 /*	__u32		fb_fsid[0]; floating */
 /*	__u32		fb_fileid[0]; floating */
 };
