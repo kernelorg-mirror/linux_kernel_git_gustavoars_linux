@@ -2966,7 +2966,9 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
 	unsigned short mode_flags;
 	nodemask_t nodes;
 	char *nodelist = strchr(str, ':');
+	char *tmp_nodelist = nodelist;
 	char *flags = strchr(str, '=');
+	char *tmp_flags = flags;
 	int err = 1, mode;
 
 	if (flags)
@@ -3075,9 +3077,9 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
 out:
 	/* Restore string for error message */
 	if (nodelist)
-		*--nodelist = ':';
+		nodelist = tmp_nodelist;
 	if (flags)
-		*--flags = '=';
+		flags = tmp_flags;
 	if (!err)
 		*mpol = new;
 	return err;
