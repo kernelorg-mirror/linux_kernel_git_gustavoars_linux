@@ -570,7 +570,7 @@ static void HUF_fillDTableX2Level2(HUF_DEltX2* DTable, U32 sizeLog, const U32 co
 
 static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
                            const sortedSymbol_t* sortedList, const U32 sortedListSize,
-                           const U32* rankStart, rankVal_t rankValOrigin, const U32 maxWeight,
+                           const U32* rankStart, const U32* rankValOrigin, const U32 maxWeight,
                            const U32 nbBitsBaseline, U32* wksp, size_t wkspSize)
 {
     U32* rankVal = wksp;
@@ -598,7 +598,7 @@ static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
             if (minWeight < 1) minWeight = 1;
             sortedRank = rankStart[minWeight];
             HUF_fillDTableX2Level2(DTable+start, targetLog-nbBits, nbBits,
-                           rankValOrigin[nbBits], minWeight,
+                           rankValOrigin + nbBits, minWeight,
                            sortedList+sortedRank, sortedListSize-sortedRank,
                            nbBitsBaseline, symbol, wksp, wkspSize);
         } else {
@@ -699,7 +699,7 @@ size_t HUF_readDTableX2_wksp(HUF_DTable* DTable,
 
     HUF_fillDTableX2(dt, maxTableLog,
                    wksp->sortedSymbol, sizeOfSort,
-                   wksp->rankStart0, wksp->rankVal, maxW,
+                   wksp->rankStart0, (U32 *)wksp->rankVal, maxW,
                    tableLog+1,
                    wksp->calleeWksp, sizeof(wksp->calleeWksp) / sizeof(U32));
 
