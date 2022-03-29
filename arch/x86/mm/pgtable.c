@@ -424,8 +424,13 @@ static inline void _pgd_free(pgd_t *pgd)
 pgd_t *pgd_alloc(struct mm_struct *mm)
 {
 	pgd_t *pgd;
+#ifdef CONFIG_X86_PAE
 	pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
 	pmd_t *pmds[MAX_PREALLOCATED_PMDS];
+#else
+	pmd_t **u_pmds;
+	pmd_t **pmds;
+#endif /* CONFIG_X86_PAE */
 
 	pgd = _pgd_alloc();
 
