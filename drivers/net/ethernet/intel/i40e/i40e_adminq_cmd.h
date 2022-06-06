@@ -593,10 +593,10 @@ I40E_CHECK_STRUCT_LEN(0x10, i40e_aqc_switch_config_element_resp);
  */
 struct i40e_aqc_get_switch_config_resp {
 	struct i40e_aqc_get_switch_config_header_resp	header;
-	struct i40e_aqc_switch_config_element_resp	element[1];
+	struct i40e_aqc_switch_config_element_resp	element[];
 };
 
-I40E_CHECK_STRUCT_LEN(0x20, i40e_aqc_get_switch_config_resp);
+I40E_CHECK_STRUCT_LEN(0x10, i40e_aqc_get_switch_config_resp);
 
 /* Add Statistics (direct 0x0201)
  * Remove Statistics (direct 0x0202)
