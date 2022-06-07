@@ -1939,11 +1939,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	attr->type = cpu_to_be16(FDMI_HBA_ATTRIB_NODENAME);
 	templen = sizeof(wwn_t);
 	memcpy(attr->value, &bfa_fcs_lport_get_nwwn(port), templen);
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * Manufacturer
@@ -1953,11 +1952,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = (u16) strlen(fcs_hba_attr->manufacturer);
 	memcpy(attr->value, fcs_hba_attr->manufacturer, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * Serial Number
@@ -1967,11 +1965,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = (u16) strlen(fcs_hba_attr->serial_num);
 	memcpy(attr->value, fcs_hba_attr->serial_num, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * Model
@@ -1981,11 +1978,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = (u16) strlen(fcs_hba_attr->model);
 	memcpy(attr->value, fcs_hba_attr->model, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * Model Desc
@@ -1995,11 +1991,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = (u16) strlen(fcs_hba_attr->model_desc);
 	memcpy(attr->value, fcs_hba_attr->model_desc, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * H/W Version
@@ -2010,11 +2005,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 		templen = (u16) strlen(fcs_hba_attr->hw_version);
 		memcpy(attr->value, fcs_hba_attr->hw_version, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 
 	/*
@@ -2025,11 +2019,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = (u16) strlen(fcs_hba_attr->driver_version);
 	memcpy(attr->value, fcs_hba_attr->driver_version, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * Option Rom Version
@@ -2040,11 +2033,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 		templen = (u16) strlen(fcs_hba_attr->option_rom_ver);
 		memcpy(attr->value, fcs_hba_attr->option_rom_ver, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 
 	attr = (struct fdmi_attr_s *) curr_ptr;
@@ -2052,11 +2044,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = (u16) strlen(fcs_hba_attr->fw_version);
 	memcpy(attr->value, fcs_hba_attr->fw_version, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * OS Name
@@ -2067,11 +2058,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 		templen = (u16) strlen(fcs_hba_attr->os_name);
 		memcpy(attr->value, fcs_hba_attr->os_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 
 	/*
@@ -2082,11 +2072,10 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 	templen = sizeof(fcs_hba_attr->max_ct_pyld);
 	memcpy(attr->value, &fcs_hba_attr->max_ct_pyld, templen);
 	templen = fc_roundup(templen, sizeof(u32));
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	count++;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	/*
 	 * Send extended attributes ( FOS 7.1 support )
 	 */
@@ -2096,61 +2085,56 @@ bfa_fcs_lport_fdmi_build_rhba_pyld(struct bfa_fcs_lport_fdmi_s *fdmi, u8 *pyld)
 		templen = sizeof(fcs_hba_attr->node_sym_name);
 		memcpy(attr->value, &fcs_hba_attr->node_sym_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_HBA_ATTRIB_VENDOR_ID);
 		templen = sizeof(fcs_hba_attr->vendor_info);
 		memcpy(attr->value, &fcs_hba_attr->vendor_info, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_HBA_ATTRIB_NUM_PORTS);
 		templen = sizeof(fcs_hba_attr->num_ports);
 		memcpy(attr->value, &fcs_hba_attr->num_ports, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_HBA_ATTRIB_FABRIC_NAME);
 		templen = sizeof(fcs_hba_attr->fabric_name);
 		memcpy(attr->value, &fcs_hba_attr->fabric_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_HBA_ATTRIB_BIOS_VER);
 		templen = sizeof(fcs_hba_attr->bios_ver);
 		memcpy(attr->value, &fcs_hba_attr->bios_ver, templen);
 		templen = fc_roundup(attr->len, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		count++;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 
 	/*
 	 * Update size of payload
 	 */
-	len += ((sizeof(attr->type) + sizeof(attr->len)) * count);
+	len += size_mul(sizeof(*attr), count);
 
 	rhba->hba_attr_blk.attr_count = cpu_to_be32(count);
 
@@ -2271,12 +2255,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 	attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_FC4_TYPES);
 	templen = sizeof(fcs_port_attr.supp_fc4_types);
 	memcpy(attr->value, fcs_port_attr.supp_fc4_types, templen);
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	++count;
-	attr->len =
-		cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * Supported Speed
@@ -2285,12 +2267,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 	attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_SUPP_SPEED);
 	templen = sizeof(fcs_port_attr.supp_speed);
 	memcpy(attr->value, &fcs_port_attr.supp_speed, templen);
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	++count;
-	attr->len =
-		cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * current Port Speed
@@ -2299,11 +2279,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 	attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_PORT_SPEED);
 	templen = sizeof(fcs_port_attr.curr_speed);
 	memcpy(attr->value, &fcs_port_attr.curr_speed, templen);
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	++count;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * max frame size
@@ -2312,11 +2291,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 	attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_FRAME_SIZE);
 	templen = sizeof(fcs_port_attr.max_frm_size);
 	memcpy(attr->value, &fcs_port_attr.max_frm_size, templen);
-	curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+	curr_ptr += struct_size(attr, value, templen);
 	len += templen;
 	++count;
-	attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-			     sizeof(templen));
+	attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 	/*
 	 * OS Device Name
@@ -2327,11 +2305,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 		templen = (u16) strlen(fcs_port_attr.os_device_name);
 		memcpy(attr->value, fcs_port_attr.os_device_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-					sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 	/*
 	 * Host Name
@@ -2342,11 +2319,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 		templen = (u16) strlen(fcs_port_attr.host_name);
 		memcpy(attr->value, fcs_port_attr.host_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 
 	if (fdmi->retry_cnt == 0) {
@@ -2355,22 +2331,20 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 		templen = sizeof(fcs_port_attr.node_name);
 		memcpy(attr->value, &fcs_port_attr.node_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_PORT_NAME);
 		templen = sizeof(fcs_port_attr.port_name);
 		memcpy(attr->value, &fcs_port_attr.port_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(attr->len) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		if (fcs_port_attr.port_sym_name.symname[0] != '\0') {
 			attr = (struct fdmi_attr_s *) curr_ptr;
@@ -2380,12 +2354,10 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 			memcpy(attr->value,
 				&fcs_port_attr.port_sym_name, templen);
 			templen = fc_roundup(templen, sizeof(u32));
-			curr_ptr += sizeof(attr->type) +
-					sizeof(templen) + templen;
+			curr_ptr += struct_size(attr, value, templen);
 			len += templen;
 			++count;
-			attr->len = cpu_to_be16(templen +
-				sizeof(attr->type) + sizeof(templen));
+			attr->len = cpu_to_be16(struct_size(attr, value, templen));
 		}
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
@@ -2393,33 +2365,30 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 		templen = sizeof(fcs_port_attr.port_type);
 		memcpy(attr->value, &fcs_port_attr.port_type, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_SUPP_COS);
 		templen = sizeof(fcs_port_attr.scos);
 		memcpy(attr->value, &fcs_port_attr.scos, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_PORT_FAB_NAME);
 		templen = sizeof(fcs_port_attr.port_fabric_name);
 		memcpy(attr->value, &fcs_port_attr.port_fabric_name, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_PORT_FC4_TYPE);
@@ -2427,40 +2396,37 @@ bfa_fcs_lport_fdmi_build_portattr_block(struct bfa_fcs_lport_fdmi_s *fdmi,
 		memcpy(attr->value, fcs_port_attr.port_act_fc4_type,
 				templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_PORT_STATE);
 		templen = sizeof(fcs_port_attr.port_state);
 		memcpy(attr->value, &fcs_port_attr.port_state, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				 sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 
 		attr = (struct fdmi_attr_s *) curr_ptr;
 		attr->type = cpu_to_be16(FDMI_PORT_ATTRIB_PORT_NUM_RPRT);
 		templen = sizeof(fcs_port_attr.num_ports);
 		memcpy(attr->value, &fcs_port_attr.num_ports, templen);
 		templen = fc_roundup(templen, sizeof(u32));
-		curr_ptr += sizeof(attr->type) + sizeof(templen) + templen;
+		curr_ptr += struct_size(attr, value, templen);
 		len += templen;
 		++count;
-		attr->len = cpu_to_be16(templen + sizeof(attr->type) +
-				sizeof(templen));
+		attr->len = cpu_to_be16(struct_size(attr, value, templen));
 	}
 
 	/*
 	 * Update size of payload
 	 */
 	port_attrib->attr_count = cpu_to_be32(count);
-	len += ((sizeof(attr->type) + sizeof(attr->len)) * count);
+	len += size_mul(sizeof(*attr), count);
 	return len;
 }
 
