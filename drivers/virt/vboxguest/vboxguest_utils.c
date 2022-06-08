@@ -199,7 +199,7 @@ static void hgcm_call_add_pagelist_size(void *buf, u32 len, size_t *extra)
 	u32 page_count;
 
 	page_count = hgcm_call_buf_size_in_pages(buf, len);
-	*extra += offsetof(struct vmmdev_hgcm_pagelist, pages[page_count]);
+	*extra += offsetof(struct vmmdev_hgcm_pagelist, pages_flex[page_count]);
 }
 
 static int hgcm_call_preprocess_linaddr(
@@ -361,11 +361,11 @@ static void hgcm_call_init_linaddr(struct vmmdev_hgcm_call *call,
 		else
 			page = virt_to_page(buf);
 
-		dst_pg_lst->pages[i] = page_to_phys(page);
+		dst_pg_lst->pages_flex[i] = page_to_phys(page);
 		buf += PAGE_SIZE;
 	}
 
-	*off_extra += offsetof(struct vmmdev_hgcm_pagelist, pages[page_count]);
+	*off_extra += offsetof(struct vmmdev_hgcm_pagelist, pages_flex[page_count]);
 }
 
 /**

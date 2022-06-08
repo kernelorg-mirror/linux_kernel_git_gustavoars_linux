@@ -282,7 +282,10 @@ struct vmmdev_hgcm_pagelist {
 	__u32 flags;             /** VMMDEV_HGCM_F_PARM_*. */
 	__u16 offset_first_page; /** Data offset in the first page. */
 	__u16 page_count;        /** Number of pages. */
-	__u64 pages[1];          /** Page addresses. */
+	union {			 /** Page addresses. */
+		__u64 pages[1];
+		__DECLARE_FLEX_ARRAY(__u64, pages_flex);
+	};
 };
 VMMDEV_ASSERT_SIZE(vmmdev_hgcm_pagelist, 4 + 2 + 2 + 8);
 
