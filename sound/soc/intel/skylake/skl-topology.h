@@ -115,7 +115,7 @@ struct skl_cpr_gtw_cfg {
 	u32 dma_buffer_size;
 	u32 config_length;
 	/* not mandatory; required only for DMIC/I2S */
-	u32 config_data[1];
+	u32 config_data[];
 } __packed;
 
 struct skl_dma_control {
