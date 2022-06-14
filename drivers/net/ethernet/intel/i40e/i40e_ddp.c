@@ -226,7 +226,7 @@ static bool i40e_ddp_is_pkg_hdr_valid(struct net_device *netdev,
 		return false;
 	}
 
-	pkg_hdr_size = sizeof(u32) * (pkg_hdr->segment_count + 2U);
+	pkg_hdr_size = struct_size(pkg_hdr, segment_offset, pkg_hdr->segment_count);
 	if (size < pkg_hdr_size) {
 		netdev_err(netdev, "Invalid DDP profile - too many segments");
 		return false;
