@@ -1266,7 +1266,7 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
 			return ret;
 		command = ContainerRawIo;
 		fibsize = sizeof(struct aac_raw_io) +
-			((le32_to_cpu(readcmd->sg.count)-1) * sizeof(struct sgentryraw));
+			(le32_to_cpu(readcmd->sg.count) * sizeof(struct sgentryraw));
 	}
 
 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
@@ -1400,7 +1400,7 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
 			return ret;
 		command = ContainerRawIo;
 		fibsize = sizeof(struct aac_raw_io) +
-			((le32_to_cpu(writecmd->sg.count)-1) * sizeof (struct sgentryraw));
+			(le32_to_cpu(writecmd->sg.count) * sizeof (struct sgentryraw));
 	}
 
 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
@@ -3877,12 +3877,6 @@ static long aac_build_sgraw(struct scsi_cmnd *scsicmd, struct sgmapraw *psg)
 
 	// Get rid of old data
 	psg->count = 0;
-	psg->sg[0].next = 0;
-	psg->sg[0].prev = 0;
-	psg->sg[0].addr[0] = 0;
-	psg->sg[0].addr[1] = 0;
-	psg->sg[0].count = 0;
-	psg->sg[0].flags = 0;
 
 	nseg = scsi_dma_map(scsicmd);
 	if (nseg <= 0)
