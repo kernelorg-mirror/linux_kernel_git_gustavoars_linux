@@ -495,7 +495,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
 	u32 sg_count[HBA_MAX_SG_EMBEDDED];
 	u32 sg_indx = 0;
 	u32 byte_count = 0;
-	u32 actual_fibsize64, actual_fibsize = 0;
+	size_t actual_fibsize64, actual_fibsize = 0;
 	int i;
 	int is_native_device;
 	u64 address;
@@ -561,8 +561,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
 		rcode = -EINVAL;
 		goto cleanup;
 	}
-	actual_fibsize = sizeof(struct aac_srb) +
-		((user_srbcmd->sg.count & 0xff) * sizeof(struct sgentry));
+	actual_fibsize = struct_size(srbcmd, sg.sg, user_srbcmd->sg.count & 0xff);
 	actual_fibsize64 = actual_fibsize + (user_srbcmd->sg.count & 0xff) *
 	  (sizeof(struct sgentry64) - sizeof(struct sgentry));
 	/* User made a mistake - should not continue */
