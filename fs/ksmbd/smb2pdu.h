@@ -441,7 +441,7 @@ struct smb2_posix_info {
 	__le32 Mode;
 	u8 SidBuffer[40];
 	__le32 name_len;
-	u8 name[1];
+	u8 name[];
 	/*
 	 * var sized owner SID
 	 * var sized group SID
