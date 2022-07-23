@@ -191,7 +191,7 @@ int pkt_session_set_buffers(struct hfi_session_set_buffers_pkt *pkt,
 		struct hfi_buffer_info *bi;
 
 		pkt->extradata_size = bd->extradata_size;
-		pkt->shdr.hdr.size = sizeof(*pkt) - sizeof(u32) +
+		pkt->shdr.hdr.size = sizeof(*pkt) +
 			(bd->num_buffers * sizeof(*bi));
 		bi = (struct hfi_buffer_info *)pkt->buffer_info;
 		for (i = 0; i < pkt->num_buffers; i++) {
@@ -201,7 +201,7 @@ int pkt_session_set_buffers(struct hfi_session_set_buffers_pkt *pkt,
 	} else {
 		pkt->extradata_size = 0;
 		pkt->shdr.hdr.size = sizeof(*pkt) +
-			((bd->num_buffers - 1) * sizeof(u32));
+			(bd->num_buffers * sizeof(u32));
 		for (i = 0; i < pkt->num_buffers; i++)
 			pkt->buffer_info[i] = bd->device_addr;
 	}
