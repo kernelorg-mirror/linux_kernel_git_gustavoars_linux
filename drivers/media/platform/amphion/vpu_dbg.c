@@ -27,7 +27,7 @@ struct print_buf_desc {
 	u32 bytes;
 	u32 read;
 	u32 write;
-	char buffer[0];
+	char buffer[];
 };
 
 static char *vb2_stat_name[] = {
@@ -305,14 +305,14 @@ static int vpu_dbg_fwlog(struct seq_file *s, void *data)
 	if (rptr + length >= print_buf->bytes) {
 		int num = print_buf->bytes - rptr;
 
-		if (seq_write(s, print_buf->buffer + rptr, num))
+		if (seq_write(s, &print_buf->buffer[rptr], num))
 			ret = -1;
 		length -= num;
 		rptr = 0;
 	}
 
 	if (length) {
-		if (seq_write(s, print_buf->buffer + rptr, length))
+		if (seq_write(s, &print_buf->buffer[rptr], length))
 			ret = -1;
 		rptr += length;
 	}
