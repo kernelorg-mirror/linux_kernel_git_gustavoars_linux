@@ -51,7 +51,7 @@ struct xt_entry_target {
 		__u16 target_size;
 	} u;
 
-	unsigned char data[0];
+	unsigned char data[];
 };
 
 #define XT_TARGET_INIT(__name, __size)					       \

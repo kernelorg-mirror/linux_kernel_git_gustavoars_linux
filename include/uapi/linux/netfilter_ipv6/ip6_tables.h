@@ -125,7 +125,7 @@ struct ip6t_entry {
 	struct xt_counters counters;
 
 	/* The matches (if any), then the target. */
-	unsigned char elems[0];
+	unsigned char elems[];
 };
 
 /* Standard entry */

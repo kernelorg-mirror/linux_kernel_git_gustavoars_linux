@@ -22,7 +22,7 @@ struct mt7921_asar_dyn {
 	u8 names[4];
 	u8 enable;
 	u8 nr_tbl;
-	struct mt7921_asar_dyn_limit tbl[0];
+	struct mt7921_asar_dyn_limit tbl[];
 } __packed;
 
 struct mt7921_asar_dyn_limit_v2 {
@@ -35,7 +35,7 @@ struct mt7921_asar_dyn_v2 {
 	u8 enable;
 	u8 rsvd;
 	u8 nr_tbl;
-	struct mt7921_asar_dyn_limit_v2 tbl[0];
+	struct mt7921_asar_dyn_limit_v2 tbl[];
 } __packed;
 
 struct mt7921_asar_geo_band {
@@ -53,7 +53,7 @@ struct mt7921_asar_geo {
 	u8 names[4];
 	u8 version;
 	u8 nr_tbl;
-	struct mt7921_asar_geo_limit tbl[0];
+	struct mt7921_asar_geo_limit tbl[];
 } __packed;
 
 struct mt7921_asar_geo_limit_v2 {
@@ -67,7 +67,7 @@ struct mt7921_asar_geo_v2 {
 	u8 version;
 	u8 rsvd;
 	u8 nr_tbl;
-	struct mt7921_asar_geo_limit_v2 tbl[0];
+	struct mt7921_asar_geo_limit_v2 tbl[];
 } __packed;
 
 struct mt7921_asar_cl {

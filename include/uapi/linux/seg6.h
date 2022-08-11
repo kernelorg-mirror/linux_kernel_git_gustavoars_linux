@@ -49,7 +49,7 @@ struct ipv6_sr_hdr {
 struct sr6_tlv {
 	__u8 type;
 	__u8 len;
-	__u8 data[0];
+	__u8 data[];
 };
 
 #endif

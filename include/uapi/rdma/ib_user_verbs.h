@@ -429,7 +429,7 @@ struct ib_uverbs_ex_create_cq {
 struct ib_uverbs_create_cq_resp {
 	__u32 cq_handle;
 	__u32 cqe;
-	__aligned_u64 driver_data[0];
+	__aligned_u64 driver_data[];
 };
 
 struct ib_uverbs_ex_create_cq_resp {
@@ -637,7 +637,7 @@ struct ib_uverbs_create_qp_resp {
 	__u32 max_recv_sge;
 	__u32 max_inline_data;
 	__u32 reserved;
-	__u32 driver_data[0];
+	__u32 driver_data[];
 };
 
 struct ib_uverbs_ex_create_qp_resp {
@@ -733,7 +733,7 @@ struct ib_uverbs_modify_qp {
 	__u8  alt_port_num;
 	__u8  alt_timeout;
 	__u8  reserved[2];
-	__aligned_u64 driver_data[0];
+	__aligned_u64 driver_data[];
 };
 
 struct ib_uverbs_ex_modify_qp {
@@ -902,7 +902,7 @@ struct ib_uverbs_flow_spec_hdr {
 	__u16 size;
 	__u16 reserved;
 	/* followed by flow_spec */
-	__aligned_u64 flow_spec_data[0];
+	__aligned_u64 flow_spec_data[];
 };
 
 struct ib_uverbs_flow_eth_filter {

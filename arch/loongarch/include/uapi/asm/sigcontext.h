@@ -22,7 +22,7 @@ struct sigcontext {
 	__u64	sc_pc;
 	__u64	sc_regs[32];
 	__u32	sc_flags;
-	__u64	sc_extcontext[0] __attribute__((__aligned__(16)));
+	__u64	sc_extcontext[] __attribute__((__aligned__(16)));
 };
 
 #define CONTEXT_INFO_ALIGN	16
