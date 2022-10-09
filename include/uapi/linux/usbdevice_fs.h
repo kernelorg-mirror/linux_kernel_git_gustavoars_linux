@@ -131,7 +131,10 @@ struct usbdevfs_urb {
 	unsigned int signr;	/* signal to be sent on completion,
 				  or 0 if none should be sent. */
 	void __user *usercontext;
-	struct usbdevfs_iso_packet_desc iso_frame_desc[];
+	union {
+	       struct usbdevfs_iso_packet_desc iso_frame_desc[0];
+	       __DECLARE_FLEX_ARRAY(struct usbdevfs_iso_packet_desc, iso_frame_desc_flex);
+	};
 };
 
 /* ioctls for talking directly to drivers */

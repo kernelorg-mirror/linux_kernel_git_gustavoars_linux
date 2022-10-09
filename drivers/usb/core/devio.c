@@ -1989,7 +1989,7 @@ static int proc_submiturb(struct usb_dev_state *ps, void __user *arg)
 	userurb_sigval.sival_ptr = arg;
 
 	return proc_do_submiturb(ps, &uurb,
-			(((struct usbdevfs_urb __user *)arg)->iso_frame_desc),
+			(((struct usbdevfs_urb __user *)arg)->iso_frame_desc_flex),
 			arg, userurb_sigval);
 }
 
@@ -2050,10 +2050,10 @@ static int processcompl(struct async *as, void __user * __user *arg)
 	if (usb_endpoint_xfer_isoc(&urb->ep->desc)) {
 		for (i = 0; i < urb->number_of_packets; i++) {
 			if (put_user(urb->iso_frame_desc[i].actual_length,
-				     &userurb->iso_frame_desc[i].actual_length))
+				     &userurb->iso_frame_desc_flex[i].actual_length))
 				goto err_out;
 			if (put_user(urb->iso_frame_desc[i].status,
-				     &userurb->iso_frame_desc[i].status))
+				     &userurb->iso_frame_desc_flex[i].status))
 				goto err_out;
 		}
 	}
