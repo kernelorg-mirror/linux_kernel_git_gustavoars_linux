@@ -1214,6 +1214,9 @@ static struct css_set *find_css_set(struct css_set *old_cset,
 	unsigned long key;
 	int ssid;
 
+	if (sizeof(template) == 0)
+                return NULL;
+
 	lockdep_assert_held(&cgroup_mutex);
 
 	/* First see if we already have a cgroup group that matches
