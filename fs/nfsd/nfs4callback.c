@@ -353,7 +353,7 @@ encode_cb_recallany4args(struct xdr_stream *xdr,
 {
 	encode_nfs_cb_opnum4(xdr, OP_CB_RECALL_ANY);
 	encode_uint32(xdr, ra->ra_keep);
-	encode_bitmap4(xdr, ra->ra_bmval, ARRAY_SIZE(ra->ra_bmval));
+	encode_bitmap4(xdr, ra->ra_bmval, 1);
 	hdr->nops++;
 }
 

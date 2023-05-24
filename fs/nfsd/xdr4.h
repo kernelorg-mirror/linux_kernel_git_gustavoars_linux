@@ -899,7 +899,7 @@ struct nfsd4_operation {
 struct nfsd4_cb_recall_any {
 	struct nfsd4_callback	ra_cb;
 	u32			ra_keep;
-	u32			ra_bmval[1];
+	u32			ra_bmval[];
 };
 
 #endif
