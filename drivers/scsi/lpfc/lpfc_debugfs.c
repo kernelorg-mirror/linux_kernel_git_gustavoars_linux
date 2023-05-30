@@ -2189,9 +2189,9 @@ lpfc_debugfs_lockstat_write(struct file *file, const char __user *buf,
 #endif
 
 static int lpfc_debugfs_ras_log_data(struct lpfc_hba *phba,
-				     char *buffer, int size)
+				     char *buffer, size_t size)
 {
-	int copied = 0;
+	size_t copied = 0;
 	struct lpfc_dmabuf *dmabuf, *next;
 
 	memset(buffer, 0, size);
@@ -2249,7 +2249,7 @@ lpfc_debugfs_ras_log_open(struct inode *inode, struct file *file)
 {
 	struct lpfc_hba *phba = inode->i_private;
 	struct lpfc_debug *debug;
-	int size;
+	size_t size;
 	int rc = -ENOMEM;
 
 	spin_lock_irq(&phba->hbalock);
