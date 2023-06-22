@@ -76,7 +76,9 @@ static int copyin(struct openpromio __user *info, struct openpromio **opp_p)
 	if (bufsize > OPROMMAXPARAM)
 		bufsize = OPROMMAXPARAM;
 
-	if (!(*opp_p = kzalloc(sizeof(int) + bufsize + 1, GFP_KERNEL)))
+	*opp_p = kzalloc(struct_size(*opp_p, oprom_array, bufsize + 1),
+			 GFP_KERNEL);
+	if (!*opp_p)
 		return -ENOMEM;
 
 	if (copy_from_user(&(*opp_p)->oprom_array,
@@ -95,7 +97,9 @@ static int getstrings(struct openpromio __user *info, struct openpromio **opp_p)
 	if (!info || !opp_p)
 		return -EFAULT;
 
-	if (!(*opp_p = kzalloc(sizeof(int) + OPROMMAXPARAM + 1, GFP_KERNEL)))
+	*opp_p = kzalloc(struct_size(*opp_p, oprom_array, OPROMMAXPARAM + 1),
+			 GFP_KERNEL);
+	if (!*opp_p)
 		return -ENOMEM;
 
 	(*opp_p)->oprom_size = 0;
