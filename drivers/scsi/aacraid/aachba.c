@@ -1266,8 +1266,7 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
 		if (ret < 0)
 			return ret;
 		command = ContainerRawIo;
-		fibsize = sizeof(struct aac_raw_io) +
-			  le32_to_cpu(readcmd->sg.count) * sizeof(struct sgentryraw);
+		fibsize = struct_size(readcmd, sg.sg, le32_to_cpu(readcmd->sg.count));
 	}
 
 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
@@ -1400,8 +1399,7 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
 		if (ret < 0)
 			return ret;
 		command = ContainerRawIo;
-		fibsize = sizeof(struct aac_raw_io) +
-			  le32_to_cpu(writecmd->sg.count) * sizeof(struct sgentryraw);
+		fibsize = struct_size(writecmd, sg.sg, le32_to_cpu(writecmd->sg.count));
 	}
 
 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
