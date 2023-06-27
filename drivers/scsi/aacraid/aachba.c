@@ -1832,8 +1832,7 @@ static int aac_get_safw_ciss_luns(struct aac_dev *dev)
 	struct aac_srb_unit srbu;
 	struct aac_ciss_phys_luns_resp *phys_luns;
 
-	datasize = sizeof(struct aac_ciss_phys_luns_resp) +
-		   AAC_MAX_TARGETS * sizeof(struct _ciss_lun);
+	datasize = struct_size(phys_luns, lun, AAC_MAX_TARGETS);
 	phys_luns = kmalloc(datasize, GFP_KERNEL);
 	if (phys_luns == NULL)
 		goto out;
