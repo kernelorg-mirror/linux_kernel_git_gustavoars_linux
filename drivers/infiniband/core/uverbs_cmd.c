@@ -3260,8 +3260,9 @@ static int ib_uverbs_ex_create_flow(struct uverbs_attr_bundle *attrs)
 		goto err_put;
 	}
 
-	flow_attr = kzalloc(struct_size(flow_attr, flows,
-				cmd.flow_attr.num_of_specs), GFP_KERNEL);
+	flow_attr = kzalloc(flex_struct_size(flow_attr, flows,
+					     cmd.flow_attr.num_of_specs),
+			    GFP_KERNEL);
 	if (!flow_attr) {
 		err = -ENOMEM;
 		goto err_put;

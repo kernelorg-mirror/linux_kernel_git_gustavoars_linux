@@ -310,8 +310,8 @@ static int ac100_rtc_register_clks(struct ac100_rtc_dev *chip)
 	int i, ret;
 
 	chip->clk_data = devm_kzalloc(chip->dev,
-				      struct_size(chip->clk_data, hws,
-						  AC100_CLKOUT_NUM),
+				      flex_struct_size(chip->clk_data, hws,
+						       AC100_CLKOUT_NUM),
 				      GFP_KERNEL);
 	if (!chip->clk_data)
 		return -ENOMEM;

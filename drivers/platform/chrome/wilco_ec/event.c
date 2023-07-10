@@ -106,7 +106,7 @@ static struct ec_event_queue *event_queue_new(int capacity)
 {
 	struct ec_event_queue *q;
 
-	q = kzalloc(struct_size(q, entries, capacity), GFP_KERNEL);
+	q = kzalloc(flex_struct_size(q, entries, capacity), GFP_KERNEL);
 	if (!q)
 		return NULL;
 

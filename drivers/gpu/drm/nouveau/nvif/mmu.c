@@ -111,7 +111,7 @@ nvif_mmu_ctor(struct nvif_object *parent, const char *name, s32 oclass,
 
 	if (mmu->kind_nr) {
 		struct nvif_mmu_kind_v0 *kind;
-		size_t argc = struct_size(kind, data, mmu->kind_nr);
+		size_t argc = flex_struct_size(kind, data, mmu->kind_nr);
 
 		if (ret = -ENOMEM, !(kind = kmalloc(argc, GFP_KERNEL)))
 			goto done;

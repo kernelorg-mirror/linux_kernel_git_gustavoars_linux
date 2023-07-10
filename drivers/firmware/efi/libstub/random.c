@@ -103,7 +103,7 @@ efi_status_t efi_random_get_seed(void)
 	 * beforehand)
 	 */
 	status = efi_bs_call(allocate_pool, EFI_ACPI_RECLAIM_MEMORY,
-			     struct_size(seed, bits, seed_size),
+			     flex_struct_size(seed, bits, seed_size),
 			     (void **)&seed);
 	if (status != EFI_SUCCESS) {
 		efi_warn("Failed to allocate memory for RNG seed.\n");
@@ -169,7 +169,7 @@ efi_status_t efi_random_get_seed(void)
 	return EFI_SUCCESS;
 
 err_freepool:
-	memzero_explicit(seed, struct_size(seed, bits, seed_size));
+	memzero_explicit(seed, flex_struct_size(seed, bits, seed_size));
 	efi_bs_call(free_pool, seed);
 	efi_warn("Failed to obtain seed from EFI_RNG_PROTOCOL or EFI variable\n");
 err_warn:

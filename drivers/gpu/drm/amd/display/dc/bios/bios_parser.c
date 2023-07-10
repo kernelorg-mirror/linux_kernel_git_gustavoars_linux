@@ -139,7 +139,7 @@ static uint8_t get_number_of_objects(struct bios_parser *bp, uint32_t offset)
 
 	table = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base,
 				object_table_offset,
-				struct_size(table, asObjects, 1)));
+				flex_struct_size(table, asObjects, 1)));
 
 	if (!table)
 		return 0;
@@ -169,7 +169,7 @@ static struct graphics_object_id bios_parser_get_connector_id(
 
 	ATOM_OBJECT_TABLE *tbl = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base,
 				connector_table_offset,
-				struct_size(tbl, asObjects, 1)));
+				flex_struct_size(tbl, asObjects, 1)));
 
 	if (!tbl) {
 		dm_error("Can't get connector table from atom bios.\n");
@@ -666,7 +666,7 @@ static enum bp_result get_ss_info_v3_1(
 
 	ss_table_header_include = ((ATOM_ASIC_INTERNAL_SS_INFO_V3 *) bios_get_image(&bp->base,
 				DATA_TABLES(ASIC_InternalSS_Info),
-				struct_size(ss_table_header_include, asSpreadSpectrum, 1)));
+				flex_struct_size(ss_table_header_include, asSpreadSpectrum, 1)));
 	table_size =
 		(le16_to_cpu(ss_table_header_include->sHeader.usStructureSize)
 				- sizeof(ATOM_COMMON_TABLE_HEADER))
@@ -1035,7 +1035,7 @@ static enum bp_result get_ss_info_from_internal_ss_info_tbl_V2_1(
 	header = ((ATOM_ASIC_INTERNAL_SS_INFO_V2 *) bios_get_image(
 				&bp->base,
 				DATA_TABLES(ASIC_InternalSS_Info),
-				struct_size(header, asSpreadSpectrum, 1)));
+				flex_struct_size(header, asSpreadSpectrum, 1)));
 
 	memset(info, 0, sizeof(struct spread_spectrum_info));
 
@@ -1717,7 +1717,7 @@ static uint32_t get_ss_entry_number_from_internal_ss_info_tbl_v2_1(
 	header_include = ((ATOM_ASIC_INTERNAL_SS_INFO_V2 *) bios_get_image(
 				&bp->base,
 				DATA_TABLES(ASIC_InternalSS_Info),
-				struct_size(header_include, asSpreadSpectrum, 1)));
+				flex_struct_size(header_include, asSpreadSpectrum, 1)));
 
 	size = (le16_to_cpu(header_include->sHeader.usStructureSize)
 			- sizeof(ATOM_COMMON_TABLE_HEADER))
@@ -1755,7 +1755,7 @@ static uint32_t get_ss_entry_number_from_internal_ss_info_tbl_V3_1(
 
 	header_include = ((ATOM_ASIC_INTERNAL_SS_INFO_V3 *) bios_get_image(&bp->base,
 				DATA_TABLES(ASIC_InternalSS_Info),
-				struct_size(header_include, asSpreadSpectrum, 1)));
+				flex_struct_size(header_include, asSpreadSpectrum, 1)));
 	size = (le16_to_cpu(header_include->sHeader.usStructureSize) -
 			sizeof(ATOM_COMMON_TABLE_HEADER)) /
 					sizeof(ATOM_ASIC_SS_ASSIGNMENT_V3);
@@ -1799,11 +1799,11 @@ static enum bp_result bios_parser_get_gpio_pin_info(
 
 	header = ((ATOM_GPIO_PIN_LUT *) bios_get_image(&bp->base,
 				DATA_TABLES(GPIO_Pin_LUT),
-				struct_size(header, asGPIO_Pin, 1)));
+				flex_struct_size(header, asGPIO_Pin, 1)));
 	if (!header)
 		return BP_RESULT_BADBIOSTABLE;
 
-	if (sizeof(ATOM_COMMON_TABLE_HEADER) + struct_size(header, asGPIO_Pin, 1)
+	if (sizeof(ATOM_COMMON_TABLE_HEADER) + flex_struct_size(header, asGPIO_Pin, 1)
 			> le16_to_cpu(header->sHeader.usStructureSize))
 		return BP_RESULT_BADBIOSTABLE;
 
@@ -1989,7 +1989,7 @@ static ATOM_OBJECT *get_bios_object(struct bios_parser *bp,
 	offset += bp->object_info_tbl_offset;
 
 	tbl = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base, offset,
-				struct_size(tbl, asObjects, 1)));
+				flex_struct_size(tbl, asObjects, 1)));
 	if (!tbl)
 		return NULL;
 
@@ -2625,7 +2625,7 @@ static enum bp_result update_slot_layout_info(
 
 		if (record_header->ucRecordType ==
 			ATOM_BRACKET_LAYOUT_RECORD_TYPE &&
-			struct_size(record, asConnInfo, 1)
+			flex_struct_size(record, asConnInfo, 1)
 			<= record_header->ucRecordSize) {
 			record = (ATOM_BRACKET_LAYOUT_RECORD *)
 				(record_header);
@@ -2721,7 +2721,7 @@ static enum bp_result get_bracket_layout_record(
 		bp->object_info_tbl.v1_3->usMiscObjectTableOffset;
 	object_table = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base,
 				genericTableOffset,
-				struct_size(object_table, asObjects, 1)));
+				flex_struct_size(object_table, asObjects, 1)));
 	if (!object_table)
 		return BP_RESULT_FAILURE;
 

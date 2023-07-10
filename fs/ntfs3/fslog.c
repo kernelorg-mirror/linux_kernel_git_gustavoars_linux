@@ -389,7 +389,7 @@ static inline u32 lrh_length(const struct LOG_REC_HDR *lr)
 {
 	u16 t16 = le16_to_cpu(lr->lcns_follow);
 
-	return struct_size(lr, page_lcns, max_t(u16, 1, t16));
+	return flex_struct_size(lr, page_lcns, max_t(u16, 1, t16));
 }
 
 struct lcb {
@@ -1349,7 +1349,7 @@ static void log_create(struct ntfs_log *log, u32 l_size, const u64 last_lsn,
 				((log->sys_page_size >> SECTOR_SHIFT) + 1),
 		8);
 	log->restart_size = log->sys_page_size - log->ra_off;
-	log->ra_size = struct_size(log->ra, clients, 1);
+	log->ra_size = flex_struct_size(log->ra, clients, 1);
 	log->current_openlog_count = open_log_count;
 
 	/*
@@ -4479,7 +4479,7 @@ next_log_record_analyze:
 		} else {
 			t32 = log->clst_per_page;
 			kfree(dptbl);
-			dptbl = init_rsttbl(struct_size(dp, page_lcns, t32),
+			dptbl = init_rsttbl(flex_struct_size(dp, page_lcns, t32),
 					    32);
 			if (!dptbl) {
 				err = -ENOMEM;

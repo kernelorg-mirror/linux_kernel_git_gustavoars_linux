@@ -711,7 +711,7 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
 
 			/* reserve the entry itself */
 			memblock_reserve(prsv,
-					 struct_size(rsv, entry, rsv->size));
+					 flex_struct_size(rsv, entry, rsv->size));
 
 			for (i = 0; i < atomic_read(&rsv->count); i++) {
 				memblock_reserve(rsv->entry[i].base,

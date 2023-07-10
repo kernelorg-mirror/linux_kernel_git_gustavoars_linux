@@ -108,7 +108,7 @@ static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
 		return -ENXIO;
 	}
 
-	cximsd = devm_kzalloc(dev, struct_size(cximsd, xormaps, nr_maps),
+	cximsd = devm_kzalloc(dev, flex_struct_size(cximsd, xormaps, nr_maps),
 			      GFP_KERNEL);
 	if (!cximsd)
 		return -ENOMEM;
@@ -168,7 +168,7 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
 		return -EINVAL;
 	}
 
-	expected_len = struct_size(cfmws, interleave_targets, ways);
+	expected_len = flex_struct_size(cfmws, interleave_targets, ways);
 
 	if (cfmws->header.length < expected_len) {
 		dev_err(dev, "CFMWS length %d less than expected %d\n",

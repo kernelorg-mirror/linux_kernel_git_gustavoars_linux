@@ -510,7 +510,8 @@ static int sf_pdma_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	pdma = devm_kzalloc(&pdev->dev, struct_size(pdma, chans, n_chans),
+	pdma = devm_kzalloc(&pdev->dev,
+			    flex_struct_size(pdma, chans, n_chans),
 			    GFP_KERNEL);
 	if (!pdma)
 		return -ENOMEM;

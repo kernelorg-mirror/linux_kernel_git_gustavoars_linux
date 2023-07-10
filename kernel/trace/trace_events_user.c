@@ -2163,7 +2163,7 @@ static int user_events_ref_add(struct user_event_file_info *info,
 				return i;
 	}
 
-	size = struct_size(refs, events, count + 1);
+	size = flex_struct_size(refs, events, count + 1);
 
 	new_refs = kzalloc(size, GFP_KERNEL_ACCOUNT);
 

@@ -154,7 +154,8 @@ static int sun6i_hwspinlock_probe(struct platform_device *pdev)
 		goto bank_fail;
 	}
 
-	priv->bank = devm_kzalloc(&pdev->dev, struct_size(priv->bank, lock, priv->nlocks),
+	priv->bank = devm_kzalloc(&pdev->dev,
+				  flex_struct_size(priv->bank, lock, priv->nlocks),
 				  GFP_KERNEL);
 	if (!priv->bank) {
 		err = -ENOMEM;

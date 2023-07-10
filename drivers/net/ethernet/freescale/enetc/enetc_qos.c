@@ -77,7 +77,7 @@ static int enetc_setup_taprio(struct enetc_ndev_priv *priv,
 	gcl_config = &cbd.gcl_conf;
 	gcl_len = admin_conf->num_entries;
 
-	data_size = struct_size(gcl_data, entry, gcl_len);
+	data_size = flex_struct_size(gcl_data, entry, gcl_len);
 	tmp = enetc_cbd_alloc_data_mem(priv->si, &cbd, data_size,
 				       &dma, (void *)&gcl_data);
 	if (!tmp)
@@ -794,7 +794,7 @@ static int enetc_streamgate_hw_set(struct enetc_ndev_priv *priv,
 
 	sgcl_config->acl_len = (sgi->num_entries - 1) & 0x3;
 
-	data_size = struct_size(sgcl_data, sgcl, sgi->num_entries);
+	data_size = flex_struct_size(sgcl_data, sgcl, sgi->num_entries);
 	tmp = enetc_cbd_alloc_data_mem(priv->si, &cbd, data_size,
 				       &dma, (void *)&sgcl_data);
 	if (!tmp)
@@ -1242,7 +1242,7 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
 		goto free_filter;
 	}
 
-	entries_size = struct_size(sgi, entries, entryg->gate.num_entries);
+	entries_size = flex_struct_size(sgi, entries, entryg->gate.num_entries);
 	sgi = kzalloc(entries_size, GFP_KERNEL);
 	if (!sgi) {
 		err = -ENOMEM;

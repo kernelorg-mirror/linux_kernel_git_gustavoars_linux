@@ -3821,7 +3821,8 @@ static struct dwc2_hcd_urb *dwc2_hcd_urb_alloc(struct dwc2_hsotg *hsotg,
 {
 	struct dwc2_hcd_urb *urb;
 
-	urb = kzalloc(struct_size(urb, iso_descs, iso_desc_count), mem_flags);
+	urb = kzalloc(flex_struct_size(urb, iso_descs, iso_desc_count),
+		      mem_flags);
 	if (urb)
 		urb->packet_count = iso_desc_count;
 	return urb;

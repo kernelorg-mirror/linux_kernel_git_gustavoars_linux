@@ -1159,7 +1159,9 @@ static int lpg_add_led(struct lpg *lpg, struct device_node *np)
 	else
 		num_channels = 1;
 
-	led = devm_kzalloc(lpg->dev, struct_size(led, channels, num_channels), GFP_KERNEL);
+	led = devm_kzalloc(lpg->dev,
+			   flex_struct_size(led, channels, num_channels),
+			   GFP_KERNEL);
 	if (!led)
 		return -ENOMEM;
 

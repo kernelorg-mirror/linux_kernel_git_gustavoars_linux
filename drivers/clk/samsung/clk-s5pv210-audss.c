@@ -74,7 +74,7 @@ static int s5pv210_audss_clk_probe(struct platform_device *pdev)
 		return PTR_ERR(reg_base);
 
 	clk_data = devm_kzalloc(&pdev->dev,
-				struct_size(clk_data, hws, AUDSS_MAX_CLKS),
+				flex_struct_size(clk_data, hws, AUDSS_MAX_CLKS),
 				GFP_KERNEL);
 
 	if (!clk_data)

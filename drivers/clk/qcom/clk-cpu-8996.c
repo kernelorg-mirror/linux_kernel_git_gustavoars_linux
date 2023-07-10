@@ -587,7 +587,7 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	int ret;
 
-	data = devm_kzalloc(dev, struct_size(data, hws, 2), GFP_KERNEL);
+	data = devm_kzalloc(dev, flex_struct_size(data, hws, 2), GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 

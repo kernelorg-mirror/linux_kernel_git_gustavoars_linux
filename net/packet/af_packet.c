@@ -1756,7 +1756,7 @@ static int fanout_add(struct sock *sk, struct fanout_args *args)
 			/* legacy PACKET_FANOUT_MAX */
 			args->max_num_members = 256;
 		err = -ENOMEM;
-		match = kvzalloc(struct_size(match, arr, args->max_num_members),
+		match = kvzalloc(flex_struct_size(match, arr, args->max_num_members),
 				 GFP_KERNEL);
 		if (!match)
 			goto out;

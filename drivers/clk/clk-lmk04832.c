@@ -1418,8 +1418,8 @@ static int lmk04832_probe(struct spi_device *spi)
 		goto err_disable_oscin;
 	}
 
-	lmk->clk_data = devm_kzalloc(lmk->dev, struct_size(lmk->clk_data, hws,
-							   info->num_channels),
+	lmk->clk_data = devm_kzalloc(lmk->dev, flex_struct_size(lmk->clk_data, hws,
+								info->num_channels),
 				     GFP_KERNEL);
 	if (!lmk->clk_data) {
 		ret = -ENOMEM;

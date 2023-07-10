@@ -183,7 +183,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
 	 * another range split. So add extra two slots here.
 	 */
 	nr_ranges += 2;
-	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+	cmem = vzalloc(flex_struct_size(cmem, ranges, nr_ranges));
 	if (!cmem)
 		return NULL;
 
@@ -309,7 +309,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
 	struct crash_memmap_data cmd;
 	struct crash_mem *cmem;
 
-	cmem = vzalloc(struct_size(cmem, ranges, 1));
+	cmem = vzalloc(flex_struct_size(cmem, ranges, 1));
 	if (!cmem)
 		return -ENOMEM;
 

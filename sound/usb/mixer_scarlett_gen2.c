@@ -1186,8 +1186,8 @@ static int scarlett2_usb(
 	struct scarlett2_data *private = mixer->private_data;
 	struct usb_device *dev = mixer->chip->dev;
 	struct scarlett2_usb_packet *req, *resp = NULL;
-	size_t req_buf_size = struct_size(req, data, req_size);
-	size_t resp_buf_size = struct_size(resp, data, resp_size);
+	size_t req_buf_size = flex_struct_size(req, data, req_size);
+	size_t resp_buf_size = flex_struct_size(resp, data, resp_size);
 	int err;
 
 	req = kmalloc(req_buf_size, GFP_KERNEL);

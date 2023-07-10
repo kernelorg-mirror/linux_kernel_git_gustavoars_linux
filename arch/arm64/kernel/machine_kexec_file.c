@@ -51,7 +51,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
 	for_each_mem_range(i, &start, &end)
 		nr_ranges++;
 
-	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
+	cmem = kmalloc(flex_struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
 	if (!cmem)
 		return -ENOMEM;
 

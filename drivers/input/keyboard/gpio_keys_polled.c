@@ -246,7 +246,8 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	bdev = devm_kzalloc(dev, struct_size(bdev, data, pdata->nbuttons),
+	bdev = devm_kzalloc(dev,
+			    flex_struct_size(bdev, data, pdata->nbuttons),
 			    GFP_KERNEL);
 	if (!bdev) {
 		dev_err(dev, "no memory for private data\n");

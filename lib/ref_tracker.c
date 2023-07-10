@@ -34,7 +34,7 @@ ref_tracker_get_stats(struct ref_tracker_dir *dir, unsigned int limit)
 	struct ref_tracker_dir_stats *stats;
 	struct ref_tracker *tracker;
 
-	stats = kmalloc(struct_size(stats, stacks, limit),
+	stats = kmalloc(flex_struct_size(stats, stacks, limit),
 			GFP_NOWAIT | __GFP_NOWARN);
 	if (!stats)
 		return ERR_PTR(-ENOMEM);

@@ -167,7 +167,7 @@ static int a2mp_discover_req(struct amp_mgr *mgr, struct sk_buff *skb,
 			num_ctrl++;
 	}
 
-	len = struct_size(rsp, cl, num_ctrl);
+	len = flex_struct_size(rsp, cl, num_ctrl);
 	rsp = kmalloc(len, GFP_ATOMIC);
 	if (!rsp) {
 		read_unlock(&hci_dev_list_lock);

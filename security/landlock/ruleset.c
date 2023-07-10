@@ -29,7 +29,7 @@ static struct landlock_ruleset *create_ruleset(const u32 num_layers)
 	struct landlock_ruleset *new_ruleset;
 
 	new_ruleset =
-		kzalloc(struct_size(new_ruleset, fs_access_masks, num_layers),
+		kzalloc(flex_struct_size(new_ruleset, fs_access_masks, num_layers),
 			GFP_KERNEL_ACCOUNT);
 	if (!new_ruleset)
 		return ERR_PTR(-ENOMEM);
@@ -85,7 +85,7 @@ create_rule(struct landlock_object *const object,
 	} else {
 		new_num_layers = num_layers;
 	}
-	new_rule = kzalloc(struct_size(new_rule, layers, new_num_layers),
+	new_rule = kzalloc(flex_struct_size(new_rule, layers, new_num_layers),
 			   GFP_KERNEL_ACCOUNT);
 	if (!new_rule)
 		return ERR_PTR(-ENOMEM);

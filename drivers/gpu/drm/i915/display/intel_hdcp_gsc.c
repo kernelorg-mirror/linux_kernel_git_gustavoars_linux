@@ -464,7 +464,7 @@ static int gsc_hdcp_verify_mprime(struct device *dev,
 		return -ENODEV;
 	}
 
-	cmd_size = struct_size(verify_mprime_in, streams, data->k);
+	cmd_size = flex_struct_size(verify_mprime_in, streams, data->k);
 	if (cmd_size == SIZE_MAX)
 		return -EINVAL;
 

@@ -124,7 +124,7 @@ static int nh_notifier_mpath_info_init(struct nh_notifier_info *info,
 	int i;
 
 	info->type = NH_NOTIFIER_INFO_TYPE_GRP;
-	info->nh_grp = kzalloc(struct_size(info->nh_grp, nh_entries, num_nh),
+	info->nh_grp = kzalloc(flex_struct_size(info->nh_grp, nh_entries, num_nh),
 			       GFP_KERNEL);
 	if (!info->nh_grp)
 		return -ENOMEM;
@@ -155,7 +155,7 @@ static int nh_notifier_res_table_info_init(struct nh_notifier_info *info,
 	u16 i;
 
 	info->type = NH_NOTIFIER_INFO_TYPE_RES_TABLE;
-	size = struct_size(info->nh_res_table, nhs, num_nh_buckets);
+	size = flex_struct_size(info->nh_res_table, nhs, num_nh_buckets);
 	info->nh_res_table = __vmalloc(size, GFP_KERNEL | __GFP_ZERO |
 				       __GFP_NOWARN);
 	if (!info->nh_res_table)
@@ -533,7 +533,7 @@ static struct nh_group *nexthop_grp_alloc(u16 num_nh)
 {
 	struct nh_group *nhg;
 
-	nhg = kzalloc(struct_size(nhg, nh_entries, num_nh), GFP_KERNEL);
+	nhg = kzalloc(flex_struct_size(nhg, nh_entries, num_nh), GFP_KERNEL);
 	if (nhg)
 		nhg->num_nh = num_nh;
 
@@ -549,7 +549,7 @@ nexthop_res_table_alloc(struct net *net, u32 nhg_id, struct nh_config *cfg)
 	struct nh_res_table *res_table;
 	unsigned long size;
 
-	size = struct_size(res_table, nh_buckets, num_nh_buckets);
+	size = flex_struct_size(res_table, nh_buckets, num_nh_buckets);
 	res_table = __vmalloc(size, GFP_KERNEL | __GFP_ZERO | __GFP_NOWARN);
 	if (!res_table)
 		return NULL;

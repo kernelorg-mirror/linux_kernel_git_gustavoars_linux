@@ -418,8 +418,8 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
 	rpi->firmware = firmware;
 	platform_set_drvdata(pdev, rpi);
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws,
-						 RPI_FIRMWARE_NUM_CLK_ID),
+	clk_data = devm_kzalloc(dev, flex_struct_size(clk_data, hws,
+						      RPI_FIRMWARE_NUM_CLK_ID),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

@@ -1778,7 +1778,7 @@ static int wx_alloc_q_vector(struct wx *wx,
 	/* note this will allocate space for the ring structure as well! */
 	ring_count = txr_count + rxr_count;
 
-	q_vector = kzalloc(struct_size(q_vector, ring, ring_count),
+	q_vector = kzalloc(flex_struct_size(q_vector, ring, ring_count),
 			   GFP_KERNEL);
 	if (!q_vector)
 		return -ENOMEM;

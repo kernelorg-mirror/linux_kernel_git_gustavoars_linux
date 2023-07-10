@@ -2310,7 +2310,8 @@ static int stm32_rcc_clock_init(struct device *dev, void __iomem *base,
 
 	max_binding =  data->maxbinding;
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, max_binding),
+	clk_data = devm_kzalloc(dev,
+				flex_struct_size(clk_data, hws, max_binding),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

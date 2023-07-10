@@ -234,7 +234,8 @@ static int __init combiner_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	combiner = devm_kzalloc(&pdev->dev, struct_size(combiner, regs, nregs),
+	combiner = devm_kzalloc(&pdev->dev,
+				flex_struct_size(combiner, regs, nregs),
 				GFP_KERNEL);
 	if (!combiner)
 		return -ENOMEM;

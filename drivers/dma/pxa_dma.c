@@ -742,7 +742,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
 	dma_addr_t dma;
 	int i;
 
-	sw_desc = kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc),
+	sw_desc = kzalloc(flex_struct_size(sw_desc, hw_desc, nb_hw_desc),
 			  GFP_NOWAIT);
 	if (!sw_desc)
 		return NULL;

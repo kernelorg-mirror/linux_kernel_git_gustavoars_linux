@@ -1681,7 +1681,7 @@ static struct ndis_80211_pmkid *get_device_pmkids(struct usbnet *usbdev)
 	int len, ret, max_pmkids;
 
 	max_pmkids = priv->wdev.wiphy->max_num_pmkids;
-	len = struct_size(pmkids, bssid_info, max_pmkids);
+	len = flex_struct_size(pmkids, bssid_info, max_pmkids);
 
 	pmkids = kzalloc(len, GFP_KERNEL);
 	if (!pmkids)
@@ -1714,7 +1714,7 @@ static int set_device_pmkids(struct usbnet *usbdev,
 	int ret, len, num_pmkids;
 
 	num_pmkids = le32_to_cpu(pmkids->bssid_info_count);
-	len = struct_size(pmkids, bssid_info, num_pmkids);
+	len = flex_struct_size(pmkids, bssid_info, num_pmkids);
 	pmkids->length = cpu_to_le32(len);
 
 	debug_print_pmkids(usbdev, pmkids, __func__);
@@ -1760,7 +1760,7 @@ static struct ndis_80211_pmkid *remove_pmkid(struct usbnet *usbdev,
 		pmkids->bssid_info[i] = pmkids->bssid_info[i + 1];
 
 	count--;
-	pmkids->length = cpu_to_le32(struct_size(pmkids, bssid_info, count));
+	pmkids->length = cpu_to_le32(flex_struct_size(pmkids, bssid_info, count));
 	pmkids->bssid_info_count = cpu_to_le32(count);
 
 	return pmkids;
@@ -1803,7 +1803,7 @@ static struct ndis_80211_pmkid *update_pmkid(struct usbnet *usbdev,
 	}
 
 	/* add new pmkid */
-	newlen = struct_size(pmkids, bssid_info, count + 1);
+	newlen = flex_struct_size(pmkids, bssid_info, count + 1);
 
 	new_pmkids = krealloc(pmkids, newlen, GFP_KERNEL);
 	if (!new_pmkids) {

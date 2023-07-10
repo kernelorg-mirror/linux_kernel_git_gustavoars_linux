@@ -1044,7 +1044,7 @@ static int hptiop_queuecommand_lck(struct scsi_cmnd *scp)
 	req->channel = scp->device->channel;
 	req->target = scp->device->id;
 	req->lun = scp->device->lun;
-	req->header.size = cpu_to_le32(struct_size(req, sg_list, sg_count));
+	req->header.size = cpu_to_le32(flex_struct_size(req, sg_list, sg_count));
 
 	memcpy(req->cdb, scp->cmnd, sizeof(req->cdb));
 	hba->ops->post_req(hba, _req);

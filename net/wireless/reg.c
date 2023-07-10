@@ -449,7 +449,7 @@ reg_copy_regd(const struct ieee80211_regdomain *src_regd)
 	struct ieee80211_regdomain *regd;
 	unsigned int i;
 
-	regd = kzalloc(struct_size(regd, reg_rules, src_regd->n_reg_rules),
+	regd = kzalloc(flex_struct_size(regd, reg_rules, src_regd->n_reg_rules),
 		       GFP_KERNEL);
 	if (!regd)
 		return ERR_PTR(-ENOMEM);
@@ -930,7 +930,7 @@ static int regdb_query_country(const struct fwdb_header *db,
 	struct ieee80211_regdomain *regdom;
 	unsigned int i;
 
-	regdom = kzalloc(struct_size(regdom, reg_rules, coll->n_rules),
+	regdom = kzalloc(flex_struct_size(regdom, reg_rules, coll->n_rules),
 			 GFP_KERNEL);
 	if (!regdom)
 		return -ENOMEM;
@@ -1528,7 +1528,7 @@ regdom_intersect(const struct ieee80211_regdomain *rd1,
 	if (!num_rules)
 		return NULL;
 
-	rd = kzalloc(struct_size(rd, reg_rules, num_rules), GFP_KERNEL);
+	rd = kzalloc(flex_struct_size(rd, reg_rules, num_rules), GFP_KERNEL);
 	if (!rd)
 		return NULL;
 

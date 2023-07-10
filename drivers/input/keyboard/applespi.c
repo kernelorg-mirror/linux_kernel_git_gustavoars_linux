@@ -1518,7 +1518,7 @@ static void applespi_got_data(struct applespi_data *applespi)
 		size_t tp_len;
 
 		tp = &message->touchpad;
-		tp_len = struct_size(tp, fingers, tp->number_of_fingers);
+		tp_len = flex_struct_size(tp, fingers, tp->number_of_fingers);
 
 		if (le16_to_cpu(message->length) + 2 != tp_len) {
 			dev_warn_ratelimited(&applespi->spi->dev,

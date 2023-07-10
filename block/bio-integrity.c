@@ -57,7 +57,8 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
 		return ERR_PTR(-EOPNOTSUPP);
 
 	if (!bs || !mempool_initialized(&bs->bio_integrity_pool)) {
-		bip = kmalloc(struct_size(bip, bip_inline_vecs, nr_vecs), gfp_mask);
+		bip = kmalloc(flex_struct_size(bip, bip_inline_vecs, nr_vecs),
+			      gfp_mask);
 		inline_vecs = nr_vecs;
 	} else {
 		bip = mempool_alloc(&bs->bio_integrity_pool, gfp_mask);

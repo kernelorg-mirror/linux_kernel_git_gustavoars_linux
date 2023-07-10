@@ -138,7 +138,7 @@ int v3d_perfmon_create_ioctl(struct drm_device *dev, void *data,
 			return -EINVAL;
 	}
 
-	perfmon = kzalloc(struct_size(perfmon, values, req->ncounters),
+	perfmon = kzalloc(flex_struct_size(perfmon, values, req->ncounters),
 			  GFP_KERNEL);
 	if (!perfmon)
 		return -ENOMEM;

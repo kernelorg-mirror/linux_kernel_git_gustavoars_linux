@@ -382,7 +382,7 @@ static int get_clock_voltage_dependency_table(struct pp_hwmgr *hwmgr,
 	unsigned long i;
 	struct phm_clock_voltage_dependency_table *dep_table;
 
-	dep_table = kzalloc(struct_size(dep_table, entries, table->ucNumEntries),
+	dep_table = kzalloc(flex_struct_size(dep_table, entries, table->ucNumEntries),
 			    GFP_KERNEL);
 	if (NULL == dep_table)
 		return -ENOMEM;
@@ -409,7 +409,8 @@ static int get_valid_clk(struct pp_hwmgr *hwmgr,
 	unsigned long i;
 	struct phm_clock_array *clock_table;
 
-	clock_table = kzalloc(struct_size(clock_table, values, table->count), GFP_KERNEL);
+	clock_table = kzalloc(flex_struct_size(clock_table, values, table->count),
+			      GFP_KERNEL);
 	if (!clock_table)
 		return -ENOMEM;
 
@@ -1209,7 +1210,7 @@ static int get_uvd_clock_voltage_limit_table(struct pp_hwmgr *hwmgr,
 	unsigned long i;
 	struct phm_uvd_clock_voltage_dependency_table *uvd_table;
 
-	uvd_table = kzalloc(struct_size(uvd_table, entries, table->numEntries),
+	uvd_table = kzalloc(flex_struct_size(uvd_table, entries, table->numEntries),
 			    GFP_KERNEL);
 	if (!uvd_table)
 		return -ENOMEM;
@@ -1239,7 +1240,7 @@ static int get_vce_clock_voltage_limit_table(struct pp_hwmgr *hwmgr,
 	unsigned long i;
 	struct phm_vce_clock_voltage_dependency_table *vce_table = NULL;
 
-	vce_table = kzalloc(struct_size(vce_table, entries, table->numEntries),
+	vce_table = kzalloc(flex_struct_size(vce_table, entries, table->numEntries),
 			    GFP_KERNEL);
 	if (!vce_table)
 		return -ENOMEM;
@@ -1267,7 +1268,7 @@ static int get_samu_clock_voltage_limit_table(struct pp_hwmgr *hwmgr,
 	unsigned long i;
 	struct phm_samu_clock_voltage_dependency_table *samu_table;
 
-	samu_table = kzalloc(struct_size(samu_table, entries, table->numEntries),
+	samu_table = kzalloc(flex_struct_size(samu_table, entries, table->numEntries),
 			     GFP_KERNEL);
 	if (!samu_table)
 		return -ENOMEM;
@@ -1292,7 +1293,7 @@ static int get_acp_clock_voltage_limit_table(struct pp_hwmgr *hwmgr,
 	unsigned long i;
 	struct phm_acp_clock_voltage_dependency_table *acp_table;
 
-	acp_table = kzalloc(struct_size(acp_table, entries, table->numEntries),
+	acp_table = kzalloc(flex_struct_size(acp_table, entries, table->numEntries),
 			    GFP_KERNEL);
 	if (!acp_table)
 		return -ENOMEM;
@@ -1487,7 +1488,7 @@ static int get_cac_leakage_table(struct pp_hwmgr *hwmgr,
 	if (!hwmgr || !table || !ptable)
 		return -EINVAL;
 
-	cac_leakage_table = kzalloc(struct_size(cac_leakage_table, entries, table->ucNumEntries),
+	cac_leakage_table = kzalloc(flex_struct_size(cac_leakage_table, entries, table->ucNumEntries),
 				    GFP_KERNEL);
 	if (!cac_leakage_table)
 		return -ENOMEM;
@@ -1625,7 +1626,7 @@ static int init_phase_shedding_table(struct pp_hwmgr *hwmgr,
 			unsigned long i;
 
 
-			table = kzalloc(struct_size(table, entries, ptable->ucNumEntries),
+			table = kzalloc(flex_struct_size(table, entries, ptable->ucNumEntries),
 					GFP_KERNEL);
 			if (!table)
 				return -ENOMEM;

@@ -640,7 +640,8 @@ static int zynqmp_ipi_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	pdata = devm_kzalloc(dev, struct_size(pdata, ipi_mboxes, num_mboxes),
+	pdata = devm_kzalloc(dev,
+			     flex_struct_size(pdata, ipi_mboxes, num_mboxes),
 			     GFP_KERNEL);
 	if (!pdata)
 		return -ENOMEM;

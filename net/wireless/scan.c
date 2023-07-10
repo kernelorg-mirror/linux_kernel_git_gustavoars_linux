@@ -838,7 +838,7 @@ static int cfg80211_scan_6ghz(struct cfg80211_registered_device *rdev)
 		spin_unlock_bh(&rdev->bss_lock);
 	}
 
-	request = kzalloc(struct_size(request, channels, n_channels) +
+	request = kzalloc(flex_struct_size(request, channels, n_channels) +
 			  sizeof(*request->scan_6ghz_params) * count +
 			  sizeof(*request->ssids) * rdev_req->n_ssids,
 			  GFP_KERNEL);
@@ -986,7 +986,7 @@ int cfg80211_scan(struct cfg80211_registered_device *rdev)
 	if (!n_channels)
 		return cfg80211_scan_6ghz(rdev);
 
-	request = kzalloc(struct_size(request, channels, n_channels),
+	request = kzalloc(flex_struct_size(request, channels, n_channels),
 			  GFP_KERNEL);
 	if (!request)
 		return -ENOMEM;
@@ -2433,7 +2433,7 @@ cfg80211_defrag_mle(const struct element *mle, const u8 *ie, size_t ielen,
 		buf_len += elem->datalen;
 	}
 
-	res = kzalloc(struct_size(res, data, buf_len), gfp);
+	res = kzalloc(flex_struct_size(res, data, buf_len), gfp);
 	if (!res)
 		return NULL;
 

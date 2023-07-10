@@ -1885,7 +1885,7 @@ static int nfit_test0_alloc(struct nfit_test *t)
 			+ offsetof(struct acpi_nfit_control_region,
 					window_size) * NUM_DCR
 			+ sizeof(struct acpi_nfit_data_region) * NUM_BDW
-			+ struct_size(flush, hint_address, NUM_HINTS) * NUM_DCR
+			+ flex_struct_size(flush, hint_address, NUM_HINTS) * NUM_DCR
 			+ sizeof(struct acpi_nfit_capabilities);
 	int i;
 

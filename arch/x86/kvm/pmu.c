@@ -881,7 +881,7 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
 	if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
 		return -E2BIG;
 
-	size = struct_size(filter, events, tmp.nevents);
+	size = flex_struct_size(filter, events, tmp.nevents);
 	filter = kzalloc(size, GFP_KERNEL_ACCOUNT);
 	if (!filter)
 		return -ENOMEM;

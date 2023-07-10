@@ -212,7 +212,7 @@ static int nvme_pr_read_keys(struct block_device *bdev,
 	 * Assume we are using 128-bit host IDs and allocate a buffer large
 	 * enough to get enough keys to fill the return keys buffer.
 	 */
-	rse_len = struct_size(rse, regctl_eds, num_keys);
+	rse_len = flex_struct_size(rse, regctl_eds, num_keys);
 	rse = kzalloc(rse_len, GFP_KERNEL);
 	if (!rse)
 		return -ENOMEM;
@@ -265,7 +265,7 @@ get_num_regs:
 		return 0;
 	}
 
-	rse_len = struct_size(rse, regctl_eds, num_regs);
+	rse_len = flex_struct_size(rse, regctl_eds, num_regs);
 	rse = kzalloc(rse_len, GFP_KERNEL);
 	if (!rse)
 		return -ENOMEM;

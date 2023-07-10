@@ -481,7 +481,7 @@ static int s3c64xx_eint_gpio_init(struct samsung_pinctrl_drv_data *d)
 		++nr_domains;
 	}
 
-	data = devm_kzalloc(dev, struct_size(data, domains, nr_domains),
+	data = devm_kzalloc(dev, flex_struct_size(data, domains, nr_domains),
 			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;

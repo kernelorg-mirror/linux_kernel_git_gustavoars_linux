@@ -191,7 +191,8 @@ struct visconti_clk_provider *visconti_init_clk(struct device *dev,
 	struct visconti_clk_provider *ctx;
 	int i;
 
-	ctx = devm_kzalloc(dev, struct_size(ctx, clk_data.hws, nr_clks), GFP_KERNEL);
+	ctx = devm_kzalloc(dev, flex_struct_size(ctx, clk_data.hws, nr_clks),
+			   GFP_KERNEL);
 	if (!ctx)
 		return ERR_PTR(-ENOMEM);
 

@@ -102,7 +102,9 @@ static int pericom8250_probe(struct pci_dev *pdev, const struct pci_device_id *i
 	else
 		nr = 1;
 
-	pericom = devm_kzalloc(&pdev->dev, struct_size(pericom, line, nr), GFP_KERNEL);
+	pericom = devm_kzalloc(&pdev->dev,
+			       flex_struct_size(pericom, line, nr),
+			       GFP_KERNEL);
 	if (!pericom)
 		return -ENOMEM;
 

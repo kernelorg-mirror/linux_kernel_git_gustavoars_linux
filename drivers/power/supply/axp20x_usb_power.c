@@ -552,7 +552,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
 	axp_data = of_device_get_match_data(&pdev->dev);
 
 	power = devm_kzalloc(&pdev->dev,
-			     struct_size(power, irqs, axp_data->num_irq_names),
+			     flex_struct_size(power, irqs, axp_data->num_irq_names),
 			     GFP_KERNEL);
 	if (!power)
 		return -ENOMEM;

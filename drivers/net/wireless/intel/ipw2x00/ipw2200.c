@@ -1221,7 +1221,7 @@ static struct ipw_fw_error *ipw_alloc_error_log(struct ipw_priv *priv)
 	u32 base = ipw_read32(priv, IPW_ERROR_LOG);
 	u32 elem_len = ipw_read_reg32(priv, base);
 
-	error = kmalloc(size_add(struct_size(error, elem, elem_len),
+	error = kmalloc(size_add(flex_struct_size(error, elem, elem_len),
 				 array_size(sizeof(*error->log), log_len)),
 			GFP_ATOMIC);
 	if (!error) {

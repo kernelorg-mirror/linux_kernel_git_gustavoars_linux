@@ -17,8 +17,8 @@ static size_t xskq_get_ring_size(struct xsk_queue *q, bool umem_queue)
 	struct xdp_rxtx_ring *rxtx_ring;
 
 	if (umem_queue)
-		return struct_size(umem_ring, desc, q->nentries);
-	return struct_size(rxtx_ring, desc, q->nentries);
+		return flex_struct_size(umem_ring, desc, q->nentries);
+	return flex_struct_size(rxtx_ring, desc, q->nentries);
 }
 
 struct xsk_queue *xskq_create(u32 nentries, bool umem_queue)

@@ -318,7 +318,7 @@ static int en7523_clk_probe(struct platform_device *pdev)
 		return PTR_ERR(np_base);
 
 	clk_data = devm_kzalloc(&pdev->dev,
-				struct_size(clk_data, hws, EN7523_NUM_CLOCKS),
+				flex_struct_size(clk_data, hws, EN7523_NUM_CLOCKS),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

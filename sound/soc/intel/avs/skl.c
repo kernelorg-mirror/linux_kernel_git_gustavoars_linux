@@ -22,7 +22,7 @@ skl_enable_logs(struct avs_dev *adev, enum avs_log_enable enable, u32 aging_peri
 
 	if (fls_long(resource_mask) > num_cores)
 		return -EINVAL;
-	size = struct_size(info, logs_core, num_cores);
+	size = flex_struct_size(info, logs_core, num_cores);
 	info = kzalloc(size, GFP_KERNEL);
 	if (!info)
 		return -ENOMEM;

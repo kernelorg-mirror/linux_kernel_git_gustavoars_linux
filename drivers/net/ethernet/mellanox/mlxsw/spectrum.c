@@ -2643,8 +2643,9 @@ static int mlxsw_sp_traps_init(struct mlxsw_sp *mlxsw_sp)
 	if (!MLXSW_CORE_RES_VALID(mlxsw_sp->core, MAX_CPU_POLICERS))
 		return -EIO;
 	max_policers = MLXSW_CORE_RES_GET(mlxsw_sp->core, MAX_CPU_POLICERS);
-	trap = kzalloc(struct_size(trap, policers_usage,
-				   BITS_TO_LONGS(max_policers)), GFP_KERNEL);
+	trap = kzalloc(flex_struct_size(trap, policers_usage,
+					BITS_TO_LONGS(max_policers)),
+		       GFP_KERNEL);
 	if (!trap)
 		return -ENOMEM;
 	trap->max_policers = max_policers;

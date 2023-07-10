@@ -65,7 +65,7 @@ static struct linear_conf *linear_conf(struct mddev *mddev, int raid_disks)
 	struct md_rdev *rdev;
 	int i, cnt;
 
-	conf = kzalloc(struct_size(conf, disks, raid_disks), GFP_KERNEL);
+	conf = kzalloc(flex_struct_size(conf, disks, raid_disks), GFP_KERNEL);
 	if (!conf)
 		return NULL;
 

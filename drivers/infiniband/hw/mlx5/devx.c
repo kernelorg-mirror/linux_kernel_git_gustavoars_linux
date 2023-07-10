@@ -1814,8 +1814,8 @@ static int UVERBS_HANDLER(MLX5_IB_METHOD_DEVX_OBJ_ASYNC_QUERY)(
 		return -EAGAIN;
 	}
 
-	async_data = kvzalloc(struct_size(async_data, hdr.out_data,
-					  cmd_out_len), GFP_KERNEL);
+	async_data = kvzalloc(flex_struct_size(async_data, hdr.out_data,
+					       cmd_out_len), GFP_KERNEL);
 	if (!async_data) {
 		err = -ENOMEM;
 		goto sub_bytes;

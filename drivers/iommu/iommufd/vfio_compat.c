@@ -398,17 +398,17 @@ static int iommufd_fill_cap_iova(struct iommufd_ioas *ioas,
 			continue;
 		range.start = span.start_hole;
 		range.end = span.last_hole;
-		if (avail >= struct_size(&cap_iovas, iova_ranges,
-					 cap_iovas.nr_iovas + 1) &&
+		if (avail >= flex_struct_size(&cap_iovas, iova_ranges,
+					      cap_iovas.nr_iovas + 1) &&
 		    copy_to_user(&ucap_iovas->iova_ranges[cap_iovas.nr_iovas],
 				 &range, sizeof(range)))
 			return -EFAULT;
 		cap_iovas.nr_iovas++;
 	}
-	if (avail >= struct_size(&cap_iovas, iova_ranges, cap_iovas.nr_iovas) &&
+	if (avail >= flex_struct_size(&cap_iovas, iova_ranges, cap_iovas.nr_iovas) &&
 	    copy_to_user(ucap_iovas, &cap_iovas, sizeof(cap_iovas)))
 		return -EFAULT;
-	return struct_size(&cap_iovas, iova_ranges, cap_iovas.nr_iovas);
+	return flex_struct_size(&cap_iovas, iova_ranges, cap_iovas.nr_iovas);
 }
 
 static int iommufd_fill_cap_dma_avail(struct iommufd_ioas *ioas,

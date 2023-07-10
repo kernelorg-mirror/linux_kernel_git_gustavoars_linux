@@ -134,7 +134,7 @@ static int ti_syscon_gate_clk_probe(struct platform_device *pdev)
 				     "must specify a parent clock\n");
 	}
 
-	hw_data = devm_kzalloc(dev, struct_size(hw_data, hws, num_clks),
+	hw_data = devm_kzalloc(dev, flex_struct_size(hw_data, hws, num_clks),
 			       GFP_KERNEL);
 	if (!hw_data)
 		return -ENOMEM;

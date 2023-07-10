@@ -102,8 +102,8 @@ static int q6core_callback(struct apr_device *adev, struct apr_resp_pkt *data)
 		fwk = data->payload;
 
 		core->fwk_version = kmemdup(data->payload,
-					    struct_size(fwk, svc_api_info,
-							fwk->num_services),
+					    flex_struct_size(fwk, svc_api_info,
+							     fwk->num_services),
 					    GFP_ATOMIC);
 		if (!core->fwk_version)
 			return -ENOMEM;
@@ -119,8 +119,8 @@ static int q6core_callback(struct apr_device *adev, struct apr_resp_pkt *data)
 		v = data->payload;
 
 		core->svc_version = kmemdup(data->payload,
-					    struct_size(v, svc_api_info,
-							v->num_services),
+					    flex_struct_size(v, svc_api_info,
+							     v->num_services),
 					    GFP_ATOMIC);
 		if (!core->svc_version)
 			return -ENOMEM;

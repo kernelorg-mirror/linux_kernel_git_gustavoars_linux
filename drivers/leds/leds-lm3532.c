@@ -675,8 +675,9 @@ static int lm3532_probe(struct i2c_client *client)
 		return -ENODEV;
 	}
 
-	drvdata = devm_kzalloc(&client->dev, struct_size(drvdata, leds, count),
-			   GFP_KERNEL);
+	drvdata = devm_kzalloc(&client->dev,
+			       flex_struct_size(drvdata, leds, count),
+			       GFP_KERNEL);
 	if (drvdata == NULL)
 		return -ENOMEM;
 

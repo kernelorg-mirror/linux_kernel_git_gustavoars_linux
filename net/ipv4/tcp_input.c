@@ -6885,7 +6885,7 @@ static void tcp_reqsk_record_syn(const struct sock *sk,
 			mac_hdrlen = 0;
 		}
 
-		saved_syn = kmalloc(struct_size(saved_syn, data, len),
+		saved_syn = kmalloc(flex_struct_size(saved_syn, data, len),
 				    GFP_ATOMIC);
 		if (saved_syn) {
 			saved_syn->mac_hdrlen = mac_hdrlen;

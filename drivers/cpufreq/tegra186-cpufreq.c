@@ -222,7 +222,7 @@ static int tegra186_cpufreq_probe(struct platform_device *pdev)
 	unsigned int i = 0, err;
 
 	data = devm_kzalloc(&pdev->dev,
-			    struct_size(data, clusters, TEGRA186_NUM_CLUSTERS),
+			    flex_struct_size(data, clusters, TEGRA186_NUM_CLUSTERS),
 			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;

@@ -321,7 +321,7 @@ static int eps_cpu_init(struct cpufreq_policy *policy)
 		states = 2;
 
 	/* Allocate private data and frequency table for current cpu */
-	centaur = kzalloc(struct_size(centaur, freq_table, states + 1),
+	centaur = kzalloc(flex_struct_size(centaur, freq_table, states + 1),
 			  GFP_KERNEL);
 	if (!centaur)
 		return -ENOMEM;

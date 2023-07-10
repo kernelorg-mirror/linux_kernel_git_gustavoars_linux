@@ -35,7 +35,7 @@ static int clk_dvp_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, dvp);
 
 	dvp->data = devm_kzalloc(&pdev->dev,
-				 struct_size(dvp->data, hws, NR_CLOCKS),
+				 flex_struct_size(dvp->data, hws, NR_CLOCKS),
 				 GFP_KERNEL);
 	if (!dvp->data)
 		return -ENOMEM;

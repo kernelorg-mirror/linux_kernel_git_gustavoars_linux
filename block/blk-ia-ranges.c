@@ -265,7 +265,7 @@ disk_alloc_independent_access_ranges(struct gendisk *disk, int nr_ia_ranges)
 {
 	struct blk_independent_access_ranges *iars;
 
-	iars = kzalloc_node(struct_size(iars, ia_range, nr_ia_ranges),
+	iars = kzalloc_node(flex_struct_size(iars, ia_range, nr_ia_ranges),
 			    GFP_KERNEL, disk->queue->node);
 	if (iars)
 		iars->nr_ia_ranges = nr_ia_ranges;

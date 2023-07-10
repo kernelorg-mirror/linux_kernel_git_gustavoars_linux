@@ -217,7 +217,8 @@ static int loongson2_clk_probe(struct platform_device *pdev)
 	if (IS_ERR(loongson2_pll_base))
 		return PTR_ERR(loongson2_pll_base);
 
-	clk_hw_data = devm_kzalloc(dev, struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
+	clk_hw_data = devm_kzalloc(dev,
+					flex_struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
 					GFP_KERNEL);
 	if (WARN_ON(!clk_hw_data))
 		return -ENOMEM;

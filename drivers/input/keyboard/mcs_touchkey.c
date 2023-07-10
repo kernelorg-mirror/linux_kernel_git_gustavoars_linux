@@ -109,7 +109,7 @@ static int mcs_touchkey_probe(struct i2c_client *client)
 		return -EINVAL;
 	}
 
-	data = kzalloc(struct_size(data, keycodes, pdata->key_maxval + 1),
+	data = kzalloc(flex_struct_size(data, keycodes, pdata->key_maxval + 1),
 		       GFP_KERNEL);
 	input_dev = input_allocate_device();
 	if (!data || !input_dev) {

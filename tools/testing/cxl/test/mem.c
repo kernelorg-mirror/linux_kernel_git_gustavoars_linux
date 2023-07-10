@@ -226,7 +226,7 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
 	if (cmd->size_in != sizeof(log_type))
 		return -EINVAL;
 
-	if (cmd->size_out < struct_size(pl, records, CXL_TEST_EVENT_CNT))
+	if (cmd->size_out < flex_struct_size(pl, records, CXL_TEST_EVENT_CNT))
 		return -EINVAL;
 
 	log_type = *((u8 *)cmd->payload_in);
@@ -1007,7 +1007,8 @@ cxl_get_injected_po(struct cxl_dev_state *cxlds, u64 offset, u64 length)
 	int nr_records = 0;
 	u64 dpa;
 
-	po = kzalloc(struct_size(po, record, poison_inject_dev_max), GFP_KERNEL);
+	po = kzalloc(flex_struct_size(po, record, poison_inject_dev_max),
+		     GFP_KERNEL);
 	if (!po)
 		return NULL;
 
@@ -1045,8 +1046,8 @@ static int mock_get_poison(struct cxl_dev_state *cxlds,
 	if (!po)
 		return -ENOMEM;
 	nr_records = le16_to_cpu(po->count);
-	memcpy(cmd->payload_out, po, struct_size(po, record, nr_records));
-	cmd->size_out = struct_size(po, record, nr_records);
+	memcpy(cmd->payload_out, po, flex_struct_size(po, record, nr_records));
+	cmd->size_out = flex_struct_size(po, record, nr_records);
 	kfree(po);
 
 	return 0;

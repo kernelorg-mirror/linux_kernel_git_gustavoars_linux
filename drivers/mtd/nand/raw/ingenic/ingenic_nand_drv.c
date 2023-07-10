@@ -489,7 +489,8 @@ static int ingenic_nand_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
-	nfc = devm_kzalloc(dev, struct_size(nfc, cs, num_banks), GFP_KERNEL);
+	nfc = devm_kzalloc(dev, flex_struct_size(nfc, cs, num_banks),
+			   GFP_KERNEL);
 	if (!nfc)
 		return -ENOMEM;
 

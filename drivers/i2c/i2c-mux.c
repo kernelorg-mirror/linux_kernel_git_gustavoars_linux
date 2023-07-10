@@ -245,7 +245,7 @@ struct i2c_mux_core *i2c_mux_alloc(struct i2c_adapter *parent,
 	struct i2c_mux_core *muxc;
 	size_t mux_size;
 
-	mux_size = struct_size(muxc, adapter, max_adapters);
+	mux_size = flex_struct_size(muxc, adapter, max_adapters);
 	muxc = devm_kzalloc(dev, size_add(mux_size, sizeof_priv), GFP_KERNEL);
 	if (!muxc)
 		return NULL;

@@ -243,7 +243,7 @@ ice_sched_remove_elems(struct ice_hw *hw, struct ice_sched_node *parent,
 	u16 buf_size;
 	int status;
 
-	buf_size = struct_size(buf, teid, num_nodes);
+	buf_size = flex_struct_size(buf, teid, num_nodes);
 	buf = devm_kzalloc(ice_hw_to_dev(hw), buf_size, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -894,7 +894,7 @@ ice_sched_add_elems(struct ice_port_info *pi, struct ice_sched_node *tc_node,
 	int status = 0;
 	u32 teid;
 
-	buf_size = struct_size(buf, generic, num_nodes);
+	buf_size = flex_struct_size(buf, generic, num_nodes);
 	buf = devm_kzalloc(ice_hw_to_dev(hw), buf_size, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -2236,7 +2236,7 @@ ice_sched_move_nodes(struct ice_port_info *pi, struct ice_sched_node *parent,
 	    hw->max_children[parent->tx_sched_layer])
 		return -ENOSPC;
 
-	buf_len = struct_size(buf, teid, 1);
+	buf_len = flex_struct_size(buf, teid, 1);
 	buf = kzalloc(buf_len, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;

@@ -715,7 +715,7 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
 		return -EINVAL;
 
 	hwc = gc->hwc.driver_data;
-	req_msg_size = struct_size(req, page_addr_list, num_page);
+	req_msg_size = flex_struct_size(req, page_addr_list, num_page);
 	if (req_msg_size > hwc->max_req_msg_size)
 		return -EINVAL;
 

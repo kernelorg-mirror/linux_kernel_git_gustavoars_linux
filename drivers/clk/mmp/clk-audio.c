@@ -348,8 +348,8 @@ static int mmp2_audio_clk_probe(struct platform_device *pdev)
 	int ret;
 
 	priv = devm_kzalloc(&pdev->dev,
-			    struct_size(priv, clk_data.hws,
-					MMP2_CLK_AUDIO_NR_CLKS),
+			    flex_struct_size(priv, clk_data.hws,
+					     MMP2_CLK_AUDIO_NR_CLKS),
 			    GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

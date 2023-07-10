@@ -51,7 +51,7 @@ struct clk_hw_onecell_data *mtk_devm_alloc_clk_data(struct device *dev,
 {
 	struct clk_hw_onecell_data *clk_data;
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, clk_num),
+	clk_data = devm_kzalloc(dev, flex_struct_size(clk_data, hws, clk_num),
 				GFP_KERNEL);
 	if (!clk_data)
 		return NULL;
@@ -66,7 +66,8 @@ struct clk_hw_onecell_data *mtk_alloc_clk_data(unsigned int clk_num)
 {
 	struct clk_hw_onecell_data *clk_data;
 
-	clk_data = kzalloc(struct_size(clk_data, hws, clk_num), GFP_KERNEL);
+	clk_data = kzalloc(flex_struct_size(clk_data, hws, clk_num),
+			   GFP_KERNEL);
 	if (!clk_data)
 		return NULL;
 

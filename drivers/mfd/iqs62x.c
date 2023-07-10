@@ -317,7 +317,7 @@ static int iqs62x_firmware_parse(struct iqs62x_core *iqs62x,
 			break;
 
 		fw_blk = devm_kzalloc(&client->dev,
-				      struct_size(fw_blk, data, len),
+				      flex_struct_size(fw_blk, data, len),
 				      GFP_KERNEL);
 		if (!fw_blk) {
 			ret = -ENOMEM;

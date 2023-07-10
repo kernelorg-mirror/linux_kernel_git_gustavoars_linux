@@ -1182,7 +1182,7 @@ of_reset_control_array_get(struct device_node *np, bool shared, bool optional,
 	if (num < 0)
 		return optional ? NULL : ERR_PTR(num);
 
-	resets = kzalloc(struct_size(resets, rstc, num), GFP_KERNEL);
+	resets = kzalloc(flex_struct_size(resets, rstc, num), GFP_KERNEL);
 	if (!resets)
 		return ERR_PTR(-ENOMEM);
 

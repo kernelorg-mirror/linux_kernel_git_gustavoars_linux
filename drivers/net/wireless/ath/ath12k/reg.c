@@ -118,7 +118,8 @@ int ath12k_reg_update_chan_list(struct ath12k *ar)
 	if (WARN_ON(!num_channels))
 		return -EINVAL;
 
-	arg = kzalloc(struct_size(arg, channel, num_channels), GFP_KERNEL);
+	arg = kzalloc(flex_struct_size(arg, channel, num_channels),
+		      GFP_KERNEL);
 
 	if (!arg)
 		return -ENOMEM;

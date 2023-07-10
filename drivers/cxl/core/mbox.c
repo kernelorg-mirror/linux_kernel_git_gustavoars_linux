@@ -849,7 +849,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
 	struct cxl_mbox_clear_event_payload *payload;
 	u16 total = le16_to_cpu(get_pl->record_count);
 	u8 max_handles = CXL_CLEAR_EVENT_MAX_HANDLES;
-	size_t pl_size = struct_size(payload, handles, max_handles);
+	size_t pl_size = flex_struct_size(payload, handles, max_handles);
 	struct cxl_mbox_cmd mbox_cmd;
 	u16 cnt;
 	int rc = 0;
@@ -859,7 +859,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
 	if (pl_size > mds->payload_size) {
 		max_handles = (mds->payload_size - sizeof(*payload)) /
 			      sizeof(__le16);
-		pl_size = struct_size(payload, handles, max_handles);
+		pl_size = flex_struct_size(payload, handles, max_handles);
 	}
 
 	payload = kvzalloc(pl_size, GFP_KERNEL);
@@ -898,7 +898,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
 	/* Clear what is left if any */
 	if (i) {
 		payload->nr_recs = i;
-		mbox_cmd.size_in = struct_size(payload, handles, i);
+		mbox_cmd.size_in = flex_struct_size(payload, handles, i);
 		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
 		if (rc)
 			goto free_pl;
@@ -928,7 +928,7 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
 		.size_in = sizeof(log_type),
 		.payload_out = payload,
 		.size_out = mds->payload_size,
-		.min_out = struct_size(payload, records, 0),
+		.min_out = flex_struct_size(payload, records, 0),
 	};
 
 	do {
@@ -1259,7 +1259,7 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
 		.payload_in = &pi,
 		.size_out = mds->payload_size,
 		.payload_out = po,
-		.min_out = struct_size(po, record, 0),
+		.min_out = flex_struct_size(po, record, 0),
 	};
 
 	do {

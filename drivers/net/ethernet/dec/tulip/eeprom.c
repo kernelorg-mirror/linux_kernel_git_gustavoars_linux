@@ -224,7 +224,8 @@ subsequent_board:
 		        return;
 		}
 
-		mtable = devm_kmalloc(&tp->pdev->dev, struct_size(mtable, mleaf, count),
+		mtable = devm_kmalloc(&tp->pdev->dev,
+				      flex_struct_size(mtable, mleaf, count),
 				      GFP_KERNEL);
 		if (mtable == NULL)
 			return;				/* Horrible, impossible failure. */

@@ -2547,7 +2547,7 @@ int cxgb4_ethofld_send_flowc(struct net_device *dev, u32 eotid, u32 tc)
 	struct sk_buff *skb;
 	int ret = 0;
 
-	len = struct_size(flowc, mnemval, nparams);
+	len = flex_struct_size(flowc, mnemval, nparams);
 	len16 = DIV_ROUND_UP(len, 16);
 
 	entry = cxgb4_lookup_eotid(&adap->tids, eotid);

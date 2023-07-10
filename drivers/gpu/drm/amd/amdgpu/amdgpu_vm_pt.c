@@ -528,7 +528,7 @@ int amdgpu_vm_pt_create(struct amdgpu_device *adev, struct amdgpu_vm *vm,
 	else
 		num_entries = 0;
 
-	bp.bo_ptr_size = struct_size((*vmbo), entries, num_entries);
+	bp.bo_ptr_size = flex_struct_size((*vmbo), entries, num_entries);
 
 	if (vm->use_cpu_for_update)
 		bp.flags |= AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;

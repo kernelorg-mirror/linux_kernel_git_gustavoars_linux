@@ -126,7 +126,7 @@ static int cxl_pmem_get_config_data(struct cxl_memdev_state *mds,
 
 	if (sizeof(*cmd) > buf_len)
 		return -EINVAL;
-	if (struct_size(cmd, out_buf, cmd->in_length) > buf_len)
+	if (flex_struct_size(cmd, out_buf, cmd->in_length) > buf_len)
 		return -EINVAL;
 
 	get_lsa = (struct cxl_mbox_get_lsa) {
@@ -159,11 +159,12 @@ static int cxl_pmem_set_config_data(struct cxl_memdev_state *mds,
 		return -EINVAL;
 
 	/* 4-byte status follows the input data in the payload */
-	if (size_add(struct_size(cmd, in_buf, cmd->in_length), 4) > buf_len)
+	if (size_add(flex_struct_size(cmd, in_buf, cmd->in_length), 4) > buf_len)
 		return -EINVAL;
 
 	set_lsa =
-		kvzalloc(struct_size(set_lsa, data, cmd->in_length), GFP_KERNEL);
+		kvzalloc(flex_struct_size(set_lsa, data, cmd->in_length),
+			 GFP_KERNEL);
 	if (!set_lsa)
 		return -ENOMEM;
 
@@ -174,7 +175,7 @@ static int cxl_pmem_set_config_data(struct cxl_memdev_state *mds,
 	mbox_cmd = (struct cxl_mbox_cmd) {
 		.opcode = CXL_MBOX_OP_SET_LSA,
 		.payload_in = set_lsa,
-		.size_in = struct_size(set_lsa, data, cmd->in_length),
+		.size_in = flex_struct_size(set_lsa, data, cmd->in_length),
 	};
 
 	rc = cxl_internal_send_cmd(mds, &mbox_cmd);

@@ -2944,7 +2944,7 @@ static struct blkg_policy_data *ioc_pd_alloc(struct gendisk *disk,
 	int levels = blkcg->css.cgroup->level + 1;
 	struct ioc_gq *iocg;
 
-	iocg = kzalloc_node(struct_size(iocg, ancestors, levels), gfp,
+	iocg = kzalloc_node(flex_struct_size(iocg, ancestors, levels), gfp,
 			    disk->node_id);
 	if (!iocg)
 		return NULL;

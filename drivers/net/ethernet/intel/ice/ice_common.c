@@ -2047,7 +2047,7 @@ ice_alloc_hw_res(struct ice_hw *hw, u16 type, u16 num, bool btm, u16 *res)
 	u16 buf_len;
 	int status;
 
-	buf_len = struct_size(buf, elem, num);
+	buf_len = flex_struct_size(buf, elem, num);
 	buf = kzalloc(buf_len, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -2084,7 +2084,7 @@ int ice_free_hw_res(struct ice_hw *hw, u16 type, u16 num, u16 *res)
 	u16 buf_len;
 	int status;
 
-	buf_len = struct_size(buf, elem, num);
+	buf_len = flex_struct_size(buf, elem, num);
 	buf = kzalloc(buf_len, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -4109,7 +4109,7 @@ ice_aq_add_lan_txq(struct ice_hw *hw, u8 num_qgrps,
 		return -EINVAL;
 
 	for (i = 0, list = qg_list; i < num_qgrps; i++) {
-		sum_size += struct_size(list, txqs, list->num_txqs);
+		sum_size += flex_struct_size(list, txqs, list->num_txqs);
 		list = (struct ice_aqc_add_tx_qgrp *)(list->txqs +
 						      list->num_txqs);
 	}
@@ -4193,7 +4193,7 @@ ice_aq_dis_lan_txq(struct ice_hw *hw, u8 num_qgrps,
 	desc.flags |= cpu_to_le16(ICE_AQ_FLAG_RD);
 
 	for (i = 0, item = qg_list; i < num_qgrps; i++) {
-		u16 item_size = struct_size(item, q_id, item->num_qs);
+		u16 item_size = flex_struct_size(item, q_id, item->num_qs);
 
 		/* If the num of queues is even, add 2 bytes of padding */
 		if ((item->num_qs % 2) == 0)
@@ -4251,7 +4251,7 @@ ice_aq_add_rdma_qsets(struct ice_hw *hw, u8 num_qset_grps,
 	for (i = 0, list = qset_list; i < num_qset_grps; i++) {
 		u16 num_qsets = le16_to_cpu(list->num_qsets);
 
-		sum_size += struct_size(list, rdma_qsets, num_qsets);
+		sum_size += flex_struct_size(list, rdma_qsets, num_qsets);
 		list = (struct ice_aqc_add_rdma_qset_data *)(list->rdma_qsets +
 							     num_qsets);
 	}
@@ -4666,7 +4666,7 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
 		return -EIO;
 	}
 
-	buf_size = struct_size(qg_list, q_id, 1);
+	buf_size = flex_struct_size(qg_list, q_id, 1);
 	qg_list = kzalloc(buf_size, GFP_KERNEL);
 	if (!qg_list)
 		return -ENOMEM;
@@ -4809,7 +4809,7 @@ ice_ena_vsi_rdma_qset(struct ice_port_info *pi, u16 vsi_handle, u8 tc,
 	if (!ice_is_vsi_valid(hw, vsi_handle))
 		return -EINVAL;
 
-	buf_size = struct_size(buf, rdma_qsets, num_qsets);
+	buf_size = flex_struct_size(buf, rdma_qsets, num_qsets);
 	buf = kzalloc(buf_size, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -4882,7 +4882,7 @@ ice_dis_vsi_rdma_qset(struct ice_port_info *pi, u16 count, u32 *qset_teid,
 
 	hw = pi->hw;
 
-	qg_size = struct_size(qg_list, q_id, 1);
+	qg_size = flex_struct_size(qg_list, q_id, 1);
 	qg_list = kzalloc(qg_size, GFP_KERNEL);
 	if (!qg_list)
 		return -ENOMEM;

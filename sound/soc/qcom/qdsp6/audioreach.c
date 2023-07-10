@@ -32,7 +32,7 @@ struct apm_sub_graph_params  {
 	struct apm_sub_graph_data sg_cfg[];
 } __packed;
 
-#define APM_SUB_GRAPH_PSIZE(p, n) ALIGN(struct_size(p, sg_cfg, n), 8)
+#define APM_SUB_GRAPH_PSIZE(p, n) ALIGN(flex_struct_size(p, sg_cfg, n), 8)
 
 /* container config */
 struct apm_container_obj  {
@@ -61,7 +61,7 @@ struct apm_container_params  {
 	struct apm_container_obj cont_obj[];
 } __packed;
 
-#define APM_CONTAINER_PSIZE(p, n) ALIGN(struct_size(p, cont_obj, n), 8)
+#define APM_CONTAINER_PSIZE(p, n) ALIGN(flex_struct_size(p, cont_obj, n), 8)
 
 /* Module List config */
 struct apm_mod_list_obj {
@@ -72,7 +72,7 @@ struct apm_mod_list_obj {
 	struct apm_module_obj mod_cfg[];
 } __packed;
 
-#define APM_MOD_LIST_OBJ_PSIZE(p, n) struct_size(p, mod_cfg, n)
+#define APM_MOD_LIST_OBJ_PSIZE(p, n) flex_struct_size(p, mod_cfg, n)
 
 struct apm_module_list_params {
 	struct apm_module_param_data param_data;
@@ -97,7 +97,7 @@ struct apm_prop_list_params {
 
 } __packed;
 
-#define APM_MOD_PROP_PSIZE(p, n) ALIGN(struct_size(p, mod_prop_obj, n), 8)
+#define APM_MOD_PROP_PSIZE(p, n) ALIGN(flex_struct_size(p, mod_prop_obj, n), 8)
 
 /* Module Connections */
 struct apm_mod_conn_list_params {
@@ -107,7 +107,7 @@ struct apm_mod_conn_list_params {
 
 } __packed;
 
-#define APM_MOD_CONN_PSIZE(p, n) ALIGN(struct_size(p, conn_obj, n), 8)
+#define APM_MOD_CONN_PSIZE(p, n) ALIGN(flex_struct_size(p, conn_obj, n), 8)
 
 struct apm_graph_open_params {
 	struct apm_cmd_header *cmd_header;
@@ -143,7 +143,7 @@ struct apm_sh_module_media_fmt_cmd {
 				sizeof(struct apm_pcm_module_media_fmt_cmd) + \
 				ch * sizeof(uint8_t), 8)
 
-#define APM_PCM_OUT_FMT_CFG_PSIZE(p, n) ALIGN(struct_size(p, channel_mapping, n), 4)
+#define APM_PCM_OUT_FMT_CFG_PSIZE(p, n) ALIGN(flex_struct_size(p, channel_mapping, n), 4)
 
 struct apm_i2s_module_intf_cfg {
 	struct apm_module_param_data param_data;
@@ -159,7 +159,7 @@ struct apm_module_hw_ep_mf_cfg {
 
 #define APM_HW_EP_CFG_PSIZE ALIGN(sizeof(struct apm_module_hw_ep_mf_cfg), 8)
 
-#define APM_MFC_CFG_PSIZE(p, n) ALIGN(struct_size(p, channel_mapping, n), 4)
+#define APM_MFC_CFG_PSIZE(p, n) ALIGN(flex_struct_size(p, channel_mapping, n), 4)
 
 struct apm_module_frame_size_factor_cfg {
 	struct apm_module_param_data param_data;

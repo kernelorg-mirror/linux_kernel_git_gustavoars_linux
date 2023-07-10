@@ -482,7 +482,7 @@ static size_t vhost_get_avail_size(struct vhost_virtqueue *vq,
 	size_t event __maybe_unused =
 	       vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
 
-	return size_add(struct_size(vq->avail, ring, num), event);
+	return size_add(flex_struct_size(vq->avail, ring, num), event);
 }
 
 static size_t vhost_get_used_size(struct vhost_virtqueue *vq,
@@ -491,7 +491,7 @@ static size_t vhost_get_used_size(struct vhost_virtqueue *vq,
 	size_t event __maybe_unused =
 	       vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
 
-	return size_add(struct_size(vq->used, ring, num), event);
+	return size_add(flex_struct_size(vq->used, ring, num), event);
 }
 
 static size_t vhost_get_desc_size(struct vhost_virtqueue *vq,
@@ -1725,8 +1725,8 @@ static long vhost_set_memory(struct vhost_dev *d, struct vhost_memory __user *m)
 		return -EOPNOTSUPP;
 	if (mem.nregions > max_mem_regions)
 		return -E2BIG;
-	newmem = kvzalloc(struct_size(newmem, regions, mem.nregions),
-			GFP_KERNEL);
+	newmem = kvzalloc(flex_struct_size(newmem, regions, mem.nregions),
+			  GFP_KERNEL);
 	if (!newmem)
 		return -ENOMEM;
 

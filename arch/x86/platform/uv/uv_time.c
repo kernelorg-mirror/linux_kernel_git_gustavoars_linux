@@ -147,9 +147,9 @@ static __init int uv_rtc_allocate_timers(void)
 		struct uv_rtc_timer_head *head = blade_info[bid];
 
 		if (!head) {
-			head = kmalloc_node(struct_size(head, cpu,
-				uv_blade_nr_possible_cpus(bid)),
-				GFP_KERNEL, nid);
+			head = kmalloc_node(flex_struct_size(head, cpu,
+							     uv_blade_nr_possible_cpus(bid)),
+					    GFP_KERNEL, nid);
 			if (!head) {
 				uv_rtc_deallocate_timers();
 				return -ENOMEM;

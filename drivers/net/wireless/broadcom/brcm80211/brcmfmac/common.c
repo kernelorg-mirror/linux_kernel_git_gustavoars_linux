@@ -112,7 +112,7 @@ static int brcmf_c_download(struct brcmf_if *ifp, u16 flag,
 	dload_buf->crc = cpu_to_le32(0);
 
 	err = brcmf_fil_iovar_data_set(ifp, var, dload_buf,
-				       struct_size(dload_buf, data, len));
+				       flex_struct_size(dload_buf, data, len));
 
 	return err;
 }
@@ -132,7 +132,7 @@ static int brcmf_c_download_blob(struct brcmf_if *ifp,
 
 	brcmf_dbg(TRACE, "Enter\n");
 
-	chunk_buf = kzalloc(struct_size(chunk_buf, data, MAX_CHUNK_LEN),
+	chunk_buf = kzalloc(flex_struct_size(chunk_buf, data, MAX_CHUNK_LEN),
 			    GFP_KERNEL);
 	if (!chunk_buf) {
 		err = -ENOMEM;

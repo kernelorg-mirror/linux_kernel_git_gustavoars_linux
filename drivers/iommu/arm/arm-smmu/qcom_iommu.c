@@ -736,7 +736,8 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
 	for_each_child_of_node(dev->of_node, child)
 		max_asid = max(max_asid, get_asid(child));
 
-	qcom_iommu = devm_kzalloc(dev, struct_size(qcom_iommu, ctxs, max_asid),
+	qcom_iommu = devm_kzalloc(dev,
+				  flex_struct_size(qcom_iommu, ctxs, max_asid),
 				  GFP_KERNEL);
 	if (!qcom_iommu)
 		return -ENOMEM;

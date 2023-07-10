@@ -263,14 +263,14 @@ static void mousevsc_on_receive(struct hv_device *device,
 		 * malicious/buggy hypervisor/host, add a check here to
 		 * ensure we don't corrupt memory.
 		 */
-		if (struct_size(pipe_msg, data, pipe_msg->size)
+		if (flex_struct_size(pipe_msg, data, pipe_msg->size)
 			> sizeof(struct mousevsc_prt_msg)) {
 			WARN_ON(1);
 			break;
 		}
 
 		memcpy(&input_dev->protocol_resp, pipe_msg,
-				struct_size(pipe_msg, data, pipe_msg->size));
+				flex_struct_size(pipe_msg, data, pipe_msg->size));
 		complete(&input_dev->wait_event);
 		break;
 

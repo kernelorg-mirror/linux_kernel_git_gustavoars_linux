@@ -640,7 +640,7 @@ static int iwl_mvm_send_patterns_v1(struct iwl_mvm *mvm,
 	if (!wowlan->n_patterns)
 		return 0;
 
-	cmd.len[0] = struct_size(pattern_cmd, patterns, wowlan->n_patterns);
+	cmd.len[0] = flex_struct_size(pattern_cmd, patterns, wowlan->n_patterns);
 
 	pattern_cmd = kmalloc(cmd.len[0], GFP_KERNEL);
 	if (!pattern_cmd)
@@ -2614,7 +2614,7 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
 		n_matches = 0;
 	}
 
-	net_detect = kzalloc(struct_size(net_detect, matches, n_matches),
+	net_detect = kzalloc(flex_struct_size(net_detect, matches, n_matches),
 			     GFP_KERNEL);
 	if (!net_detect || !n_matches)
 		goto out_report_nd;
@@ -2627,7 +2627,7 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
 							   d3_data->nd_results,
 							   i);
 
-		match = kzalloc(struct_size(match, channels, n_channels),
+		match = kzalloc(flex_struct_size(match, channels, n_channels),
 				GFP_KERNEL);
 		if (!match)
 			goto out_report_nd;

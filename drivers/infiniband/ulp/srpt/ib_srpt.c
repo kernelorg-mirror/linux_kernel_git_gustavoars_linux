@@ -3148,7 +3148,7 @@ static int srpt_add_one(struct ib_device *device)
 
 	pr_debug("device = %p\n", device);
 
-	sdev = kzalloc(struct_size(sdev, port, device->phys_port_cnt),
+	sdev = kzalloc(flex_struct_size(sdev, port, device->phys_port_cnt),
 		       GFP_KERNEL);
 	if (!sdev)
 		return -ENOMEM;

@@ -210,7 +210,7 @@ void nfp_tunnel_keep_alive(struct nfp_app *app, struct sk_buff *skb)
 	}
 
 	pay_len = nfp_flower_cmsg_get_data_len(skb);
-	if (pay_len != struct_size(payload, tun_info, count)) {
+	if (pay_len != flex_struct_size(payload, tun_info, count)) {
 		nfp_flower_cmsg_warn(app, "Corruption in tunnel keep-alive message.\n");
 		return;
 	}
@@ -252,7 +252,7 @@ void nfp_tunnel_keep_alive_v6(struct nfp_app *app, struct sk_buff *skb)
 	}
 
 	pay_len = nfp_flower_cmsg_get_data_len(skb);
-	if (pay_len != struct_size(payload, tun_info, count)) {
+	if (pay_len != flex_struct_size(payload, tun_info, count)) {
 		nfp_flower_cmsg_warn(app, "Corruption in tunnel keep-alive message.\n");
 		return;
 	}

@@ -351,7 +351,7 @@ static int usbpn_probe(struct usb_interface *intf, const struct usb_device_id *i
 	else
 		return -EINVAL;
 
-	dev = alloc_netdev(struct_size(pnd, urbs, rxq_size), ifname,
+	dev = alloc_netdev(flex_struct_size(pnd, urbs, rxq_size), ifname,
 			   NET_NAME_UNKNOWN, usbpn_setup);
 	if (!dev)
 		return -ENOMEM;

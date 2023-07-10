@@ -31,7 +31,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
 	uint64_t sz;
 	int ret;
 
-	sz = struct_size(submit, bos, nr_bos) +
+	sz = flex_struct_size(submit, bos, nr_bos) +
 			((u64)nr_cmds * sizeof(submit->cmd[0]));
 
 	if (sz > SIZE_MAX)

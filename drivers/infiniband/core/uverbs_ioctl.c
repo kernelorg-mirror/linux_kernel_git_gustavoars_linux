@@ -117,7 +117,7 @@ __malloc void *_uverbs_alloc(struct uverbs_attr_bundle *bundle, size_t size,
 	if (new_used > pbundle->internal_avail) {
 		struct bundle_alloc_head *buf;
 
-		buf = kvmalloc(struct_size(buf, data, size), flags);
+		buf = kvmalloc(flex_struct_size(buf, data, size), flags);
 		if (!buf)
 			return ERR_PTR(-ENOMEM);
 		buf->next = pbundle->allocated_mem;
@@ -627,7 +627,7 @@ long ib_uverbs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		return -EFAULT;
 
 	if (hdr.length > PAGE_SIZE ||
-	    hdr.length != struct_size(&hdr, attrs, hdr.num_attrs))
+	    hdr.length != flex_struct_size(&hdr, attrs, hdr.num_attrs))
 		return -EINVAL;
 
 	if (hdr.reserved1 || hdr.reserved2)

@@ -1452,7 +1452,7 @@ static int allegro_mcu_push_buffer_internal(struct allegro_channel *channel,
 
 	list_for_each_entry(al_buffer, list, head)
 		num_buffers++;
-	size = struct_size(msg, buffer, num_buffers);
+	size = flex_struct_size(msg, buffer, num_buffers);
 
 	msg = kmalloc(size, GFP_KERNEL);
 	if (!msg)

@@ -1931,7 +1931,7 @@ static int vmw_surface_dirty_alloc(struct vmw_resource *res)
 		num_mip = 1;
 
 	num_subres = num_layers * num_mip;
-	dirty_size = struct_size(dirty, boxes, num_subres);
+	dirty_size = flex_struct_size(dirty, boxes, num_subres);
 
 	dirty = kvzalloc(dirty_size, GFP_KERNEL);
 	if (!dirty) {

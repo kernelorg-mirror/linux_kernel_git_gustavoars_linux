@@ -159,7 +159,8 @@ static int samsung_usb2_phy_probe(struct platform_device *pdev)
 	if (!cfg)
 		return -EINVAL;
 
-	drv = devm_kzalloc(dev, struct_size(drv, instances, cfg->num_phys),
+	drv = devm_kzalloc(dev,
+			   flex_struct_size(drv, instances, cfg->num_phys),
 			   GFP_KERNEL);
 	if (!drv)
 		return -ENOMEM;

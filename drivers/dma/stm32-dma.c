@@ -1102,7 +1102,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
 		return NULL;
 	}
 
-	desc = kzalloc(struct_size(desc, sg_req, sg_len), GFP_NOWAIT);
+	desc = kzalloc(flex_struct_size(desc, sg_req, sg_len), GFP_NOWAIT);
 	if (!desc)
 		return NULL;
 
@@ -1213,7 +1213,8 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
 
 	num_periods = buf_len / period_len;
 
-	desc = kzalloc(struct_size(desc, sg_req, num_periods), GFP_NOWAIT);
+	desc = kzalloc(flex_struct_size(desc, sg_req, num_periods),
+		       GFP_NOWAIT);
 	if (!desc)
 		return NULL;
 
@@ -1251,7 +1252,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
 	int i;
 
 	num_sgs = DIV_ROUND_UP(len, STM32_DMA_ALIGNED_MAX_DATA_ITEMS);
-	desc = kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
+	desc = kzalloc(flex_struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
 	if (!desc)
 		return NULL;
 

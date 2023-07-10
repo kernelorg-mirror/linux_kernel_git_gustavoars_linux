@@ -1022,7 +1022,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
 	}
 
 	nd_region =
-		kzalloc(struct_size(nd_region, mapping, ndr_desc->num_mappings),
+		kzalloc(flex_struct_size(nd_region, mapping, ndr_desc->num_mappings),
 			GFP_KERNEL);
 
 	if (!nd_region)

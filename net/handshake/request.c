@@ -120,7 +120,8 @@ struct handshake_req *handshake_req_alloc(const struct handshake_proto *proto,
 	if (!proto->hp_accept || !proto->hp_done)
 		return NULL;
 
-	req = kzalloc(struct_size(req, hr_priv, proto->hp_privsize), flags);
+	req = kzalloc(flex_struct_size(req, hr_priv, proto->hp_privsize),
+		      flags);
 	if (!req)
 		return NULL;
 

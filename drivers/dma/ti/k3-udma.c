@@ -3222,7 +3222,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
 	unsigned int i;
 	u64 asel;
 
-	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+	d = kzalloc(flex_struct_size(d, hwdesc, sglen), GFP_NOWAIT);
 	if (!d)
 		return NULL;
 
@@ -3551,7 +3551,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
 	if (period_len >= SZ_4M)
 		return NULL;
 
-	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+	d = kzalloc(flex_struct_size(d, hwdesc, periods), GFP_NOWAIT);
 	if (!d)
 		return NULL;
 

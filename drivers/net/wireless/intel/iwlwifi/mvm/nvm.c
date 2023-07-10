@@ -448,11 +448,11 @@ iwl_mvm_update_mcc(struct iwl_mvm *mvm, const char *alpha2,
 
 		n_channels =  __le32_to_cpu(mcc_resp_v8->n_channels);
 		if (iwl_rx_packet_payload_len(pkt) !=
-		    struct_size(mcc_resp_v8, channels, n_channels)) {
+		    flex_struct_size(mcc_resp_v8, channels, n_channels)) {
 			resp_cp = ERR_PTR(-EINVAL);
 			goto exit;
 		}
-		resp_len = struct_size(resp_cp, channels, n_channels);
+		resp_len = flex_struct_size(resp_cp, channels, n_channels);
 		resp_cp = kzalloc(resp_len, GFP_KERNEL);
 		if (!resp_cp) {
 			resp_cp = ERR_PTR(-ENOMEM);
@@ -473,11 +473,11 @@ iwl_mvm_update_mcc(struct iwl_mvm *mvm, const char *alpha2,
 
 		n_channels =  __le32_to_cpu(mcc_resp_v4->n_channels);
 		if (iwl_rx_packet_payload_len(pkt) !=
-		    struct_size(mcc_resp_v4, channels, n_channels)) {
+		    flex_struct_size(mcc_resp_v4, channels, n_channels)) {
 			resp_cp = ERR_PTR(-EINVAL);
 			goto exit;
 		}
-		resp_len = struct_size(resp_cp, channels, n_channels);
+		resp_len = flex_struct_size(resp_cp, channels, n_channels);
 		resp_cp = kzalloc(resp_len, GFP_KERNEL);
 		if (!resp_cp) {
 			resp_cp = ERR_PTR(-ENOMEM);
@@ -498,11 +498,11 @@ iwl_mvm_update_mcc(struct iwl_mvm *mvm, const char *alpha2,
 
 		n_channels =  __le32_to_cpu(mcc_resp_v3->n_channels);
 		if (iwl_rx_packet_payload_len(pkt) !=
-		    struct_size(mcc_resp_v3, channels, n_channels)) {
+		    flex_struct_size(mcc_resp_v3, channels, n_channels)) {
 			resp_cp = ERR_PTR(-EINVAL);
 			goto exit;
 		}
-		resp_len = struct_size(resp_cp, channels, n_channels);
+		resp_len = flex_struct_size(resp_cp, channels, n_channels);
 		resp_cp = kzalloc(resp_len, GFP_KERNEL);
 		if (!resp_cp) {
 			resp_cp = ERR_PTR(-ENOMEM);

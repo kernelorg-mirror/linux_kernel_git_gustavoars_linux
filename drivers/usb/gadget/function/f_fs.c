@@ -915,7 +915,7 @@ static ssize_t __ffs_epfile_read_data(struct ffs_epfile *epfile,
 		data_len, ret);
 
 	data_len -= ret;
-	buf = kmalloc(struct_size(buf, storage, data_len), GFP_KERNEL);
+	buf = kmalloc(flex_struct_size(buf, storage, data_len), GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
 	buf->length = data_len;

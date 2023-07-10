@@ -502,7 +502,7 @@ int gud_pipe_check(struct drm_simple_display_pipe *pipe,
 	if (WARN_ON_ONCE(!connector_state))
 		return -ENOENT;
 
-	len = struct_size(req, properties,
+	len = flex_struct_size(req, properties,
 			  GUD_PROPERTIES_MAX_NUM + GUD_CONNECTOR_PROPERTIES_MAX_NUM);
 	req = kzalloc(len, GFP_KERNEL);
 	if (!req)
@@ -544,7 +544,7 @@ int gud_pipe_check(struct drm_simple_display_pipe *pipe,
 	}
 
 	if (drm_dev_enter(fb->dev, &idx)) {
-		len = struct_size(req, properties, num_properties);
+		len = flex_struct_size(req, properties, num_properties);
 		ret = gud_usb_set(gdrm, GUD_REQ_SET_STATE_CHECK, 0, req, len);
 		drm_dev_exit(idx);
 	}  else {

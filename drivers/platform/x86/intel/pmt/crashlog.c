@@ -274,7 +274,7 @@ static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
 	size_t size;
 	int i, ret;
 
-	size = struct_size(priv, entry, intel_vsec_dev->num_resources);
+	size = flex_struct_size(priv, entry, intel_vsec_dev->num_resources);
 	priv = devm_kzalloc(&auxdev->dev, size, GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

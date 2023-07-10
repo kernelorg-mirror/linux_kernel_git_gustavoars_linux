@@ -116,7 +116,7 @@ static struct gcov_iterator *gcov_iter_new(struct gcov_info *info)
 	/* Dry-run to get the actual buffer size. */
 	size = convert_to_gcda(NULL, info);
 
-	iter = kvmalloc(struct_size(iter, buffer, size), GFP_KERNEL);
+	iter = kvmalloc(flex_struct_size(iter, buffer, size), GFP_KERNEL);
 	if (!iter)
 		return NULL;
 

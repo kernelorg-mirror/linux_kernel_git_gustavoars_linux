@@ -1135,7 +1135,7 @@ int ath6kl_debug_roam_tbl_event(struct ath6kl *ar, const void *buf,
 
 	tbl = (const struct wmi_target_roam_tbl *) buf;
 	num_entries = le16_to_cpu(tbl->num_entries);
-	if (struct_size(tbl, info, num_entries) > len)
+	if (flex_struct_size(tbl, info, num_entries) > len)
 		return -EINVAL;
 
 	if (ar->debug.roam_tbl == NULL ||

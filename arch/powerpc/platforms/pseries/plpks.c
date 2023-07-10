@@ -177,7 +177,8 @@ static struct plpks_auth *construct_auth(u8 consumer)
 
 	// The auth structure must not cross a page boundary and must be
 	// 16 byte aligned. We align to the next largest power of 2
-	auth = kzalloc(roundup_pow_of_two(struct_size(auth, password, maxpwsize)), GFP_KERNEL);
+	auth = kzalloc(roundup_pow_of_two(flex_struct_size(auth, password, maxpwsize)),
+		       GFP_KERNEL);
 	if (!auth)
 		return ERR_PTR(-ENOMEM);
 

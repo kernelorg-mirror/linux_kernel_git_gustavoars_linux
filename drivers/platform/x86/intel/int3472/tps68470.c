@@ -117,7 +117,8 @@ skl_int3472_fill_clk_pdata(struct device *dev, struct tps68470_clk_platform_data
 		return -ENODEV;
 	}
 
-	*clk_pdata = devm_kzalloc(dev, struct_size(*clk_pdata, consumers, n_consumers),
+	*clk_pdata = devm_kzalloc(dev,
+				  flex_struct_size(*clk_pdata, consumers, n_consumers),
 				  GFP_KERNEL);
 	if (!*clk_pdata)
 		return -ENOMEM;
@@ -189,7 +190,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
 		 */
 		cells[0].name = "tps68470-clk";
 		cells[0].platform_data = clk_pdata;
-		cells[0].pdata_size = struct_size(clk_pdata, consumers, n_consumers);
+		cells[0].pdata_size = flex_struct_size(clk_pdata, consumers, n_consumers);
 		cells[1].name = "tps68470-regulator";
 		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
 		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);

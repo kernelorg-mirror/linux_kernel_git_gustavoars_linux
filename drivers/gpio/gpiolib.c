@@ -4291,7 +4291,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
 	if (count < 0)
 		return ERR_PTR(count);
 
-	descs_size = struct_size(descs, desc, count);
+	descs_size = flex_struct_size(descs, desc, count);
 	descs = kzalloc(descs_size, GFP_KERNEL);
 	if (!descs)
 		return ERR_PTR(-ENOMEM);
@@ -4317,7 +4317,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
 						    gc->ngpio : count);
 
 			array = krealloc(descs, descs_size +
-					 struct_size(array_info, invert_mask, 3 * bitmap_size),
+					 flex_struct_size(array_info, invert_mask, 3 * bitmap_size),
 					 GFP_KERNEL | __GFP_ZERO);
 			if (!array) {
 				gpiod_put_array(descs);

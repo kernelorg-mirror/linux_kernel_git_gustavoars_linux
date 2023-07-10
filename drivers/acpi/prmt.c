@@ -103,7 +103,7 @@ acpi_parse_prmt(union acpi_subtable_headers *header, const unsigned long end)
 	void *temp_mmio;
 
 	module_info = (struct acpi_prmt_module_info *) header;
-	module_info_size = struct_size(tm, handlers, module_info->handler_info_count);
+	module_info_size = flex_struct_size(tm, handlers, module_info->handler_info_count);
 	tm = kmalloc(module_info_size, GFP_KERNEL);
 	if (!tm)
 		goto parse_prmt_out1;
@@ -123,7 +123,7 @@ acpi_parse_prmt(union acpi_subtable_headers *header, const unsigned long end)
 		if (!mmio_count)
 			goto parse_prmt_out2;
 
-		mmio_range_size = struct_size(tm->mmio_info, addr_ranges, *mmio_count);
+		mmio_range_size = flex_struct_size(tm->mmio_info, addr_ranges, *mmio_count);
 		tm->mmio_info = kmalloc(mmio_range_size, GFP_KERNEL);
 		if (!tm->mmio_info)
 			goto parse_prmt_out3;

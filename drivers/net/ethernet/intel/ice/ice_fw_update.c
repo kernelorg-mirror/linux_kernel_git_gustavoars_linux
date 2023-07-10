@@ -229,7 +229,7 @@ ice_send_component_table(struct pldmfw *context, struct pldmfw_component *compon
 		return -EOPNOTSUPP;
 	}
 
-	length = struct_size(comp_tbl, cvs, component->version_len);
+	length = flex_struct_size(comp_tbl, cvs, component->version_len);
 	comp_tbl = kzalloc(length, GFP_KERNEL);
 	if (!comp_tbl)
 		return -ENOMEM;

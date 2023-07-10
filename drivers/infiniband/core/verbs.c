@@ -2993,7 +2993,8 @@ struct rdma_hw_stats *rdma_alloc_hw_stats_struct(
 {
 	struct rdma_hw_stats *stats;
 
-	stats = kzalloc(struct_size(stats, value, num_counters), GFP_KERNEL);
+	stats = kzalloc(flex_struct_size(stats, value, num_counters),
+			GFP_KERNEL);
 	if (!stats)
 		return NULL;
 

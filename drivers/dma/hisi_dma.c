@@ -980,7 +980,8 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		return ret;
 
 	chan_num = hisi_dma_get_chan_num(pdev);
-	hdma_dev = devm_kzalloc(dev, struct_size(hdma_dev, chan, chan_num),
+	hdma_dev = devm_kzalloc(dev,
+				flex_struct_size(hdma_dev, chan, chan_num),
 				GFP_KERNEL);
 	if (!hdma_dev)
 		return -EINVAL;

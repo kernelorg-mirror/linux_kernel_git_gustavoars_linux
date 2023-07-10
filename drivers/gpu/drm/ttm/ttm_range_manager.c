@@ -71,7 +71,7 @@ static int ttm_range_man_alloc(struct ttm_resource_manager *man,
 	if (!lpfn)
 		lpfn = man->size;
 
-	node = kzalloc(struct_size(node, mm_nodes, 1), GFP_KERNEL);
+	node = kzalloc(flex_struct_size(node, mm_nodes, 1), GFP_KERNEL);
 	if (!node)
 		return -ENOMEM;
 

@@ -777,7 +777,8 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
 	 * it will be automatically freed by device's release() callback,
 	 * platform_device_release().
 	 */
-	pdata = kzalloc(struct_size(pdata, features, binfo->feature_num), GFP_KERNEL);
+	pdata = kzalloc(flex_struct_size(pdata, features, binfo->feature_num),
+			GFP_KERNEL);
 	if (!pdata)
 		return -ENOMEM;
 
@@ -1166,7 +1167,8 @@ create_feature_instance(struct build_feature_devs_info *binfo,
 	if (binfo->len - ofst < size)
 		return -EINVAL;
 
-	finfo = kzalloc(struct_size(finfo, params, dfh_psize / sizeof(u64)), GFP_KERNEL);
+	finfo = kzalloc(flex_struct_size(finfo, params, dfh_psize / sizeof(u64)),
+			GFP_KERNEL);
 	if (!finfo)
 		return -ENOMEM;
 

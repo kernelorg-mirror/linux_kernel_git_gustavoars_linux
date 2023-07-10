@@ -339,7 +339,7 @@ static struct rio_dev *rio_setup_device(struct rio_net *net,
 		rio_mport_read_config_32(port, destid, hopcount,
 					 RIO_SWP_INFO_CAR, &swpinfo);
 		if (result & RIO_PEF_SWITCH)
-			size += struct_size(rswitch, nextdev, RIO_GET_TOTAL_PORTS(swpinfo));
+			size += flex_struct_size(rswitch, nextdev, RIO_GET_TOTAL_PORTS(swpinfo));
 	}
 
 	rdev = kzalloc(size, GFP_KERNEL);

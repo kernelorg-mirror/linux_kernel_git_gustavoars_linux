@@ -2756,7 +2756,7 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
 	struct hv_dr_state *dr;
 	int i;
 
-	dr = kzalloc(struct_size(dr, func, relations->device_count),
+	dr = kzalloc(flex_struct_size(dr, func, relations->device_count),
 		     GFP_NOWAIT);
 	if (!dr)
 		return;
@@ -2791,7 +2791,7 @@ static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
 	struct hv_dr_state *dr;
 	int i;
 
-	dr = kzalloc(struct_size(dr, func, relations->device_count),
+	dr = kzalloc(flex_struct_size(dr, func, relations->device_count),
 		     GFP_NOWAIT);
 	if (!dr)
 		return;
@@ -3001,8 +3001,8 @@ static void hv_pci_onchannelcallback(void *context)
 				bus_rel = (struct pci_bus_relations *)buffer;
 				if (bytes_recvd < sizeof(*bus_rel) ||
 				    bytes_recvd <
-					struct_size(bus_rel, func,
-						    bus_rel->device_count)) {
+					flex_struct_size(bus_rel, func,
+							 bus_rel->device_count)) {
 					dev_err(&hbus->hdev->device,
 						"bus relations too small\n");
 					break;
@@ -3016,8 +3016,8 @@ static void hv_pci_onchannelcallback(void *context)
 				bus_rel2 = (struct pci_bus_relations2 *)buffer;
 				if (bytes_recvd < sizeof(*bus_rel2) ||
 				    bytes_recvd <
-					struct_size(bus_rel2, func,
-						    bus_rel2->device_count)) {
+					flex_struct_size(bus_rel2, func,
+							 bus_rel2->device_count)) {
 					dev_err(&hbus->hdev->device,
 						"bus relations v2 too small\n");
 					break;

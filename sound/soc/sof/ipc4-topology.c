@@ -881,7 +881,7 @@ static int sof_ipc4_widget_setup_comp_process(struct snd_sof_widget *swidget)
 	/* allocate memory for base config extension if needed */
 	if (process->init_config == SOF_IPC4_MODULE_INIT_CONFIG_TYPE_BASE_CFG_WITH_EXT) {
 		struct sof_ipc4_base_module_cfg_ext *base_cfg_ext;
-		u32 ext_size = struct_size(base_cfg_ext, pin_formats,
+		u32 ext_size = flex_struct_size(base_cfg_ext, pin_formats,
 						swidget->num_input_pins + swidget->num_output_pins);
 
 		base_cfg_ext = kzalloc(ext_size, GFP_KERNEL);
@@ -2017,7 +2017,7 @@ static int sof_ipc4_control_load_volume(struct snd_sof_dev *sdev, struct snd_sof
 	struct sof_ipc4_msg *msg;
 	int i;
 
-	scontrol->size = struct_size(control_data, chanv, scontrol->num_channels);
+	scontrol->size = flex_struct_size(control_data, chanv, scontrol->num_channels);
 
 	/* scontrol->ipc_control_data will be freed in sof_control_unload */
 	scontrol->ipc_control_data = kzalloc(scontrol->size, GFP_KERNEL);

@@ -244,7 +244,7 @@ static int memory_info_update(struct snd_sof_dev *sdev, char *buf, size_t buff_s
 		goto error;
 	}
 
-	if (struct_size(reply, elems, reply->num_elems) != reply->rhdr.hdr.size) {
+	if (flex_struct_size(reply, elems, reply->num_elems) != reply->rhdr.hdr.size) {
 		dev_err(sdev->dev, "error: invalid memory info ipc struct size, %d\n",
 			reply->rhdr.hdr.size);
 		ret = -EINVAL;

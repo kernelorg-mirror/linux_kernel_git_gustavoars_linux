@@ -29,7 +29,8 @@ static struct svc_rdma_chunk *pcl_alloc_chunk(u32 segcount, u32 position)
 {
 	struct svc_rdma_chunk *chunk;
 
-	chunk = kmalloc(struct_size(chunk, ch_segments, segcount), GFP_KERNEL);
+	chunk = kmalloc(flex_struct_size(chunk, ch_segments, segcount),
+			GFP_KERNEL);
 	if (!chunk)
 		return NULL;
 

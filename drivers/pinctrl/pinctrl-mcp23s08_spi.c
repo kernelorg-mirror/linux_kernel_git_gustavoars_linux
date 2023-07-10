@@ -167,7 +167,8 @@ static int mcp23s08_probe(struct spi_device *spi)
 
 	chips = hweight_long(spi_present_mask);
 
-	data = devm_kzalloc(dev, struct_size(data, chip, chips), GFP_KERNEL);
+	data = devm_kzalloc(dev, flex_struct_size(data, chip, chips),
+			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 

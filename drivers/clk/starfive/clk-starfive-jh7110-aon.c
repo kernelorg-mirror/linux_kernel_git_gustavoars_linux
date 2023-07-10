@@ -72,7 +72,7 @@ static int jh7110_aoncrg_probe(struct platform_device *pdev)
 	int ret;
 
 	priv = devm_kzalloc(&pdev->dev,
-			    struct_size(priv, reg, JH7110_AONCLK_END),
+			    flex_struct_size(priv, reg, JH7110_AONCLK_END),
 			    GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

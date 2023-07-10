@@ -192,7 +192,7 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
 		return -EINVAL;
 	}
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, count),
+	clk_data = devm_kzalloc(dev, flex_struct_size(clk_data, hws, count),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

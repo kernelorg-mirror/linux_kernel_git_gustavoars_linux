@@ -623,7 +623,7 @@ static int dsi_phy_driver_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	phy->provided_clocks = devm_kzalloc(dev,
-			struct_size(phy->provided_clocks, hws, NUM_PROVIDED_CLKS),
+			flex_struct_size(phy->provided_clocks, hws, NUM_PROVIDED_CLKS),
 			GFP_KERNEL);
 	if (!phy->provided_clocks)
 		return -ENOMEM;

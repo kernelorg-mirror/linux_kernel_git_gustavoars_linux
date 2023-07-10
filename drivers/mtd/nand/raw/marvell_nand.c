@@ -2604,7 +2604,7 @@ static int marvell_nand_chip_init(struct device *dev, struct marvell_nfc *nfc,
 
 	/* Alloc the nand chip structure */
 	marvell_nand = devm_kzalloc(dev,
-				    struct_size(marvell_nand, sels, nsels),
+				    flex_struct_size(marvell_nand, sels, nsels),
 				    GFP_KERNEL);
 	if (!marvell_nand) {
 		dev_err(dev, "could not allocate chip structure\n");

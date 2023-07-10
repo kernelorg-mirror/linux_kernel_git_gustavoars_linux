@@ -428,7 +428,8 @@ static int lgm_cgu_probe(struct platform_device *pdev)
 	struct device_node *np = dev->of_node;
 	int ret;
 
-	ctx = devm_kzalloc(dev, struct_size(ctx, clk_data.hws, CLK_NR_CLKS),
+	ctx = devm_kzalloc(dev,
+			   flex_struct_size(ctx, clk_data.hws, CLK_NR_CLKS),
 			   GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;

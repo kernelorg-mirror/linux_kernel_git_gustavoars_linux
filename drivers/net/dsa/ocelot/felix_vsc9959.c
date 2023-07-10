@@ -2252,7 +2252,7 @@ static int vsc9959_psfp_filter_add(struct ocelot *ocelot, int port,
 	flow_action_for_each(i, a, &f->rule->action) {
 		switch (a->id) {
 		case FLOW_ACTION_GATE:
-			size = struct_size(sgi, entries, a->gate.num_entries);
+			size = flex_struct_size(sgi, entries, a->gate.num_entries);
 			sgi = kzalloc(size, GFP_KERNEL);
 			if (!sgi) {
 				ret = -ENOMEM;

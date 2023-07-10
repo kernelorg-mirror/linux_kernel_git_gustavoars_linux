@@ -65,7 +65,7 @@ static int __qat_bl_sgl_to_bufl(struct adf_accel_dev *accel_dev,
 	dma_addr_t blp = DMA_MAPPING_ERROR;
 	dma_addr_t bloutp = DMA_MAPPING_ERROR;
 	struct scatterlist *sg;
-	size_t sz_out, sz = struct_size(bufl, buffers, n);
+	size_t sz_out, sz = flex_struct_size(bufl, buffers, n);
 	int node = dev_to_node(&GET_DEV(accel_dev));
 	unsigned int left;
 	int bufl_dma_dir;
@@ -129,7 +129,7 @@ static int __qat_bl_sgl_to_bufl(struct adf_accel_dev *accel_dev,
 		int n_sglout = sg_nents(sglout);
 
 		n = n_sglout + extra_buff;
-		sz_out = struct_size(buflout, buffers, n);
+		sz_out = flex_struct_size(buflout, buffers, n);
 		left = dskip;
 
 		sg_nctr = 0;
@@ -275,7 +275,7 @@ static int qat_bl_sgl_map(struct adf_accel_dev *accel_dev,
 	size_t sz;
 
 	n = sg_nents(sgl);
-	sz = struct_size(bufl, buffers, n);
+	sz = flex_struct_size(bufl, buffers, n);
 	bufl = kzalloc_node(sz, GFP_KERNEL, node);
 	if (unlikely(!bufl))
 		return -ENOMEM;
@@ -378,7 +378,7 @@ int qat_bl_realloc_map_new_dst(struct adf_accel_dev *accel_dev,
 	if (ret)
 		return ret;
 
-	new_bl_size = struct_size(new_bl, buffers, new_bl->num_bufs);
+	new_bl_size = flex_struct_size(new_bl, buffers, new_bl->num_bufs);
 
 	/* Map new firmware SGL descriptor */
 	new_blp = dma_map_single(dev, new_bl, new_bl_size, DMA_TO_DEVICE);

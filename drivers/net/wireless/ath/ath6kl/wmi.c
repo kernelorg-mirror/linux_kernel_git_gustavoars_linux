@@ -1293,7 +1293,7 @@ static int ath6kl_wmi_neighbor_report_event_rx(struct wmi *wmi, u8 *datap,
 	if (len < sizeof(*ev))
 		return -EINVAL;
 	ev = (struct wmi_neighbor_report_event *) datap;
-	if (struct_size(ev, neighbor, ev->num_neighbors) > len) {
+	if (flex_struct_size(ev, neighbor, ev->num_neighbors) > len) {
 		ath6kl_dbg(ATH6KL_DBG_WMI,
 			   "truncated neighbor event (num=%d len=%d)\n",
 			   ev->num_neighbors, len);
@@ -1763,7 +1763,7 @@ static int ath6kl_wmi_aplist_event_rx(struct wmi *wmi, u8 *datap, int len)
 	ath6kl_dbg(ATH6KL_DBG_WMI,
 		   "number of APs in aplist event: %d\n", ev->num_ap);
 
-	if (len < struct_size(ev, ap_list, ev->num_ap))
+	if (len < flex_struct_size(ev, ap_list, ev->num_ap))
 		return -EINVAL;
 
 	/* AP list version 1 contents */
@@ -1964,7 +1964,7 @@ static int ath6kl_wmi_startscan_cmd(struct wmi *wmi, u8 if_idx,
 	if (num_chan > WMI_MAX_CHANNELS)
 		return -EINVAL;
 
-	skb = ath6kl_wmi_get_new_buf(struct_size(sc, ch_list, num_chan));
+	skb = ath6kl_wmi_get_new_buf(flex_struct_size(sc, ch_list, num_chan));
 	if (!skb)
 		return -ENOMEM;
 
@@ -2020,7 +2020,7 @@ int ath6kl_wmi_beginscan_cmd(struct wmi *wmi, u8 if_idx,
 	if (num_chan > WMI_MAX_CHANNELS)
 		return -EINVAL;
 
-	skb = ath6kl_wmi_get_new_buf(struct_size(sc, ch_list, num_chan));
+	skb = ath6kl_wmi_get_new_buf(flex_struct_size(sc, ch_list, num_chan));
 	if (!skb)
 		return -ENOMEM;
 

@@ -619,7 +619,9 @@ static int scpsys_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	scpsys = devm_kzalloc(dev, struct_size(scpsys, domains, soc->num_domains), GFP_KERNEL);
+	scpsys = devm_kzalloc(dev,
+			      flex_struct_size(scpsys, domains, soc->num_domains),
+			      GFP_KERNEL);
 	if (!scpsys)
 		return -ENOMEM;
 

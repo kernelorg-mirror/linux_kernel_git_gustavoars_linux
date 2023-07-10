@@ -362,8 +362,9 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
 	int ret = 0;
 	int i;
 
-	*entry = kzalloc(struct_size(*entry, template_data,
-				     template_desc->num_fields), GFP_NOFS);
+	*entry = kzalloc(flex_struct_size(*entry, template_data,
+					  template_desc->num_fields),
+			 GFP_NOFS);
 	if (!*entry)
 		return -ENOMEM;
 

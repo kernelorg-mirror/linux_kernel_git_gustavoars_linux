@@ -2435,7 +2435,7 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 		goto out;
 	}
 
-	cxlr_pmem = kzalloc(struct_size(cxlr_pmem, mapping, p->nr_targets),
+	cxlr_pmem = kzalloc(flex_struct_size(cxlr_pmem, mapping, p->nr_targets),
 			    GFP_KERNEL);
 	if (!cxlr_pmem) {
 		cxlr_pmem = ERR_PTR(-ENOMEM);

@@ -101,7 +101,7 @@ static struct dma_resv_list *dma_resv_list_alloc(unsigned int max_fences)
 	size_t size;
 
 	/* Round up to the next kmalloc bucket size. */
-	size = kmalloc_size_roundup(struct_size(list, table, max_fences));
+	size = kmalloc_size_roundup(flex_struct_size(list, table, max_fences));
 
 	list = kmalloc(size, GFP_KERNEL);
 	if (!list)

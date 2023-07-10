@@ -1908,7 +1908,7 @@ static int negotiate_mq(struct blkfront_info *info)
 	if (!info->nr_rings)
 		info->nr_rings = 1;
 
-	info->rinfo_size = struct_size(info->rinfo, shadow,
+	info->rinfo_size = flex_struct_size(info->rinfo, shadow,
 				       BLK_RING_SIZE(info));
 	info->rinfo = kvcalloc(info->nr_rings, info->rinfo_size, GFP_KERNEL);
 	if (!info->rinfo) {

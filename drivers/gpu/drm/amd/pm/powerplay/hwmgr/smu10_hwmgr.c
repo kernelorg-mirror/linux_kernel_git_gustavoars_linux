@@ -133,7 +133,7 @@ static int smu10_init_dynamic_state_adjustment_rule_settings(
 	int count = 8;
 	struct phm_clock_voltage_dependency_table *table_clk_vlt;
 
-	table_clk_vlt = kzalloc(struct_size(table_clk_vlt, entries, count),
+	table_clk_vlt = kzalloc(flex_struct_size(table_clk_vlt, entries, count),
 				GFP_KERNEL);
 
 	if (NULL == table_clk_vlt) {
@@ -473,7 +473,8 @@ static int smu10_get_clock_voltage_dependency_table(struct pp_hwmgr *hwmgr,
 	uint32_t i;
 	struct smu10_voltage_dependency_table *ptable;
 
-	ptable = kzalloc(struct_size(ptable, entries, num_entry), GFP_KERNEL);
+	ptable = kzalloc(flex_struct_size(ptable, entries, num_entry),
+			 GFP_KERNEL);
 	if (NULL == ptable)
 		return -ENOMEM;
 

@@ -1128,7 +1128,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
 	}
 
 	sdev = devm_kzalloc(&pdev->dev,
-			    struct_size(sdev, channels, chn_count),
+			    flex_struct_size(sdev, channels, chn_count),
 			    GFP_KERNEL);
 	if (!sdev)
 		return -ENOMEM;

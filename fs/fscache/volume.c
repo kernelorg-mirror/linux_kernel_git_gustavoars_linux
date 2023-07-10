@@ -217,7 +217,7 @@ static struct fscache_volume *fscache_alloc_volume(const char *volume_key,
 	if (IS_ERR(cache))
 		return NULL;
 
-	volume = kzalloc(struct_size(volume, coherency, coherency_len),
+	volume = kzalloc(flex_struct_size(volume, coherency, coherency_len),
 			 GFP_KERNEL);
 	if (!volume)
 		goto err_cache;

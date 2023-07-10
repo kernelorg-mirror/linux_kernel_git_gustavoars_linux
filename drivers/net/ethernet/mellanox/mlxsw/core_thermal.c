@@ -711,7 +711,7 @@ int mlxsw_thermal_init(struct mlxsw_core *core,
 	mlxsw_reg_mgpir_unpack(mgpir_pl, NULL, NULL, NULL, NULL,
 			       &num_of_slots);
 
-	thermal = kzalloc(struct_size(thermal, line_cards, num_of_slots + 1),
+	thermal = kzalloc(flex_struct_size(thermal, line_cards, num_of_slots + 1),
 			  GFP_KERNEL);
 	if (!thermal)
 		return -ENOMEM;

@@ -1024,7 +1024,8 @@ static int apple_mca_probe(struct platform_device *pdev)
 		return -EINVAL;
 	nclusters = (resource_size(res) - CLUSTER_STRIDE) / CLUSTER_STRIDE + 1;
 
-	mca = devm_kzalloc(&pdev->dev, struct_size(mca, clusters, nclusters),
+	mca = devm_kzalloc(&pdev->dev,
+			   flex_struct_size(mca, clusters, nclusters),
 			   GFP_KERNEL);
 	if (!mca)
 		return -ENOMEM;

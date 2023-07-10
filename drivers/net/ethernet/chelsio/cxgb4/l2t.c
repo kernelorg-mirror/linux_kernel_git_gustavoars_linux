@@ -639,7 +639,7 @@ struct l2t_data *t4_init_l2t(unsigned int l2t_start, unsigned int l2t_end)
 	if (l2t_size < L2T_MIN_HASH_BUCKETS)
 		return NULL;
 
-	d = kvzalloc(struct_size(d, l2tab, l2t_size), GFP_KERNEL);
+	d = kvzalloc(flex_struct_size(d, l2tab, l2t_size), GFP_KERNEL);
 	if (!d)
 		return NULL;
 

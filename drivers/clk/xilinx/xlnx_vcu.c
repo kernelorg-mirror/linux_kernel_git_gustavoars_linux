@@ -527,7 +527,9 @@ static int xvcu_register_clock_provider(struct xvcu_device *xvcu)
 	struct clk_hw *hw;
 	void __iomem *reg_base = xvcu->vcu_slcr_ba;
 
-	data = devm_kzalloc(dev, struct_size(data, hws, CLK_XVCU_NUM_CLOCKS), GFP_KERNEL);
+	data = devm_kzalloc(dev,
+			    flex_struct_size(data, hws, CLK_XVCU_NUM_CLOCKS),
+			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 	data->num = CLK_XVCU_NUM_CLOCKS;

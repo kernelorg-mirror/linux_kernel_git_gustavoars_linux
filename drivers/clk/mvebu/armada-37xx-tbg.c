@@ -90,7 +90,7 @@ static int armada_3700_tbg_clock_probe(struct platform_device *pdev)
 	int i;
 
 	hw_tbg_data = devm_kzalloc(&pdev->dev,
-				   struct_size(hw_tbg_data, hws, NUM_TBG),
+				   flex_struct_size(hw_tbg_data, hws, NUM_TBG),
 				   GFP_KERNEL);
 	if (!hw_tbg_data)
 		return -ENOMEM;

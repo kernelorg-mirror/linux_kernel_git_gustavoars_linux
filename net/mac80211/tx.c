@@ -5324,7 +5324,7 @@ ieee80211_beacon_get_ap_ema_list(struct ieee80211_hw *hw,
 	if (!beacon->mbssid_ies || !beacon->mbssid_ies->cnt)
 		return NULL;
 
-	ema = kzalloc(struct_size(ema, bcn, beacon->mbssid_ies->cnt),
+	ema = kzalloc(flex_struct_size(ema, bcn, beacon->mbssid_ies->cnt),
 		      GFP_ATOMIC);
 	if (!ema)
 		return NULL;

@@ -1355,8 +1355,8 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
 	if (!data)
 		return -EINVAL;
 
-	sp = devm_kzalloc(dev, struct_size(sp, clk_data.hws,
-					   CDNS_SIERRA_OUTPUT_CLOCKS),
+	sp = devm_kzalloc(dev, flex_struct_size(sp, clk_data.hws,
+						CDNS_SIERRA_OUTPUT_CLOCKS),
 			  GFP_KERNEL);
 	if (!sp)
 		return -ENOMEM;

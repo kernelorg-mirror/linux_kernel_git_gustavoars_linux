@@ -302,7 +302,7 @@ find_table(struct device *dev, const struct firmware *fw)
 		}
 
 		/* make sure the offsets array isn't truncated */
-		if (struct_size(table, offset, table->num) > size) {
+		if (flex_struct_size(table, offset, table->num) > size) {
 			dev_err(dev, "resource table incomplete\n");
 			return NULL;
 		}

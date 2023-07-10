@@ -474,7 +474,8 @@ static int evdev_open(struct inode *inode, struct file *file)
 	struct evdev_client *client;
 	int error;
 
-	client = kvzalloc(struct_size(client, buffer, bufsize), GFP_KERNEL);
+	client = kvzalloc(flex_struct_size(client, buffer, bufsize),
+			  GFP_KERNEL);
 	if (!client)
 		return -ENOMEM;
 

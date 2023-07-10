@@ -38,7 +38,7 @@ static inline int xfs_attr_sf_entsize_byname(uint8_t nlen, uint8_t vlen)
 /* space an entry uses */
 static inline int xfs_attr_sf_entsize(struct xfs_attr_sf_entry *sfep)
 {
-	return struct_size(sfep, nameval, sfep->namelen + sfep->valuelen);
+	return flex_struct_size(sfep, nameval, sfep->namelen + sfep->valuelen);
 }
 
 /* next entry in struct */

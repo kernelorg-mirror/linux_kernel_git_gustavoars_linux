@@ -87,7 +87,8 @@ int mlxsw_sp_span_init(struct mlxsw_sp *mlxsw_sp)
 		return -EIO;
 
 	entries_count = MLXSW_CORE_RES_GET(mlxsw_sp->core, MAX_SPAN);
-	span = kzalloc(struct_size(span, entries, entries_count), GFP_KERNEL);
+	span = kzalloc(flex_struct_size(span, entries, entries_count),
+		       GFP_KERNEL);
 	if (!span)
 		return -ENOMEM;
 	refcount_set(&span->policer_id_base_ref_count, 0);

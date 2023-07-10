@@ -2315,7 +2315,7 @@ int prestera_hw_counters_get(struct prestera_switch *sw, u32 idx,
 		.block_id = __cpu_to_le32(idx),
 		.num_counters = __cpu_to_le32(*len),
 	};
-	size_t size = struct_size(resp, stats, *len);
+	size_t size = flex_struct_size(resp, stats, *len);
 	int err, i;
 
 	resp = kmalloc(size, GFP_KERNEL);

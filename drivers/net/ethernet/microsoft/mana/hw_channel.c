@@ -403,7 +403,8 @@ static int mana_hwc_alloc_dma_buf(struct hw_channel_context *hwc, u16 q_depth,
 	int err;
 	u16 i;
 
-	dma_buf = kzalloc(struct_size(dma_buf, reqs, q_depth), GFP_KERNEL);
+	dma_buf = kzalloc(flex_struct_size(dma_buf, reqs, q_depth),
+			  GFP_KERNEL);
 	if (!dma_buf)
 		return -ENOMEM;
 

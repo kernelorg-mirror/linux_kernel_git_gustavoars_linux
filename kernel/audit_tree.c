@@ -94,7 +94,8 @@ static struct audit_tree *alloc_tree(const char *s)
 {
 	struct audit_tree *tree;
 
-	tree = kmalloc(struct_size(tree, pathname, strlen(s) + 1), GFP_KERNEL);
+	tree = kmalloc(flex_struct_size(tree, pathname, strlen(s) + 1),
+		       GFP_KERNEL);
 	if (tree) {
 		refcount_set(&tree->count, 1);
 		tree->goner = 0;
@@ -190,7 +191,7 @@ static struct audit_chunk *alloc_chunk(int count)
 	struct audit_chunk *chunk;
 	int i;
 
-	chunk = kzalloc(struct_size(chunk, owners, count), GFP_KERNEL);
+	chunk = kzalloc(flex_struct_size(chunk, owners, count), GFP_KERNEL);
 	if (!chunk)
 		return NULL;
 

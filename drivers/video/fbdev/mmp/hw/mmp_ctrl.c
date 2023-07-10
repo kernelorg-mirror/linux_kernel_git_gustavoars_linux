@@ -470,7 +470,7 @@ static int mmphw_probe(struct platform_device *pdev)
 
 	/* allocate */
 	ctrl = devm_kzalloc(&pdev->dev,
-			    struct_size(ctrl, path_plats, mi->path_num),
+			    flex_struct_size(ctrl, path_plats, mi->path_num),
 			    GFP_KERNEL);
 	if (!ctrl) {
 		ret = -ENOMEM;

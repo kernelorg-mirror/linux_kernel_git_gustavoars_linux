@@ -244,8 +244,8 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_vm_memmap *memmap)
 	}
 
 	/* Prepare the vm_memory_region_batch */
-	regions_info = kzalloc(struct_size(regions_info, regions_op,
-					   nr_regions), GFP_KERNEL);
+	regions_info = kzalloc(flex_struct_size(regions_info, regions_op,
+						nr_regions), GFP_KERNEL);
 	if (!regions_info) {
 		ret = -ENOMEM;
 		goto unmap_kernel_map;

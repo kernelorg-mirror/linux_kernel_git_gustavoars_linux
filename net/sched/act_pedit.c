@@ -508,7 +508,7 @@ static int tcf_pedit_dump(struct sk_buff *skb, struct tc_action *a,
 
 	spin_lock_bh(&p->tcf_lock);
 	parms = rcu_dereference_protected(p->parms, 1);
-	s = struct_size(opt, keys, parms->tcfp_nkeys);
+	s = flex_struct_size(opt, keys, parms->tcfp_nkeys);
 
 	opt = kzalloc(s, GFP_ATOMIC);
 	if (unlikely(!opt)) {

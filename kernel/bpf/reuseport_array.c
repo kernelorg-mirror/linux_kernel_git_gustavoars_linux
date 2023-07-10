@@ -152,7 +152,8 @@ static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
 	struct reuseport_array *array;
 
 	/* allocate all map elements and zero-initialize them */
-	array = bpf_map_area_alloc(struct_size(array, ptrs, attr->max_entries), numa_node);
+	array = bpf_map_area_alloc(flex_struct_size(array, ptrs, attr->max_entries),
+				   numa_node);
 	if (!array)
 		return ERR_PTR(-ENOMEM);
 
@@ -336,7 +337,7 @@ static u64 reuseport_array_mem_usage(const struct bpf_map *map)
 {
 	struct reuseport_array *array;
 
-	return struct_size(array, ptrs, map->max_entries);
+	return flex_struct_size(array, ptrs, map->max_entries);
 }
 
 BTF_ID_LIST_SINGLE(reuseport_array_map_btf_ids, struct, reuseport_array)

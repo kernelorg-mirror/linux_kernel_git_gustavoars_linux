@@ -37,7 +37,8 @@ struct afs_server_list *afs_alloc_server_list(struct afs_cell *cell,
 		if (vldb->fs_mask[i] & type_mask)
 			nr_servers++;
 
-	slist = kzalloc(struct_size(slist, servers, nr_servers), GFP_KERNEL);
+	slist = kzalloc(flex_struct_size(slist, servers, nr_servers),
+			GFP_KERNEL);
 	if (!slist)
 		goto error;
 

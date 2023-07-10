@@ -227,7 +227,7 @@ static int ice_qp_ena(struct ice_vsi *vsi, u16 q_idx)
 	if (q_idx >= vsi->num_rxq || q_idx >= vsi->num_txq)
 		return -EINVAL;
 
-	size = struct_size(qg_buf, txqs, 1);
+	size = flex_struct_size(qg_buf, txqs, 1);
 	qg_buf = kzalloc(size, GFP_KERNEL);
 	if (!qg_buf)
 		return -ENOMEM;

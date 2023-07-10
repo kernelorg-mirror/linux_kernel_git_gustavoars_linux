@@ -846,7 +846,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
 	}
 
 	tdma = devm_kzalloc(&pdev->dev,
-			    struct_size(tdma, channels, cdata->nr_channels),
+			    flex_struct_size(tdma, channels, cdata->nr_channels),
 			    GFP_KERNEL);
 	if (!tdma)
 		return -ENOMEM;

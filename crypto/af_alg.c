@@ -611,7 +611,7 @@ static int af_alg_alloc_tsgl(struct sock *sk)
 
 	if (!sg || sgl->cur >= MAX_SGL_ENTS) {
 		sgl = sock_kmalloc(sk,
-				   struct_size(sgl, sg, (MAX_SGL_ENTS + 1)),
+				   flex_struct_size(sgl, sg, (MAX_SGL_ENTS + 1)),
 				   GFP_KERNEL);
 		if (!sgl)
 			return -ENOMEM;
@@ -749,7 +749,8 @@ void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
 		}
 
 		list_del(&sgl->list);
-		sock_kfree_s(sk, sgl, struct_size(sgl, sg, MAX_SGL_ENTS + 1));
+		sock_kfree_s(sk, sgl,
+			     flex_struct_size(sgl, sg, MAX_SGL_ENTS + 1));
 	}
 
 	if (!ctx->used)

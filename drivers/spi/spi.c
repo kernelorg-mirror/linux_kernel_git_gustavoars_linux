@@ -3431,7 +3431,7 @@ static struct spi_replaced_transfers *spi_replace_transfers(
 
 	/* Allocate the structure using spi_res */
 	rxfer = spi_res_alloc(msg->spi, __spi_replace_transfers_release,
-			      struct_size(rxfer, inserted_transfers, insert)
+			      flex_struct_size(rxfer, inserted_transfers, insert)
 			      + extradatasize,
 			      gfp);
 	if (!rxfer)

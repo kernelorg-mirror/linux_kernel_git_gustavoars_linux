@@ -47,7 +47,8 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
 {
 	struct gpiod_lookup_table *lookups;
 
-	lookups = krealloc(aggr->lookups, struct_size(lookups, table, *n + 2),
+	lookups = krealloc(aggr->lookups,
+			   flex_struct_size(lookups, table, *n + 2),
 			   GFP_KERNEL);
 	if (!lookups)
 		return -ENOMEM;
@@ -128,7 +129,7 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
 
 	memcpy(aggr->args, buf, count + 1);
 
-	aggr->lookups = kzalloc(struct_size(aggr->lookups, table, 1),
+	aggr->lookups = kzalloc(flex_struct_size(aggr->lookups, table, 1),
 				GFP_KERNEL);
 	if (!aggr->lookups) {
 		res = -ENOMEM;
@@ -502,7 +503,8 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
 	unsigned int i;
 	int error;
 
-	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
+	fwd = devm_kzalloc(dev,
+			   flex_struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
 			   GFP_KERNEL);
 	if (!fwd)
 		return ERR_PTR(-ENOMEM);

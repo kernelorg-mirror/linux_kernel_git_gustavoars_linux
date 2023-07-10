@@ -501,7 +501,7 @@ struct nfp_reprs *nfp_reprs_alloc(unsigned int num_reprs)
 {
 	struct nfp_reprs *reprs;
 
-	reprs = kzalloc(struct_size(reprs, reprs, num_reprs), GFP_KERNEL);
+	reprs = kzalloc(flex_struct_size(reprs, reprs, num_reprs), GFP_KERNEL);
 	if (!reprs)
 		return NULL;
 	reprs->num_reprs = num_reprs;

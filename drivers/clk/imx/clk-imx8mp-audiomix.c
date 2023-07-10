@@ -186,7 +186,7 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
 	int i;
 
 	priv = devm_kzalloc(dev,
-			    struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
+			    flex_struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
 			    GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

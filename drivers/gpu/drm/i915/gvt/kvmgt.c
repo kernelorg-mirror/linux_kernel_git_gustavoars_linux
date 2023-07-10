@@ -1211,7 +1211,7 @@ static long intel_vgpu_ioctl(struct vfio_device *vfio_dev, unsigned int cmd,
 					VFIO_REGION_INFO_FLAG_WRITE;
 			info.size = gvt_aperture_sz(vgpu->gvt);
 
-			sparse = kzalloc(struct_size(sparse, areas, nr_areas),
+			sparse = kzalloc(flex_struct_size(sparse, areas, nr_areas),
 					 GFP_KERNEL);
 			if (!sparse)
 				return -ENOMEM;
@@ -1278,8 +1278,8 @@ static long intel_vgpu_ioctl(struct vfio_device *vfio_dev, unsigned int cmd,
 			case VFIO_REGION_INFO_CAP_SPARSE_MMAP:
 				ret = vfio_info_add_capability(&caps,
 					&sparse->header,
-					struct_size(sparse, areas,
-						    sparse->nr_areas));
+					flex_struct_size(sparse, areas,
+							 sparse->nr_areas));
 				if (ret) {
 					kfree(sparse);
 					return ret;

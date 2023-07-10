@@ -4886,7 +4886,7 @@ static struct cfg80211_acl_data *parse_acl_data(struct wiphy *wiphy,
 	if (n_entries > wiphy->max_acl_mac_addrs)
 		return ERR_PTR(-ENOTSUPP);
 
-	acl = kzalloc(struct_size(acl, mac_addrs, n_entries), GFP_KERNEL);
+	acl = kzalloc(flex_struct_size(acl, mac_addrs, n_entries), GFP_KERNEL);
 	if (!acl)
 		return ERR_PTR(-ENOMEM);
 
@@ -5433,7 +5433,7 @@ nl80211_parse_mbssid_elems(struct wiphy *wiphy, struct nlattr *attrs)
 	nla_for_each_nested(nl_elems, attrs, rem_elems)
 		num_elems++;
 
-	elems = kzalloc(struct_size(elems, elem, num_elems), GFP_KERNEL);
+	elems = kzalloc(flex_struct_size(elems, elem, num_elems), GFP_KERNEL);
 	if (!elems)
 		return ERR_PTR(-ENOMEM);
 
@@ -5465,7 +5465,7 @@ nl80211_parse_rnr_elems(struct wiphy *wiphy, struct nlattr *attrs,
 		num_elems++;
 	}
 
-	elems = kzalloc(struct_size(elems, elem, num_elems), GFP_KERNEL);
+	elems = kzalloc(flex_struct_size(elems, elem, num_elems), GFP_KERNEL);
 	if (!elems)
 		return ERR_PTR(-ENOMEM);
 
@@ -8805,7 +8805,7 @@ static int nl80211_set_reg(struct sk_buff *skb, struct genl_info *info)
 		goto out;
 	}
 
-	rd = kzalloc(struct_size(rd, reg_rules, num_rules), GFP_KERNEL);
+	rd = kzalloc(flex_struct_size(rd, reg_rules, num_rules), GFP_KERNEL);
 	if (!rd) {
 		r = -ENOMEM;
 		goto out;
@@ -9172,7 +9172,7 @@ static int nl80211_trigger_scan(struct sk_buff *skb, struct genl_info *info)
 	if (ie_len > wiphy->max_scan_ie_len)
 		return -EINVAL;
 
-	size = struct_size(request, channels, n_channels);
+	size = flex_struct_size(request, channels, n_channels);
 	size = size_add(size, array_size(sizeof(*request->ssids), n_ssids));
 	size = size_add(size, ie_len);
 	request = kzalloc(size, GFP_KERNEL);
@@ -9617,7 +9617,7 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
 	     attrs[NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST]))
 		return ERR_PTR(-EINVAL);
 
-	size = struct_size(request, channels, n_channels);
+	size = flex_struct_size(request, channels, n_channels);
 	size = size_add(size, array_size(sizeof(*request->ssids), n_ssids));
 	size = size_add(size, array_size(sizeof(*request->match_sets),
 					 n_match_sets));
@@ -12901,8 +12901,8 @@ static int nl80211_set_cqm_rssi(struct genl_info *info,
 	if (n_thresholds) {
 		struct cfg80211_cqm_config *cqm_config;
 
-		cqm_config = kzalloc(struct_size(cqm_config, rssi_thresholds,
-						 n_thresholds),
+		cqm_config = kzalloc(flex_struct_size(cqm_config, rssi_thresholds,
+						      n_thresholds),
 				     GFP_KERNEL);
 		if (!cqm_config) {
 			err = -ENOMEM;
@@ -15933,7 +15933,7 @@ static int nl80211_set_tid_config(struct sk_buff *skb,
 			    rem_conf)
 		num_conf++;
 
-	tid_config = kzalloc(struct_size(tid_config, tid_conf, num_conf),
+	tid_config = kzalloc(flex_struct_size(tid_config, tid_conf, num_conf),
 			     GFP_KERNEL);
 	if (!tid_config)
 		return -ENOMEM;
@@ -16613,7 +16613,8 @@ static int nl80211_set_sar_specs(struct sk_buff *skb, struct genl_info *info)
 	if (specs > rdev->wiphy.sar_capa->num_freq_ranges)
 		return -EINVAL;
 
-	sar_spec = kzalloc(struct_size(sar_spec, sub_specs, specs), GFP_KERNEL);
+	sar_spec = kzalloc(flex_struct_size(sar_spec, sub_specs, specs),
+			   GFP_KERNEL);
 	if (!sar_spec)
 		return -ENOMEM;
 

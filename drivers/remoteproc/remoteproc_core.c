@@ -483,7 +483,7 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
 	struct platform_device *pdev;
 
 	/* make sure resource isn't truncated */
-	rsc_size = struct_size(rsc, vring, rsc->num_of_vrings);
+	rsc_size = flex_struct_size(rsc, vring, rsc->num_of_vrings);
 	if (size_add(rsc_size, rsc->config_len) > avail) {
 		dev_err(dev, "vdev rsc is truncated\n");
 		return -EINVAL;

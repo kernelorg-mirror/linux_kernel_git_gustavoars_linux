@@ -12,7 +12,7 @@ struct flow_rule *flow_rule_alloc(unsigned int num_actions)
 	struct flow_rule *rule;
 	int i;
 
-	rule = kzalloc(struct_size(rule, action.entries, num_actions),
+	rule = kzalloc(flex_struct_size(rule, action.entries, num_actions),
 		       GFP_KERNEL);
 	if (!rule)
 		return NULL;
@@ -33,7 +33,7 @@ struct flow_offload_action *offload_action_alloc(unsigned int num_actions)
 	struct flow_offload_action *fl_action;
 	int i;
 
-	fl_action = kzalloc(struct_size(fl_action, action.entries, num_actions),
+	fl_action = kzalloc(flex_struct_size(fl_action, action.entries, num_actions),
 			    GFP_KERNEL);
 	if (!fl_action)
 		return NULL;

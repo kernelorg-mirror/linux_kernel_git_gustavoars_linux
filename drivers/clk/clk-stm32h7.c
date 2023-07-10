@@ -1200,7 +1200,7 @@ static void __init stm32h7_rcc_init(struct device_node *np)
 	const char *hse_clk, *lse_clk, *i2s_clk;
 	struct regmap *pdrm;
 
-	clk_data = kzalloc(struct_size(clk_data, hws, STM32H7_MAX_CLKS),
+	clk_data = kzalloc(flex_struct_size(clk_data, hws, STM32H7_MAX_CLKS),
 			   GFP_KERNEL);
 	if (!clk_data)
 		return;

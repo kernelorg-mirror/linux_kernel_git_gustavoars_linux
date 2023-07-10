@@ -445,7 +445,9 @@ static int mpfs_clk_probe(struct platform_device *pdev)
 	num_clks = ARRAY_SIZE(mpfs_msspll_clks) + ARRAY_SIZE(mpfs_cfg_clks)
 		   + ARRAY_SIZE(mpfs_periph_clks) + 1;
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hw_data.hws, num_clks), GFP_KERNEL);
+	clk_data = devm_kzalloc(dev,
+				flex_struct_size(clk_data, hw_data.hws, num_clks),
+				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;
 

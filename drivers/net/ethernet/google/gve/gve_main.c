@@ -189,7 +189,7 @@ static int gve_alloc_stats_report(struct gve_priv *priv)
 		       gve_num_tx_queues(priv);
 	rx_stats_num = (GVE_RX_STATS_REPORT_NUM + NIC_RX_STATS_REPORT_NUM) *
 		       priv->rx_cfg.num_queues;
-	priv->stats_report_len = struct_size(priv->stats_report, stats,
+	priv->stats_report_len = flex_struct_size(priv->stats_report, stats,
 					     tx_stats_num + rx_stats_num);
 	priv->stats_report =
 		dma_alloc_coherent(&priv->pdev->dev, priv->stats_report_len,

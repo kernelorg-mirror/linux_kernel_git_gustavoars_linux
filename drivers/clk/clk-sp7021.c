@@ -617,7 +617,7 @@ static int sp7021_clk_probe(struct platform_device *pdev)
 	for (i = 0; i < ARRAY_SIZE(sp_clken); i++)
 		writel((sp_clken[i] << 16) | sp_clken[i], clk_base + i * 4);
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, CLK_MAX),
+	clk_data = devm_kzalloc(dev, flex_struct_size(clk_data, hws, CLK_MAX),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

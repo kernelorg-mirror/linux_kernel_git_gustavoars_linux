@@ -492,7 +492,7 @@ static int dapm_kcontrol_add_widget(struct snd_kcontrol *kcontrol,
 		n = 1;
 
 	new_wlist = krealloc(data->wlist,
-			     struct_size(new_wlist, widgets, n),
+			     flex_struct_size(new_wlist, widgets, n),
 			     GFP_KERNEL);
 	if (!new_wlist)
 		return -ENOMEM;
@@ -1135,7 +1135,7 @@ static int dapm_widget_list_create(struct snd_soc_dapm_widget_list **list,
 	list_for_each(it, widgets)
 		size++;
 
-	*list = kzalloc(struct_size(*list, widgets, size), GFP_KERNEL);
+	*list = kzalloc(flex_struct_size(*list, widgets, size), GFP_KERNEL);
 	if (*list == NULL)
 		return -ENOMEM;
 

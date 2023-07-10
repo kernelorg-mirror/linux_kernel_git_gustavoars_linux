@@ -235,7 +235,7 @@ static int snd_ctl_new(struct snd_kcontrol **kctl, unsigned int count,
 	if (count == 0 || count > MAX_CONTROL_COUNT)
 		return -EINVAL;
 
-	*kctl = kzalloc(struct_size(*kctl, vd, count), GFP_KERNEL);
+	*kctl = kzalloc(flex_struct_size(*kctl, vd, count), GFP_KERNEL);
 	if (!*kctl)
 		return -ENOMEM;
 

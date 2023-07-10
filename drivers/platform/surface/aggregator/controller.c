@@ -623,7 +623,7 @@ static struct ssam_event_item *ssam_event_item_alloc(size_t len, gfp_t flags)
 
 		item->ops.free = __ssam_event_item_free_cached;
 	} else {
-		item = kzalloc(struct_size(item, event.data, len), flags);
+		item = kzalloc(flex_struct_size(item, event.data, len), flags);
 		if (!item)
 			return NULL;
 

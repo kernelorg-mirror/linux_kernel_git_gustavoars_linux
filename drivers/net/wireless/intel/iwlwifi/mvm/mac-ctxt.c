@@ -1663,14 +1663,14 @@ void iwl_mvm_rx_stored_beacon_notif(struct iwl_mvm *mvm,
 	if (ver <= 2) {
 		struct iwl_stored_beacon_notif_v2 *sb_v2 = (void *)pkt->data;
 
-		if (pkt_len < struct_size(sb_v2, data, size))
+		if (pkt_len < flex_struct_size(sb_v2, data, size))
 			return;
 
 		data = sb_v2->data;
 	} else {
 		struct iwl_stored_beacon_notif_v3 *sb_v3 = (void *)pkt->data;
 
-		if (pkt_len < struct_size(sb_v3, data, size))
+		if (pkt_len < flex_struct_size(sb_v3, data, size))
 			return;
 
 		data = sb_v3->data;

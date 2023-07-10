@@ -61,7 +61,7 @@ static int request_mac_address(struct lte_udev *udev)
 	int actual;
 	int ret = -1;
 
-	hci = kmalloc(struct_size(hci, data, 1), GFP_KERNEL);
+	hci = kmalloc(flex_struct_size(hci, data, 1), GFP_KERNEL);
 	if (!hci)
 		return -ENOMEM;
 

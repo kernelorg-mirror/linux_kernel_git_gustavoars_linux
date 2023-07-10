@@ -677,7 +677,7 @@ static int log_writes_map(struct dm_target *ti, struct bio *bio)
 	if (discard_bio)
 		alloc_size = sizeof(struct pending_block);
 	else
-		alloc_size = struct_size(block, vecs, bio_segments(bio));
+		alloc_size = flex_struct_size(block, vecs, bio_segments(bio));
 
 	block = kzalloc(alloc_size, GFP_NOIO);
 	if (!block) {

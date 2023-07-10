@@ -1030,8 +1030,9 @@ int sctp_auth_init(struct sctp_endpoint *ep, gfp_t gfp)
 	if (!ep->auth_hmacs_list) {
 		struct sctp_hmac_algo_param *auth_hmacs;
 
-		auth_hmacs = kzalloc(struct_size(auth_hmacs, hmac_ids,
-						 SCTP_AUTH_NUM_HMACS), gfp);
+		auth_hmacs = kzalloc(flex_struct_size(auth_hmacs, hmac_ids,
+						      SCTP_AUTH_NUM_HMACS),
+				     gfp);
 		if (!auth_hmacs)
 			goto nomem;
 		/* Initialize the HMACS parameter.

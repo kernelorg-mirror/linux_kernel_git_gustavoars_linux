@@ -2882,7 +2882,7 @@ trace_event_buffer_lock_reserve(struct trace_buffer **current_rb,
 		 * to discard out of the ring buffer on a failed match.
 		 */
 		if ((entry = __this_cpu_read(trace_buffered_event))) {
-			int max_len = PAGE_SIZE - struct_size(entry, array, 1);
+			int max_len = PAGE_SIZE - flex_struct_size(entry, array, 1);
 
 			val = this_cpu_inc_return(trace_buffered_event_cnt);
 

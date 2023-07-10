@@ -501,7 +501,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 
 	nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
 	host = sdhci_pltfm_init(pdev, &data->pltfm_data,
-				struct_size(priv, phy_params, nr_phy_params));
+				flex_struct_size(priv, phy_params, nr_phy_params));
 	if (IS_ERR(host)) {
 		ret = PTR_ERR(host);
 		goto disable_clk;

@@ -350,7 +350,8 @@ long watch_queue_set_filter(struct pipe_inode_info *pipe,
 	 * user-specified filters.
 	 */
 	ret = -ENOMEM;
-	wfilter = kzalloc(struct_size(wfilter, filters, nr_filter), GFP_KERNEL);
+	wfilter = kzalloc(flex_struct_size(wfilter, filters, nr_filter),
+			  GFP_KERNEL);
 	if (!wfilter)
 		goto err_filter;
 	wfilter->nr_filters = nr_filter;

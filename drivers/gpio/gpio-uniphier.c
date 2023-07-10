@@ -362,7 +362,7 @@ static int uniphier_gpio_probe(struct platform_device *pdev)
 		return ret;
 
 	nregs = uniphier_gpio_get_nbanks(ngpios) * 2 + 3;
-	priv = devm_kzalloc(dev, struct_size(priv, saved_vals, nregs),
+	priv = devm_kzalloc(dev, flex_struct_size(priv, saved_vals, nregs),
 			    GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

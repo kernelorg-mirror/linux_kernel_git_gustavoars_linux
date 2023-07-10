@@ -118,7 +118,8 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
 
 	num_locks = i * 32; /* actual number of locks in this device */
 
-	bank = devm_kzalloc(&pdev->dev, struct_size(bank, lock, num_locks),
+	bank = devm_kzalloc(&pdev->dev,
+			    flex_struct_size(bank, lock, num_locks),
 			    GFP_KERNEL);
 	if (!bank) {
 		ret = -ENOMEM;

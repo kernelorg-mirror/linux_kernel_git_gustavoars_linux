@@ -1371,12 +1371,12 @@ iwl_parse_mei_nvm_data(struct iwl_trans *trans, const struct iwl_cfg *cfg,
 	u8 tx_chains = fw->valid_rx_ant;
 
 	if (cfg->uhb_supported)
-		data = kzalloc(struct_size(data, channels,
-					   IWL_NVM_NUM_CHANNELS_UHB),
+		data = kzalloc(flex_struct_size(data, channels,
+						IWL_NVM_NUM_CHANNELS_UHB),
 					   GFP_KERNEL);
 	else
-		data = kzalloc(struct_size(data, channels,
-					   IWL_NVM_NUM_CHANNELS_EXT),
+		data = kzalloc(flex_struct_size(data, channels,
+						IWL_NVM_NUM_CHANNELS_EXT),
 					   GFP_KERNEL);
 	if (!data)
 		return NULL;
@@ -1436,16 +1436,16 @@ iwl_parse_nvm_data(struct iwl_trans *trans, const struct iwl_cfg *cfg,
 	const __le16 *ch_section;
 
 	if (cfg->uhb_supported)
-		data = kzalloc(struct_size(data, channels,
-					   IWL_NVM_NUM_CHANNELS_UHB),
+		data = kzalloc(flex_struct_size(data, channels,
+						IWL_NVM_NUM_CHANNELS_UHB),
 					   GFP_KERNEL);
 	else if (cfg->nvm_type != IWL_NVM_EXT)
-		data = kzalloc(struct_size(data, channels,
-					   IWL_NVM_NUM_CHANNELS),
+		data = kzalloc(flex_struct_size(data, channels,
+						IWL_NVM_NUM_CHANNELS),
 					   GFP_KERNEL);
 	else
-		data = kzalloc(struct_size(data, channels,
-					   IWL_NVM_NUM_CHANNELS_EXT),
+		data = kzalloc(flex_struct_size(data, channels,
+						IWL_NVM_NUM_CHANNELS_EXT),
 					   GFP_KERNEL);
 	if (!data)
 		return NULL;
@@ -1656,7 +1656,8 @@ iwl_parse_nvm_mcc_info(struct device *dev, const struct iwl_cfg *cfg,
 		      num_of_ch);
 
 	/* build a regdomain rule for every valid channel */
-	regd = kzalloc(struct_size(regd, reg_rules, num_of_ch), GFP_KERNEL);
+	regd = kzalloc(flex_struct_size(regd, reg_rules, num_of_ch),
+		       GFP_KERNEL);
 	if (!regd)
 		return ERR_PTR(-ENOMEM);
 
@@ -1748,7 +1749,8 @@ iwl_parse_nvm_mcc_info(struct device *dev, const struct iwl_cfg *cfg,
 	 * Narrow down regdom for unused regulatory rules to prevent hole
 	 * between reg rules to wmm rules.
 	 */
-	copy_rd = kmemdup(regd, struct_size(regd, reg_rules, valid_rules),
+	copy_rd = kmemdup(regd,
+			  flex_struct_size(regd, reg_rules, valid_rules),
 			  GFP_KERNEL);
 	if (!copy_rd)
 		copy_rd = ERR_PTR(-ENOMEM);
@@ -1999,7 +2001,8 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
 	if (empty_otp)
 		IWL_INFO(trans, "OTP is empty\n");
 
-	nvm = kzalloc(struct_size(nvm, channels, IWL_NUM_CHANNELS), GFP_KERNEL);
+	nvm = kzalloc(flex_struct_size(nvm, channels, IWL_NUM_CHANNELS),
+		      GFP_KERNEL);
 	if (!nvm) {
 		ret = -ENOMEM;
 		goto out;

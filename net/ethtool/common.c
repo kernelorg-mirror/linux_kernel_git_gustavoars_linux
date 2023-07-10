@@ -550,7 +550,8 @@ int ethtool_get_max_rxnfc_channel(struct net_device *dev, u64 *max)
 	if (rule_cnt <= 0)
 		return -EINVAL;
 
-	info = kvzalloc(struct_size(info, rule_locs, rule_cnt), GFP_KERNEL);
+	info = kvzalloc(flex_struct_size(info, rule_locs, rule_cnt),
+			GFP_KERNEL);
 	if (!info)
 		return -ENOMEM;
 

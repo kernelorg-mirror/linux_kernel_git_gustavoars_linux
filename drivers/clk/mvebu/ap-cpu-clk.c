@@ -277,9 +277,9 @@ static int ap_cpu_clock_probe(struct platform_device *pdev)
 	if (!ap_cpu_clk)
 		return -ENOMEM;
 
-	ap_cpu_data = devm_kzalloc(dev, struct_size(ap_cpu_data, hws,
-						    nclusters),
-				GFP_KERNEL);
+	ap_cpu_data = devm_kzalloc(dev, flex_struct_size(ap_cpu_data, hws,
+							 nclusters),
+				   GFP_KERNEL);
 	if (!ap_cpu_data)
 		return -ENOMEM;
 

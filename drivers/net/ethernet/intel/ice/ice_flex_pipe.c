@@ -342,13 +342,13 @@ ice_upd_dvm_boost_entry(struct ice_hw *hw, struct ice_dvm_entry *entry)
 		goto ice_upd_dvm_boost_entry_err;
 
 	sect_rx = ice_pkg_buf_alloc_section(bld, ICE_SID_RXPARSER_BOOST_TCAM,
-					    struct_size(sect_rx, tcam, 1));
+					    flex_struct_size(sect_rx, tcam, 1));
 	if (!sect_rx)
 		goto ice_upd_dvm_boost_entry_err;
 	sect_rx->count = cpu_to_le16(1);
 
 	sect_tx = ice_pkg_buf_alloc_section(bld, ICE_SID_TXPARSER_BOOST_TCAM,
-					    struct_size(sect_tx, tcam, 1));
+					    flex_struct_size(sect_tx, tcam, 1));
 	if (!sect_tx)
 		goto ice_upd_dvm_boost_entry_err;
 	sect_tx->count = cpu_to_le16(1);
@@ -461,13 +461,13 @@ ice_create_tunnel(struct ice_hw *hw, u16 index,
 		goto ice_create_tunnel_err;
 
 	sect_rx = ice_pkg_buf_alloc_section(bld, ICE_SID_RXPARSER_BOOST_TCAM,
-					    struct_size(sect_rx, tcam, 1));
+					    flex_struct_size(sect_rx, tcam, 1));
 	if (!sect_rx)
 		goto ice_create_tunnel_err;
 	sect_rx->count = cpu_to_le16(1);
 
 	sect_tx = ice_pkg_buf_alloc_section(bld, ICE_SID_TXPARSER_BOOST_TCAM,
-					    struct_size(sect_tx, tcam, 1));
+					    flex_struct_size(sect_tx, tcam, 1));
 	if (!sect_tx)
 		goto ice_create_tunnel_err;
 	sect_tx->count = cpu_to_le16(1);
@@ -539,13 +539,13 @@ ice_destroy_tunnel(struct ice_hw *hw, u16 index, enum ice_tunnel_type type,
 		goto ice_destroy_tunnel_err;
 
 	sect_rx = ice_pkg_buf_alloc_section(bld, ICE_SID_RXPARSER_BOOST_TCAM,
-					    struct_size(sect_rx, tcam, 1));
+					    flex_struct_size(sect_rx, tcam, 1));
 	if (!sect_rx)
 		goto ice_destroy_tunnel_err;
 	sect_rx->count = cpu_to_le16(1);
 
 	sect_tx = ice_pkg_buf_alloc_section(bld, ICE_SID_TXPARSER_BOOST_TCAM,
-					    struct_size(sect_tx, tcam, 1));
+					    flex_struct_size(sect_tx, tcam, 1));
 	if (!sect_tx)
 		goto ice_destroy_tunnel_err;
 	sect_tx->count = cpu_to_le16(1);
@@ -2470,7 +2470,7 @@ ice_prof_bld_es(struct ice_hw *hw, enum ice_block blk,
 
 			id = ice_sect_id(blk, ICE_VEC_TBL);
 			p = ice_pkg_buf_alloc_section(bld, id,
-						      struct_size(p, es, 1) +
+						      flex_struct_size(p, es, 1) +
 						      vec_size -
 						      sizeof(p->es[0]));
 
@@ -2506,7 +2506,7 @@ ice_prof_bld_tcam(struct ice_hw *hw, enum ice_block blk,
 
 			id = ice_sect_id(blk, ICE_PROF_TCAM);
 			p = ice_pkg_buf_alloc_section(bld, id,
-						      struct_size(p, entry, 1));
+						      flex_struct_size(p, entry, 1));
 
 			if (!p)
 				return -ENOSPC;
@@ -2542,7 +2542,7 @@ ice_prof_bld_xlt1(enum ice_block blk, struct ice_buf_build *bld,
 
 			id = ice_sect_id(blk, ICE_XLT1);
 			p = ice_pkg_buf_alloc_section(bld, id,
-						      struct_size(p, value, 1));
+						      flex_struct_size(p, value, 1));
 
 			if (!p)
 				return -ENOSPC;
@@ -2577,7 +2577,7 @@ ice_prof_bld_xlt2(enum ice_block blk, struct ice_buf_build *bld,
 		case ICE_VSIG_REM:
 			id = ice_sect_id(blk, ICE_XLT2);
 			p = ice_pkg_buf_alloc_section(bld, id,
-						      struct_size(p, value, 1));
+						      flex_struct_size(p, value, 1));
 
 			if (!p)
 				return -ENOSPC;

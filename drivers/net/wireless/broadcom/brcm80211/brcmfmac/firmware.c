@@ -821,7 +821,7 @@ brcmf_fw_alloc_request(u32 chip, u32 chiprev,
 		return NULL;
 	}
 
-	fwreq = kzalloc(struct_size(fwreq, items, n_fwnames), GFP_KERNEL);
+	fwreq = kzalloc(flex_struct_size(fwreq, items, n_fwnames), GFP_KERNEL);
 	if (!fwreq)
 		return NULL;
 

@@ -257,7 +257,7 @@ mana_ib_gd_first_dma_region(struct mana_ib_dev *dev,
 	int err;
 
 	create_req_msg_size =
-		struct_size(create_req, page_addr_list, num_pages);
+		flex_struct_size(create_req, page_addr_list, num_pages);
 	create_req->page_addr_list_len = num_pages;
 
 	err = mana_gd_send_request(gc, create_req_msg_size, create_req,
@@ -285,7 +285,7 @@ mana_ib_gd_add_dma_region(struct mana_ib_dev *dev, struct gdma_context *gc,
 			  unsigned int num_pages, u32 expected_status)
 {
 	unsigned int add_req_msg_size =
-		struct_size(add_req, page_addr_list, num_pages);
+		flex_struct_size(add_req, page_addr_list, num_pages);
 	struct gdma_general_resp add_resp = {};
 	int err;
 
@@ -346,7 +346,7 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
 	num_pages_to_handle =
 		min_t(size_t, num_pages_total, max_pgs_create_cmd);
 	create_req_msg_size =
-		struct_size(create_req, page_addr_list, num_pages_to_handle);
+		flex_struct_size(create_req, page_addr_list, num_pages_to_handle);
 
 	request_buf = kzalloc(hwc->max_req_msg_size, GFP_KERNEL);
 	if (!request_buf)

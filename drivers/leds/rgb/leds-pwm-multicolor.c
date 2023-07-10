@@ -118,7 +118,7 @@ static int led_pwm_mc_probe(struct platform_device *pdev)
 	fwnode_for_each_child_node(mcnode, fwnode)
 		count++;
 
-	priv = devm_kzalloc(&pdev->dev, struct_size(priv, leds, count),
+	priv = devm_kzalloc(&pdev->dev, flex_struct_size(priv, leds, count),
 			    GFP_KERNEL);
 	if (!priv) {
 		ret = -ENOMEM;

@@ -940,7 +940,7 @@ static ssize_t ucma_query_path(struct ucma_context *ctx,
 		}
 	}
 
-	if (copy_to_user(response, resp, struct_size(resp, path_data, i)))
+	if (copy_to_user(response, resp, flex_struct_size(resp, path_data, i)))
 		ret = -EFAULT;
 
 	kfree(resp);

@@ -212,8 +212,9 @@ static int imx_lpcg_parse_clks_from_dt(struct platform_device *pdev,
 	 * And the cost is very limited few pointers.
 	 */
 
-	clk_data = devm_kzalloc(&pdev->dev, struct_size(clk_data, hws,
-				IMX_LPCG_MAX_CLKS), GFP_KERNEL);
+	clk_data = devm_kzalloc(&pdev->dev, flex_struct_size(clk_data, hws,
+							     IMX_LPCG_MAX_CLKS),
+				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;
 
@@ -328,8 +329,9 @@ static int imx8qxp_lpcg_clk_probe(struct platform_device *pdev)
 	if (!base)
 		return -ENOMEM;
 
-	clk_data = devm_kzalloc(&pdev->dev, struct_size(clk_data, hws,
-				ss_lpcg->num_max), GFP_KERNEL);
+	clk_data = devm_kzalloc(&pdev->dev, flex_struct_size(clk_data, hws,
+							     ss_lpcg->num_max),
+				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;
 

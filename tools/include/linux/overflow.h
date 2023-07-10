@@ -126,7 +126,7 @@ static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
 }
 
 /**
- * struct_size() - Calculate size of structure with trailing array.
+ * flex_struct_size() - Calculate size of structure with trailing array.
  * @p: Pointer to the structure.
  * @member: Name of the array member.
  * @n: Number of elements in the array.
@@ -136,7 +136,7 @@ static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
  *
  * Return: number of bytes needed or SIZE_MAX on overflow.
  */
-#define struct_size(p, member, n)					\
+#define flex_struct_size(p, member, n)					\
 	__ab_c_size(n,							\
 		    sizeof(*(p)->member) + __must_be_array((p)->member),\
 		    sizeof(*(p)))

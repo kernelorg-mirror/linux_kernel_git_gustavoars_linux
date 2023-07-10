@@ -307,7 +307,8 @@ int kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
 		return ret;
 
 	ret = -ENOMEM;
-	stt = kzalloc(struct_size(stt, pages, npages), GFP_KERNEL | __GFP_NOWARN);
+	stt = kzalloc(flex_struct_size(stt, pages, npages),
+		      GFP_KERNEL | __GFP_NOWARN);
 	if (!stt)
 		goto fail_acct;
 

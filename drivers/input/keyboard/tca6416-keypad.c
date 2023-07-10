@@ -216,7 +216,8 @@ static int tca6416_keypad_probe(struct i2c_client *client)
 		return -EINVAL;
 	}
 
-	chip = kzalloc(struct_size(chip, buttons, pdata->nbuttons), GFP_KERNEL);
+	chip = kzalloc(flex_struct_size(chip, buttons, pdata->nbuttons),
+		       GFP_KERNEL);
 	input = input_allocate_device();
 	if (!chip || !input) {
 		error = -ENOMEM;

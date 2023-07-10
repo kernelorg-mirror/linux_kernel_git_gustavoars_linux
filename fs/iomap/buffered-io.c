@@ -58,7 +58,7 @@ iomap_page_create(struct inode *inode, struct folio *folio, unsigned int flags)
 	else
 		gfp = GFP_NOFS | __GFP_NOFAIL;
 
-	iop = kzalloc(struct_size(iop, uptodate, BITS_TO_LONGS(nr_blocks)),
+	iop = kzalloc(flex_struct_size(iop, uptodate, BITS_TO_LONGS(nr_blocks)),
 		      gfp);
 	if (iop) {
 		spin_lock_init(&iop->uptodate_lock);

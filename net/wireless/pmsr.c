@@ -288,7 +288,7 @@ int nl80211_pmsr_start(struct sk_buff *skb, struct genl_info *info)
 		}
 	}
 
-	req = kzalloc(struct_size(req, peers, count), GFP_KERNEL);
+	req = kzalloc(flex_struct_size(req, peers, count), GFP_KERNEL);
 	if (!req)
 		return -ENOMEM;
 

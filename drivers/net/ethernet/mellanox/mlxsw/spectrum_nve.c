@@ -277,7 +277,7 @@ mlxsw_sp_nve_mc_record_create(struct mlxsw_sp *mlxsw_sp,
 	struct mlxsw_sp_nve_mc_record *mc_record;
 	int err;
 
-	mc_record = kzalloc(struct_size(mc_record, entries, num_max_entries),
+	mc_record = kzalloc(flex_struct_size(mc_record, entries, num_max_entries),
 			    GFP_KERNEL);
 	if (!mc_record)
 		return ERR_PTR(-ENOMEM);

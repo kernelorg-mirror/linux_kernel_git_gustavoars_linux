@@ -2691,7 +2691,7 @@ static int ni_upload_sw_state(struct radeon_device *rdev,
 	u16 address = pi->state_table_start +
 		offsetof(NISLANDS_SMC_STATETABLE, driverState);
 	NISLANDS_SMC_SWSTATE *smc_state;
-	size_t state_size = struct_size(smc_state, levels,
+	size_t state_size = flex_struct_size(smc_state, levels,
 			NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE);
 	int ret;
 

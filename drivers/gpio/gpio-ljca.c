@@ -83,7 +83,8 @@ static int gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id, u8 config)
 	packet->num = 1;
 
 	ret = ljca_transfer(ljca_gpio->gpio_info->ljca, LJCA_GPIO_CONFIG, packet,
-			    struct_size(packet, item, packet->num), NULL, NULL);
+			    flex_struct_size(packet, item, packet->num), NULL,
+			    NULL);
 	mutex_unlock(&ljca_gpio->trans_lock);
 	return ret;
 }
@@ -99,7 +100,8 @@ static int ljca_gpio_read(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id)
 	packet->num = 1;
 	packet->item[0].index = gpio_id;
 	ret = ljca_transfer(ljca_gpio->gpio_info->ljca, LJCA_GPIO_READ, packet,
-			    struct_size(packet, item, packet->num), ljca_gpio->ibuf, &ibuf_len);
+			    flex_struct_size(packet, item, packet->num),
+			    ljca_gpio->ibuf, &ibuf_len);
 	if (ret)
 		goto out_unlock;
 
@@ -127,7 +129,8 @@ static int ljca_gpio_write(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
 	packet->item[0].value = value & 1;
 
 	ret = ljca_transfer(ljca_gpio->gpio_info->ljca, LJCA_GPIO_WRITE, packet,
-			    struct_size(packet, item, packet->num), NULL, NULL);
+			    flex_struct_size(packet, item, packet->num), NULL,
+			    NULL);
 	mutex_unlock(&ljca_gpio->trans_lock);
 	return ret;
 }
@@ -226,7 +229,8 @@ static int ljca_enable_irq(struct ljca_gpio_dev *ljca_gpio, int gpio_id, bool en
 
 	ret = ljca_transfer(ljca_gpio->gpio_info->ljca,
 			    enable ? LJCA_GPIO_INT_UNMASK : LJCA_GPIO_INT_MASK, packet,
-			    struct_size(packet, item, packet->num), NULL, NULL);
+			    flex_struct_size(packet, item, packet->num), NULL,
+			    NULL);
 	mutex_unlock(&ljca_gpio->trans_lock);
 	return ret;
 }

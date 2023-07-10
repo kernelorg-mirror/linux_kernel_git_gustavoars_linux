@@ -73,7 +73,7 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
 		return ERR_PTR(-EINVAL);
 
 	numa_node = bpf_map_attr_numa_node(attr);
-	size = struct_size(m, xsk_map, attr->max_entries);
+	size = flex_struct_size(m, xsk_map, attr->max_entries);
 
 	m = bpf_map_area_alloc(size, numa_node);
 	if (!m)
@@ -89,7 +89,7 @@ static u64 xsk_map_mem_usage(const struct bpf_map *map)
 {
 	struct xsk_map *m = container_of(map, struct xsk_map, map);
 
-	return struct_size(m, xsk_map, map->max_entries) +
+	return flex_struct_size(m, xsk_map, map->max_entries) +
 		   (u64)atomic_read(&m->count) * sizeof(struct xsk_map_node);
 }
 

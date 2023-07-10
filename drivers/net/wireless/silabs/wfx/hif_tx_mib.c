@@ -100,7 +100,7 @@ int wfx_hif_set_beacon_filter_table(struct wfx_vif *wvif, int tbl_len,
 {
 	int ret;
 	struct wfx_hif_mib_bcn_filter_table *arg;
-	int buf_len = struct_size(arg, ie_table, tbl_len);
+	int buf_len = flex_struct_size(arg, ie_table, tbl_len);
 
 	arg = kzalloc(buf_len, GFP_KERNEL);
 	if (!arg)
@@ -195,7 +195,7 @@ int wfx_hif_set_association_mode(struct wfx_vif *wvif, int ampdu_density,
 int wfx_hif_set_tx_rate_retry_policy(struct wfx_vif *wvif, int policy_index, u8 *rates)
 {
 	struct wfx_hif_mib_set_tx_rate_retry_policy *arg;
-	size_t size = struct_size(arg, tx_rate_retry_policy, 1);
+	size_t size = flex_struct_size(arg, tx_rate_retry_policy, 1);
 	int ret;
 
 	arg = kzalloc(size, GFP_KERNEL);

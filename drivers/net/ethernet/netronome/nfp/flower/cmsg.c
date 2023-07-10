@@ -46,7 +46,8 @@ nfp_flower_cmsg_mac_repr_start(struct nfp_app *app, unsigned int num_ports)
 	struct nfp_flower_cmsg_mac_repr *msg;
 	struct sk_buff *skb;
 
-	skb = nfp_flower_cmsg_alloc(app, struct_size(msg, ports, num_ports),
+	skb = nfp_flower_cmsg_alloc(app,
+				    flex_struct_size(msg, ports, num_ports),
 				    NFP_FLOWER_CMSG_TYPE_MAC_REPR, GFP_KERNEL);
 	if (!skb)
 		return NULL;
@@ -216,9 +217,10 @@ nfp_flower_cmsg_merge_hint_rx(struct nfp_app *app, struct sk_buff *skb)
 	/* msg->count starts at 0 and always assumes at least 1 entry. */
 	flow_cnt = msg->count + 1;
 
-	if (msg_len < struct_size(msg, flow, flow_cnt)) {
+	if (msg_len < flex_struct_size(msg, flow, flow_cnt)) {
 		nfp_flower_cmsg_warn(app, "Merge hint ctrl msg too short - %d bytes but expect %zd\n",
-				     msg_len, struct_size(msg, flow, flow_cnt));
+				     msg_len,
+				     flex_struct_size(msg, flow, flow_cnt));
 		return;
 	}
 

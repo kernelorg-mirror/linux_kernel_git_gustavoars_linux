@@ -146,7 +146,8 @@ int virtsnd_pcm_msg_alloc(struct virtio_pcm_substream *vss,
 		int sg_num = virtsnd_pcm_sg_num(data, period_bytes);
 		struct virtio_pcm_msg *msg;
 
-		msg = kzalloc(struct_size(msg, sgs, sg_num + 2), GFP_KERNEL);
+		msg = kzalloc(flex_struct_size(msg, sgs, sg_num + 2),
+			      GFP_KERNEL);
 		if (!msg)
 			return -ENOMEM;
 

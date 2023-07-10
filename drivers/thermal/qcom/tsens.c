@@ -1275,7 +1275,7 @@ static int tsens_probe(struct platform_device *pdev)
 	}
 
 	priv = devm_kzalloc(dev,
-			     struct_size(priv, sensor, num_sensors),
+			     flex_struct_size(priv, sensor, num_sensors),
 			     GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;

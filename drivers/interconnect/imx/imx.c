@@ -279,7 +279,7 @@ int imx_icc_register(struct platform_device *pdev,
 
 	/* icc_onecell_data is indexed by node_id, unlike nodes param */
 	num_nodes = get_max_node_id(nodes, nodes_count) + 1;
-	data = devm_kzalloc(dev, struct_size(data, nodes, num_nodes),
+	data = devm_kzalloc(dev, flex_struct_size(data, nodes, num_nodes),
 			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;

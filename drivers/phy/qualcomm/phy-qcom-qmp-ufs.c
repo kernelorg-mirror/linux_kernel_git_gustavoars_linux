@@ -1453,7 +1453,7 @@ static int qmp_ufs_register_clocks(struct qmp_ufs *qmp, struct device_node *np)
 	int ret;
 
 	clk_data = devm_kzalloc(qmp->dev,
-				struct_size(clk_data, hws, UFS_SYMBOL_CLOCKS),
+				flex_struct_size(clk_data, hws, UFS_SYMBOL_CLOCKS),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

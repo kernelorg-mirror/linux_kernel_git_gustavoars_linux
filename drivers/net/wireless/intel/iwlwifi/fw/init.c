@@ -123,7 +123,7 @@ int iwl_configure_rxq(struct iwl_fw_runtime *fwrt)
 	/* skip the default queue */
 	num_queues = fwrt->trans->num_rx_queues - 1;
 
-	size = struct_size(cmd, data, num_queues);
+	size = flex_struct_size(cmd, data, num_queues);
 
 	cmd = kzalloc(size, GFP_KERNEL);
 	if (!cmd)

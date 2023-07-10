@@ -203,7 +203,7 @@ static bool qtnf_cmd_start_ap_can_fit(const struct qtnf_vif *vif,
 		len += sizeof(struct qlink_tlv_chandef);
 
 	if (s->acl) {
-		unsigned int acl_len = struct_size(s->acl, mac_addrs,
+		unsigned int acl_len = flex_struct_size(s->acl, mac_addrs,
 						   s->acl->n_acl_entries);
 
 		len += sizeof(struct qlink_tlv_hdr) +
@@ -344,7 +344,7 @@ int qtnf_cmd_send_start_ap(struct qtnf_vif *vif,
 					s->he_cap, sizeof(*s->he_cap));
 
 	if (s->acl) {
-		size_t acl_size = struct_size(s->acl, mac_addrs,
+		size_t acl_size = flex_struct_size(s->acl, mac_addrs,
 					      s->acl->n_acl_entries);
 		struct qlink_tlv_hdr *tlv =
 			skb_put(cmd_skb,
@@ -1031,7 +1031,7 @@ qtnf_parse_variable_mac_info(struct qtnf_wmac *mac,
 	if (WARN_ON(resp->n_reg_rules > NL80211_MAX_SUPP_REG_RULES))
 		return -E2BIG;
 
-	mac->rd = kzalloc(struct_size(mac->rd, reg_rules, resp->n_reg_rules),
+	mac->rd = kzalloc(flex_struct_size(mac->rd, reg_rules, resp->n_reg_rules),
 			  GFP_KERNEL);
 	if (!mac->rd)
 		return -ENOMEM;
@@ -1327,7 +1327,7 @@ static int qtnf_cmd_band_fill_iftype(const u8 *data,
 		(const struct qlink_tlv_iftype_data *)data;
 	size_t payload_len;
 
-	payload_len = struct_size(tlv, iftype_data, tlv->n_iftype_data);
+	payload_len = flex_struct_size(tlv, iftype_data, tlv->n_iftype_data);
 	payload_len = size_sub(payload_len, sizeof(struct qlink_tlv_hdr));
 
 	if (tlv->hdr.len != cpu_to_le16(payload_len)) {
@@ -2547,7 +2547,7 @@ int qtnf_cmd_set_mac_acl(const struct qtnf_vif *vif,
 	struct qtnf_bus *bus = vif->mac->bus;
 	struct sk_buff *cmd_skb;
 	struct qlink_tlv_hdr *tlv;
-	size_t acl_size = struct_size(params, mac_addrs, params->n_acl_entries);
+	size_t acl_size = flex_struct_size(params, mac_addrs, params->n_acl_entries);
 	int ret;
 
 	cmd_skb = qtnf_cmd_alloc_new_cmdskb(vif->mac->macid, vif->vifid,

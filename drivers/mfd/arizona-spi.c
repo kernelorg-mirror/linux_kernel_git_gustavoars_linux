@@ -60,7 +60,7 @@ static int arizona_spi_acpi_windows_probe(struct arizona *arizona)
 
 	/* Add lookups for the SoCs own GPIOs used for micdet-polarity and spkVDD-enable */
 	lookup = devm_kzalloc(arizona->dev,
-			      struct_size(lookup, table, ARRAY_SIZE(arizona_soc_gpios) + 1),
+			      flex_struct_size(lookup, table, ARRAY_SIZE(arizona_soc_gpios) + 1),
 			      GFP_KERNEL);
 	if (!lookup)
 		return -ENOMEM;

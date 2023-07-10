@@ -90,7 +90,8 @@ static int denali_dt_chip_init(struct denali_controller *denali,
 	if (nsels < 0)
 		return nsels;
 
-	dchip = devm_kzalloc(denali->dev, struct_size(dchip, sels, nsels),
+	dchip = devm_kzalloc(denali->dev,
+			     flex_struct_size(dchip, sels, nsels),
 			     GFP_KERNEL);
 	if (!dchip)
 		return -ENOMEM;

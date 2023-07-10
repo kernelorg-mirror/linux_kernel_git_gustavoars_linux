@@ -1716,7 +1716,7 @@ static int sof_ipc3_control_load_volume(struct snd_sof_dev *sdev, struct snd_sof
 	int i;
 
 	/* init the volume get/put data */
-	scontrol->size = struct_size(cdata, chanv, scontrol->num_channels);
+	scontrol->size = flex_struct_size(cdata, chanv, scontrol->num_channels);
 
 	scontrol->ipc_control_data = kzalloc(scontrol->size, GFP_KERNEL);
 	if (!scontrol->ipc_control_data)
@@ -1747,7 +1747,7 @@ static int sof_ipc3_control_load_enum(struct snd_sof_dev *sdev, struct snd_sof_c
 	struct sof_ipc_ctrl_data *cdata;
 
 	/* init the enum get/put data */
-	scontrol->size = struct_size(cdata, chanv, scontrol->num_channels);
+	scontrol->size = flex_struct_size(cdata, chanv, scontrol->num_channels);
 
 	scontrol->ipc_control_data = kzalloc(scontrol->size, GFP_KERNEL);
 	if (!scontrol->ipc_control_data)

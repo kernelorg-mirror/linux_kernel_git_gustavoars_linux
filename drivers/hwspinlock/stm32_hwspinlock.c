@@ -79,7 +79,9 @@ static int stm32_hwspinlock_probe(struct platform_device *pdev)
 	if (IS_ERR(io_base))
 		return PTR_ERR(io_base);
 
-	hw = devm_kzalloc(dev, struct_size(hw, bank.lock, STM32_MUTEX_NUM_LOCKS), GFP_KERNEL);
+	hw = devm_kzalloc(dev,
+			  flex_struct_size(hw, bank.lock, STM32_MUTEX_NUM_LOCKS),
+			  GFP_KERNEL);
 	if (!hw)
 		return -ENOMEM;
 

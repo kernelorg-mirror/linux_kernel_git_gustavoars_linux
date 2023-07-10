@@ -55,9 +55,9 @@ static int qxl_alloc_client_monitors_config(struct qxl_device *qdev,
 		qdev->client_monitors_config = NULL;
 	}
 	if (!qdev->client_monitors_config) {
-		qdev->client_monitors_config = kzalloc(
-				struct_size(qdev->client_monitors_config,
-				heads, count), GFP_KERNEL);
+		qdev->client_monitors_config = kzalloc(flex_struct_size(qdev->client_monitors_config,
+									heads, count),
+						       GFP_KERNEL);
 		if (!qdev->client_monitors_config)
 			return -ENOMEM;
 	}

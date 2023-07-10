@@ -505,7 +505,8 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_create(struct device *dev
 	struct combined_channel_info *cinfo;
 	int i;
 
-	cinfo = devm_kzalloc(dev, struct_size(cinfo, config, count + 1), GFP_KERNEL);
+	cinfo = devm_kzalloc(dev, flex_struct_size(cinfo, config, count + 1),
+			     GFP_KERNEL);
 	if (!cinfo)
 		return ERR_PTR(-ENOMEM);
 
@@ -578,7 +579,8 @@ static int dell_wmi_ddv_hwmon_add(struct dell_wmi_ddv_data *data)
 	if (!devres_open_group(&wdev->dev, dell_wmi_ddv_hwmon_add, GFP_KERNEL))
 		return -ENOMEM;
 
-	cinfo = devm_kzalloc(&wdev->dev, struct_size(cinfo, info, 4), GFP_KERNEL);
+	cinfo = devm_kzalloc(&wdev->dev, flex_struct_size(cinfo, info, 4),
+			     GFP_KERNEL);
 	if (!cinfo) {
 		ret = -ENOMEM;
 

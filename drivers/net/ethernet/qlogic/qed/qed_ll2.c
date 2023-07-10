@@ -1243,7 +1243,7 @@ static int qed_ll2_acquire_connection_tx(struct qed_hwfn *p_hwfn,
 
 	capacity = qed_chain_get_capacity(&p_ll2_info->tx_queue.txq_chain);
 	/* All bds_set elements are flexibily added. */
-	desc_size = struct_size(p_descq, bds_set,
+	desc_size = flex_struct_size(p_descq, bds_set,
 				p_ll2_info->input.tx_max_bds_per_packet);
 
 	p_descq = kcalloc(capacity, desc_size, GFP_KERNEL);
@@ -1602,7 +1602,7 @@ int qed_ll2_establish_connection(void *cxt, u8 connection_handle)
 	spin_lock_init(&p_tx->lock);
 	capacity = qed_chain_get_capacity(&p_tx->txq_chain);
 	/* All bds_set elements are flexibily added. */
-	desc_size = struct_size(p_pkt, bds_set,
+	desc_size = flex_struct_size(p_pkt, bds_set,
 				p_ll2_conn->input.tx_max_bds_per_packet);
 
 	for (i = 0; i < capacity; i++) {

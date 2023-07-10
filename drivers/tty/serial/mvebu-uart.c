@@ -1388,8 +1388,8 @@ static int mvebu_uart_clock_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	hw_clk_data = devm_kzalloc(dev,
-				   struct_size(hw_clk_data, hws,
-					       ARRAY_SIZE(uart_clk_names)),
+				   flex_struct_size(hw_clk_data, hws,
+						    ARRAY_SIZE(uart_clk_names)),
 				   GFP_KERNEL);
 	if (!hw_clk_data)
 		return -ENOMEM;

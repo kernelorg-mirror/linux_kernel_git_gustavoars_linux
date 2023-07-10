@@ -302,7 +302,7 @@ static int avs_peakvol_create(struct avs_dev *adev, struct avs_path_module *mod)
 		volume = ctl_data->volume;
 
 	/* As 2+ channels controls are unsupported, have a single block for all channels. */
-	size = struct_size(cfg, vols, 1);
+	size = flex_struct_size(cfg, vols, 1);
 	cfg = kzalloc(size, GFP_KERNEL);
 	if (!cfg)
 		return -ENOMEM;
@@ -478,7 +478,7 @@ static int avs_modext_create(struct avs_dev *adev, struct avs_path_module *mod)
 	int ret, i;
 
 	num_pins = tcfg->generic.num_input_pins + tcfg->generic.num_output_pins;
-	cfg_size = struct_size(cfg, pin_fmts, num_pins);
+	cfg_size = flex_struct_size(cfg, pin_fmts, num_pins);
 
 	cfg = kzalloc(cfg_size, GFP_KERNEL);
 	if (!cfg)

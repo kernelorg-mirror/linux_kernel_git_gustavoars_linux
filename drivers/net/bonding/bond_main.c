@@ -5111,10 +5111,10 @@ int bond_update_slave_arr(struct bonding *bond, struct slave *skipslave)
 
 	might_sleep();
 
-	usable_slaves = kzalloc(struct_size(usable_slaves, arr,
-					    bond->slave_cnt), GFP_KERNEL);
-	all_slaves = kzalloc(struct_size(all_slaves, arr,
-					 bond->slave_cnt), GFP_KERNEL);
+	usable_slaves = kzalloc(flex_struct_size(usable_slaves, arr,
+						 bond->slave_cnt), GFP_KERNEL);
+	all_slaves = kzalloc(flex_struct_size(all_slaves, arr,
+					      bond->slave_cnt), GFP_KERNEL);
 	if (!usable_slaves || !all_slaves) {
 		ret = -ENOMEM;
 		goto out;

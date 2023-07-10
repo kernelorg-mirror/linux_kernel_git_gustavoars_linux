@@ -248,7 +248,8 @@ hfcsusb_ph_info(struct hfcsusb *hw)
 	struct dchannel *dch = &hw->dch;
 	int i;
 
-	phi = kzalloc(struct_size(phi, bch, dch->dev.nrbchan), GFP_ATOMIC);
+	phi = kzalloc(flex_struct_size(phi, bch, dch->dev.nrbchan),
+		      GFP_ATOMIC);
 	if (!phi)
 		return -ENOMEM;
 
@@ -261,7 +262,8 @@ hfcsusb_ph_info(struct hfcsusb *hw)
 		phi->bch[i].Flags = hw->bch[i].Flags;
 	}
 	_queue_data(&dch->dev.D, MPH_INFORMATION_IND, MISDN_ID_ANY,
-		    struct_size(phi, bch, dch->dev.nrbchan), phi, GFP_ATOMIC);
+		    flex_struct_size(phi, bch, dch->dev.nrbchan), phi,
+		    GFP_ATOMIC);
 	kfree(phi);
 
 	return 0;

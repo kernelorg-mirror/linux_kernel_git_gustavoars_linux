@@ -563,7 +563,7 @@ nfp_nsp_command_buf_dma_sg(struct nfp_nsp *nsp,
 		}
 	}
 
-	desc_sz = struct_size(desc, descs, nseg);
+	desc_sz = flex_struct_size(desc, descs, nseg);
 	desc = kmalloc(desc_sz, GFP_KERNEL);
 	if (!desc) {
 		ret = -ENOMEM;
@@ -1078,7 +1078,7 @@ int nfp_nsp_read_module_eeprom(struct nfp_nsp *state, int eth_index,
 	BUILD_BUG_ON(offsetof(struct eeprom_buf, data) % 8);
 
 	/* Buffer must be large enough and rounded to the next block size. */
-	bufsz = struct_size(buf, data, round_up(len, NSP_SFF_EEPROM_BLOCK_LEN));
+	bufsz = flex_struct_size(buf, data, round_up(len, NSP_SFF_EEPROM_BLOCK_LEN));
 	buf = kzalloc(bufsz, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;

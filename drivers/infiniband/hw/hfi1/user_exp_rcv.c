@@ -736,7 +736,7 @@ static int set_rcvarray_entry(struct hfi1_filedata *fd,
 	 * Allocate the node first so we can handle a potential
 	 * failure before we've programmed anything.
 	 */
-	node = kzalloc(struct_size(node, pages, npages), GFP_KERNEL);
+	node = kzalloc(flex_struct_size(node, pages, npages), GFP_KERNEL);
 	if (!node)
 		return -ENOMEM;
 

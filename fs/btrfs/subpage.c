@@ -161,7 +161,7 @@ struct btrfs_subpage *btrfs_alloc_subpage(const struct btrfs_fs_info *fs_info,
 
 	ASSERT(fs_info->sectorsize < PAGE_SIZE);
 
-	real_size = struct_size(ret, bitmaps,
+	real_size = flex_struct_size(ret, bitmaps,
 			BITS_TO_LONGS(fs_info->subpage_info->total_nr_bits));
 	ret = kzalloc(real_size, GFP_NOFS);
 	if (!ret)

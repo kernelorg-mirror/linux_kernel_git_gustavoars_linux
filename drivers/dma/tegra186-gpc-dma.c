@@ -895,7 +895,7 @@ tegra_dma_prep_dma_memset(struct dma_chan *dc, dma_addr_t dest, int value,
 	/* Set burst size */
 	mc_seq |= TEGRA_GPCDMA_MCSEQ_BURST_16;
 
-	dma_desc = kzalloc(struct_size(dma_desc, sg_req, 1), GFP_NOWAIT);
+	dma_desc = kzalloc(flex_struct_size(dma_desc, sg_req, 1), GFP_NOWAIT);
 	if (!dma_desc)
 		return NULL;
 
@@ -964,7 +964,7 @@ tegra_dma_prep_dma_memcpy(struct dma_chan *dc, dma_addr_t dest,
 	/* Set burst size */
 	mc_seq |= TEGRA_GPCDMA_MCSEQ_BURST_16;
 
-	dma_desc = kzalloc(struct_size(dma_desc, sg_req, 1), GFP_NOWAIT);
+	dma_desc = kzalloc(flex_struct_size(dma_desc, sg_req, 1), GFP_NOWAIT);
 	if (!dma_desc)
 		return NULL;
 
@@ -1057,7 +1057,8 @@ tegra_dma_prep_slave_sg(struct dma_chan *dc, struct scatterlist *sgl,
 	else
 		mc_seq |= TEGRA_GPCDMA_MCSEQ_BURST_2;
 
-	dma_desc = kzalloc(struct_size(dma_desc, sg_req, sg_len), GFP_NOWAIT);
+	dma_desc = kzalloc(flex_struct_size(dma_desc, sg_req, sg_len),
+			   GFP_NOWAIT);
 	if (!dma_desc)
 		return NULL;
 
@@ -1192,7 +1193,7 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_l
 		mc_seq |= TEGRA_GPCDMA_MCSEQ_BURST_2;
 
 	period_count = buf_len / period_len;
-	dma_desc = kzalloc(struct_size(dma_desc, sg_req, period_count),
+	dma_desc = kzalloc(flex_struct_size(dma_desc, sg_req, period_count),
 			   GFP_NOWAIT);
 	if (!dma_desc)
 		return NULL;
@@ -1356,7 +1357,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
 	cdata = of_device_get_match_data(&pdev->dev);
 
 	tdma = devm_kzalloc(&pdev->dev,
-			    struct_size(tdma, channels, cdata->nr_channels),
+			    flex_struct_size(tdma, channels, cdata->nr_channels),
 			    GFP_KERNEL);
 	if (!tdma)
 		return -ENOMEM;

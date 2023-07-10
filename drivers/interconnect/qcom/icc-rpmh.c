@@ -182,7 +182,8 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	if (!qp)
 		return -ENOMEM;
 
-	data = devm_kzalloc(dev, struct_size(data, nodes, num_nodes), GFP_KERNEL);
+	data = devm_kzalloc(dev, flex_struct_size(data, nodes, num_nodes),
+			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 

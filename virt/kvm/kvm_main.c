@@ -5500,7 +5500,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
 	if (bus->dev_count - bus->ioeventfd_count > NR_IOBUS_DEVS - 1)
 		return -ENOSPC;
 
-	new_bus = kmalloc(struct_size(bus, range, bus->dev_count + 1),
+	new_bus = kmalloc(flex_struct_size(bus, range, bus->dev_count + 1),
 			  GFP_KERNEL_ACCOUNT);
 	if (!new_bus)
 		return -ENOMEM;
@@ -5548,10 +5548,10 @@ int kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
 	if (i == bus->dev_count)
 		return 0;
 
-	new_bus = kmalloc(struct_size(bus, range, bus->dev_count - 1),
+	new_bus = kmalloc(flex_struct_size(bus, range, bus->dev_count - 1),
 			  GFP_KERNEL_ACCOUNT);
 	if (new_bus) {
-		memcpy(new_bus, bus, struct_size(bus, range, i));
+		memcpy(new_bus, bus, flex_struct_size(bus, range, i));
 		new_bus->dev_count--;
 		memcpy(new_bus->range + i, bus->range + i + 1,
 				flex_array_size(new_bus, range, new_bus->dev_count - i));

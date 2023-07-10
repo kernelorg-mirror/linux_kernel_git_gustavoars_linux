@@ -42,7 +42,8 @@ int ntb_msi_init(struct ntb_dev *ntb,
 	if (peers <= 0)
 		return -EINVAL;
 
-	ntb->msi = devm_kzalloc(&ntb->dev, struct_size(ntb->msi, peer_mws, peers),
+	ntb->msi = devm_kzalloc(&ntb->dev,
+				flex_struct_size(ntb->msi, peer_mws, peers),
 				GFP_KERNEL);
 	if (!ntb->msi)
 		return -ENOMEM;

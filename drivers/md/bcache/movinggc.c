@@ -145,8 +145,8 @@ static void read_moving(struct cache_set *c)
 			continue;
 		}
 
-		io = kzalloc(struct_size(io, bio.bio.bi_inline_vecs,
-					 DIV_ROUND_UP(KEY_SIZE(&w->key), PAGE_SECTORS)),
+		io = kzalloc(flex_struct_size(io, bio.bio.bi_inline_vecs,
+					      DIV_ROUND_UP(KEY_SIZE(&w->key), PAGE_SECTORS)),
 			     GFP_KERNEL);
 		if (!io)
 			goto err;

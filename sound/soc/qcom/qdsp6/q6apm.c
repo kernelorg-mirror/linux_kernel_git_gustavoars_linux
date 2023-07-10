@@ -25,7 +25,7 @@ struct apm_graph_mgmt_cmd {
 	uint32_t sub_graph_id_list[];
 } __packed;
 
-#define APM_GRAPH_MGMT_PSIZE(p, n) ALIGN(struct_size(p, sub_graph_id_list, n), 8)
+#define APM_GRAPH_MGMT_PSIZE(p, n) ALIGN(flex_struct_size(p, sub_graph_id_list, n), 8)
 
 struct q6apm *g_apm;
 

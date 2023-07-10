@@ -398,9 +398,9 @@ static int mlxsw_m_linecards_init(struct mlxsw_m *mlxsw_m)
 
 	for (i = 0; i < mlxsw_m->num_of_slots; i++) {
 		mlxsw_m->line_cards[i] =
-			kzalloc(struct_size(mlxsw_m->line_cards[i],
-					    module_to_port,
-					    mlxsw_m->max_modules_per_slot),
+			kzalloc(flex_struct_size(mlxsw_m->line_cards[i],
+						 module_to_port,
+						 mlxsw_m->max_modules_per_slot),
 				GFP_KERNEL);
 		if (!mlxsw_m->line_cards[i]) {
 			err = -ENOMEM;

@@ -1369,13 +1369,13 @@ static const struct ice_dummy_pkt_profile ice_dummy_pkt_profiles[] = {
 	ICE_PKT_PROFILE(tcp, 0),
 };
 
-#define ICE_SW_RULE_RX_TX_HDR_SIZE(s, l)	struct_size((s), hdr_data, (l))
+#define ICE_SW_RULE_RX_TX_HDR_SIZE(s, l)	flex_struct_size((s), hdr_data, (l))
 #define ICE_SW_RULE_RX_TX_ETH_HDR_SIZE(s)	\
 	ICE_SW_RULE_RX_TX_HDR_SIZE((s), DUMMY_ETH_HDR_LEN)
 #define ICE_SW_RULE_RX_TX_NO_HDR_SIZE(s)	\
 	ICE_SW_RULE_RX_TX_HDR_SIZE((s), 0)
-#define ICE_SW_RULE_LG_ACT_SIZE(s, n)		struct_size((s), act, (n))
-#define ICE_SW_RULE_VSI_LIST_SIZE(s, n)		struct_size((s), vsi, (n))
+#define ICE_SW_RULE_LG_ACT_SIZE(s, n)		flex_struct_size((s), act, (n))
+#define ICE_SW_RULE_VSI_LIST_SIZE(s, n)		flex_struct_size((s), vsi, (n))
 
 /* this is a recipe to profile association bitmap */
 static DECLARE_BITMAP(recipe_to_profile[ICE_MAX_NUM_RECIPES],
@@ -1826,7 +1826,7 @@ ice_aq_alloc_free_vsi_list(struct ice_hw *hw, u16 *vsi_list_id,
 	u16 buf_len;
 	int status;
 
-	buf_len = struct_size(sw_buf, elem, 1);
+	buf_len = flex_struct_size(sw_buf, elem, 1);
 	sw_buf = devm_kzalloc(ice_hw_to_dev(hw), buf_len, GFP_KERNEL);
 	if (!sw_buf)
 		return -ENOMEM;
@@ -2096,7 +2096,7 @@ static int ice_alloc_recipe(struct ice_hw *hw, u16 *rid)
 	u16 buf_len;
 	int status;
 
-	buf_len = struct_size(sw_buf, elem, 1);
+	buf_len = flex_struct_size(sw_buf, elem, 1);
 	sw_buf = kzalloc(buf_len, GFP_KERNEL);
 	if (!sw_buf)
 		return -ENOMEM;
@@ -4478,7 +4478,7 @@ ice_alloc_res_cntr(struct ice_hw *hw, u8 type, u8 alloc_shared, u16 num_items,
 	int status;
 
 	/* Allocate resource */
-	buf_len = struct_size(buf, elem, 1);
+	buf_len = flex_struct_size(buf, elem, 1);
 	buf = kzalloc(buf_len, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -4516,7 +4516,7 @@ ice_free_res_cntr(struct ice_hw *hw, u8 type, u8 alloc_shared, u16 num_items,
 	int status;
 
 	/* Free resource */
-	buf_len = struct_size(buf, elem, 1);
+	buf_len = flex_struct_size(buf, elem, 1);
 	buf = kzalloc(buf_len, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;

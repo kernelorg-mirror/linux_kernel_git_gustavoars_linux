@@ -919,7 +919,7 @@ atc_prep_dma_interleaved(struct dma_chan *chan,
 		ATC_SRC_PIP | ATC_DST_PIP |
 		FIELD_PREP(ATC_FC, ATC_FC_MEM2MEM);
 
-	desc = kzalloc(struct_size(desc, sg, 1), GFP_ATOMIC);
+	desc = kzalloc(flex_struct_size(desc, sg, 1), GFP_ATOMIC);
 	if (!desc)
 		return NULL;
 	desc->sglen = 1;
@@ -982,7 +982,7 @@ atc_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
 	}
 
 	sg_len = DIV_ROUND_UP(len, ATC_BTSIZE_MAX);
-	desc = kzalloc(struct_size(desc, sg, sg_len), GFP_ATOMIC);
+	desc = kzalloc(flex_struct_size(desc, sg, sg_len), GFP_ATOMIC);
 	if (!desc)
 		return NULL;
 	desc->sglen = sg_len;
@@ -1121,7 +1121,7 @@ atc_prep_dma_memset(struct dma_chan *chan, dma_addr_t dest, int value,
 		       (fill_pattern << 8) |
 		       fill_pattern;
 
-	desc = kzalloc(struct_size(desc, sg, 1), GFP_ATOMIC);
+	desc = kzalloc(flex_struct_size(desc, sg, 1), GFP_ATOMIC);
 	if (!desc)
 		goto err_free_buffer;
 	desc->sglen = 1;
@@ -1181,7 +1181,7 @@ atc_prep_dma_memset_sg(struct dma_chan *chan,
 	}
 	*(u32*)vaddr = value;
 
-	desc = kzalloc(struct_size(desc, sg, sg_len), GFP_ATOMIC);
+	desc = kzalloc(flex_struct_size(desc, sg, sg_len), GFP_ATOMIC);
 	if (!desc)
 		goto err_free_dma_buf;
 	desc->sglen = sg_len;
@@ -1264,7 +1264,7 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 		return NULL;
 	}
 
-	desc = kzalloc(struct_size(desc, sg, sg_len), GFP_ATOMIC);
+	desc = kzalloc(flex_struct_size(desc, sg, sg_len), GFP_ATOMIC);
 	if (!desc)
 		return NULL;
 	desc->sglen = sg_len;
@@ -1521,7 +1521,7 @@ atc_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
 	if (atc_dma_cyclic_check_values(reg_width, buf_addr, period_len))
 		goto err_out;
 
-	desc = kzalloc(struct_size(desc, sg, periods), GFP_ATOMIC);
+	desc = kzalloc(flex_struct_size(desc, sg, periods), GFP_ATOMIC);
 	if (!desc)
 		goto err_out;
 	desc->sglen = periods;
@@ -1948,7 +1948,7 @@ static int __init at_dma_probe(struct platform_device *pdev)
 		return -ENODEV;
 
 	atdma = devm_kzalloc(&pdev->dev,
-			     struct_size(atdma, chan, plat_dat->nr_channels),
+			     flex_struct_size(atdma, chan, plat_dat->nr_channels),
 			     GFP_KERNEL);
 	if (!atdma)
 		return -ENOMEM;

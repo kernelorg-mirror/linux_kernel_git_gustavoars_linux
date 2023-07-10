@@ -521,8 +521,8 @@ i40e_config_rdma_qvlist(struct i40e_vf *vf,
 	}
 
 	kfree(vf->qvlist_info);
-	vf->qvlist_info = kzalloc(struct_size(vf->qvlist_info, qv_info,
-					      qvlist_info->num_vectors - 1),
+	vf->qvlist_info = kzalloc(flex_struct_size(vf->qvlist_info, qv_info,
+						   qvlist_info->num_vectors - 1),
 				  GFP_KERNEL);
 	if (!vf->qvlist_info) {
 		ret = -ENOMEM;
@@ -2103,7 +2103,7 @@ static int i40e_vc_get_vf_resources_msg(struct i40e_vf *vf, u8 *msg)
 		goto err;
 	}
 
-	len = struct_size(vfres, vsi_res, num_vsis);
+	len = flex_struct_size(vfres, vsi_res, num_vsis);
 	vfres = kzalloc(len, GFP_KERNEL);
 	if (!vfres) {
 		aq_ret = I40E_ERR_NO_MEMORY;

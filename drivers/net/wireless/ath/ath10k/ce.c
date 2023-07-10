@@ -1458,8 +1458,8 @@ ath10k_ce_alloc_src_ring(struct ath10k *ar, unsigned int ce_id,
 
 	nentries = roundup_pow_of_two(nentries);
 
-	src_ring = kzalloc(struct_size(src_ring, per_transfer_context,
-				       nentries), GFP_KERNEL);
+	src_ring = kzalloc(flex_struct_size(src_ring, per_transfer_context,
+					    nentries), GFP_KERNEL);
 	if (src_ring == NULL)
 		return ERR_PTR(-ENOMEM);
 
@@ -1516,8 +1516,8 @@ ath10k_ce_alloc_src_ring_64(struct ath10k *ar, unsigned int ce_id,
 
 	nentries = roundup_pow_of_two(nentries);
 
-	src_ring = kzalloc(struct_size(src_ring, per_transfer_context,
-				       nentries), GFP_KERNEL);
+	src_ring = kzalloc(flex_struct_size(src_ring, per_transfer_context,
+					    nentries), GFP_KERNEL);
 	if (!src_ring)
 		return ERR_PTR(-ENOMEM);
 
@@ -1572,8 +1572,8 @@ ath10k_ce_alloc_dest_ring(struct ath10k *ar, unsigned int ce_id,
 
 	nentries = roundup_pow_of_two(attr->dest_nentries);
 
-	dest_ring = kzalloc(struct_size(dest_ring, per_transfer_context,
-					nentries), GFP_KERNEL);
+	dest_ring = kzalloc(flex_struct_size(dest_ring, per_transfer_context,
+					     nentries), GFP_KERNEL);
 	if (dest_ring == NULL)
 		return ERR_PTR(-ENOMEM);
 
@@ -1616,8 +1616,8 @@ ath10k_ce_alloc_dest_ring_64(struct ath10k *ar, unsigned int ce_id,
 
 	nentries = roundup_pow_of_two(attr->dest_nentries);
 
-	dest_ring = kzalloc(struct_size(dest_ring, per_transfer_context,
-					nentries), GFP_KERNEL);
+	dest_ring = kzalloc(flex_struct_size(dest_ring, per_transfer_context,
+					     nentries), GFP_KERNEL);
 	if (!dest_ring)
 		return ERR_PTR(-ENOMEM);
 

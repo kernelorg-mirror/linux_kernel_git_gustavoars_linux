@@ -143,7 +143,7 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
 		    (direct_max && (direct_max != hwirq_max))))
 		return NULL;
 
-	domain = kzalloc_node(struct_size(domain, revmap, size),
+	domain = kzalloc_node(flex_struct_size(domain, revmap, size),
 			      GFP_KERNEL, of_node_to_nid(to_of_node(fwnode)));
 	if (!domain)
 		return NULL;

@@ -1372,7 +1372,7 @@ static noinline int btrfs_ioctl_snap_create_v2(struct file *file,
 
 		nums = inherit->num_qgroups + 2 * inherit->num_ref_copies +
 		       2 * inherit->num_excl_copies;
-		if (vol_args->size != struct_size(inherit, qgroups, nums)) {
+		if (vol_args->size != flex_struct_size(inherit, qgroups, nums)) {
 			ret = -EINVAL;
 			goto free_inherit;
 		}

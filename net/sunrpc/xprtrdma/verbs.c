@@ -604,7 +604,7 @@ static struct rpcrdma_sendctx *rpcrdma_sendctx_create(struct rpcrdma_ep *ep)
 {
 	struct rpcrdma_sendctx *sc;
 
-	sc = kzalloc(struct_size(sc, sc_sges, ep->re_attr.cap.max_send_sge),
+	sc = kzalloc(flex_struct_size(sc, sc_sges, ep->re_attr.cap.max_send_sge),
 		     XPRTRDMA_GFP_FLAGS);
 	if (!sc)
 		return NULL;

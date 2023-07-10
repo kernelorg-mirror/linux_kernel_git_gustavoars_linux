@@ -289,7 +289,7 @@ static int z_erofs_create_pcluster_pool(void)
 
 	for (pcs = pcluster_pool;
 	     pcs < pcluster_pool + ARRAY_SIZE(pcluster_pool); ++pcs) {
-		size = struct_size(a, compressed_bvecs, pcs->maxpages);
+		size = flex_struct_size(a, compressed_bvecs, pcs->maxpages);
 
 		sprintf(pcs->name, "erofs_pcluster-%u", pcs->maxpages);
 		pcs->slab = kmem_cache_create(pcs->name, size, 0,

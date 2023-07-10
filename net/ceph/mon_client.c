@@ -117,7 +117,8 @@ static struct ceph_monmap *ceph_monmap_decode(void **p, void *end, bool msgr2)
 	if (num_mon > CEPH_MAX_MON)
 		goto e_inval;
 
-	monmap = kmalloc(struct_size(monmap, mon_inst, num_mon), GFP_NOIO);
+	monmap = kmalloc(flex_struct_size(monmap, mon_inst, num_mon),
+			 GFP_NOIO);
 	if (!monmap) {
 		ret = -ENOMEM;
 		goto fail;
@@ -1132,7 +1133,7 @@ static int build_initial_monmap(struct ceph_mon_client *monc)
 	int i;
 
 	/* build initial monmap */
-	monc->monmap = kzalloc(struct_size(monc->monmap, mon_inst, num_mon),
+	monc->monmap = kzalloc(flex_struct_size(monc->monmap, mon_inst, num_mon),
 			       GFP_KERNEL);
 	if (!monc->monmap)
 		return -ENOMEM;

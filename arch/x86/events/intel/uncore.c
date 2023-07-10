@@ -1016,7 +1016,7 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
 		} *attr_group;
 		for (i = 0; type->event_descs[i].attr.attr.name; i++);
 
-		attr_group = kzalloc(struct_size(attr_group, attrs, i + 1),
+		attr_group = kzalloc(flex_struct_size(attr_group, attrs, i + 1),
 								GFP_KERNEL);
 		if (!attr_group)
 			goto err;

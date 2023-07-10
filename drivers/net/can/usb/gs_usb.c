@@ -844,14 +844,14 @@ static int gs_can_open(struct net_device *netdev)
 	ctrlmode = dev->can.ctrlmode;
 	if (ctrlmode & CAN_CTRLMODE_FD) {
 		if (dev->feature & GS_CAN_FEATURE_REQ_USB_QUIRK_LPC546XX)
-			dev->hf_size_tx = struct_size(hf, canfd_quirk, 1);
+			dev->hf_size_tx = flex_struct_size(hf, canfd_quirk, 1);
 		else
-			dev->hf_size_tx = struct_size(hf, canfd, 1);
+			dev->hf_size_tx = flex_struct_size(hf, canfd, 1);
 	} else {
 		if (dev->feature & GS_CAN_FEATURE_REQ_USB_QUIRK_LPC546XX)
-			dev->hf_size_tx = struct_size(hf, classic_can_quirk, 1);
+			dev->hf_size_tx = flex_struct_size(hf, classic_can_quirk, 1);
 		else
-			dev->hf_size_tx = struct_size(hf, classic_can, 1);
+			dev->hf_size_tx = flex_struct_size(hf, classic_can, 1);
 	}
 
 	if (!parent->active_channels) {
@@ -1427,14 +1427,14 @@ static int gs_usb_probe(struct usb_interface *intf,
 		*/
 		if (dev->canch[i]->can.ctrlmode_supported & CAN_CTRLMODE_FD) {
 			if (dev->canch[i]->feature & GS_CAN_FEATURE_HW_TIMESTAMP)
-				hf_size_rx = struct_size(hf, canfd_ts, 1);
+				hf_size_rx = flex_struct_size(hf, canfd_ts, 1);
 			else
-				hf_size_rx = struct_size(hf, canfd, 1);
+				hf_size_rx = flex_struct_size(hf, canfd, 1);
 		} else {
 			if (dev->canch[i]->feature & GS_CAN_FEATURE_HW_TIMESTAMP)
-				hf_size_rx = struct_size(hf, classic_can_ts, 1);
+				hf_size_rx = flex_struct_size(hf, classic_can_ts, 1);
 			else
-				hf_size_rx = struct_size(hf, classic_can, 1);
+				hf_size_rx = flex_struct_size(hf, classic_can, 1);
 		}
 		dev->hf_size_rx = max(dev->hf_size_rx, hf_size_rx);
 	}

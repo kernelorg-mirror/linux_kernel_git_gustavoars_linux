@@ -496,7 +496,7 @@ int phm_initializa_dynamic_state_adjustment_rule_settings(struct pp_hwmgr *hwmgr
 	struct phm_ppt_v1_information *pptable_info = (struct phm_ppt_v1_information *)(hwmgr->pptable);
 
 	/* initialize vddc_dep_on_dal_pwrl table */
-	table_clk_vlt = kzalloc(struct_size(table_clk_vlt, entries, 4),
+	table_clk_vlt = kzalloc(flex_struct_size(table_clk_vlt, entries, 4),
 				GFP_KERNEL);
 
 	if (NULL == table_clk_vlt) {

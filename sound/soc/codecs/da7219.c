@@ -2135,7 +2135,7 @@ static int da7219_register_dai_clks(struct snd_soc_component *component)
 
 	/* For DT platforms allocate onecell data for clock registration */
 	if (np) {
-		clk_data = kzalloc(struct_size(clk_data, hws, DA7219_DAI_NUM_CLKS),
+		clk_data = kzalloc(flex_struct_size(clk_data, hws, DA7219_DAI_NUM_CLKS),
 				   GFP_KERNEL);
 		if (!clk_data)
 			return -ENOMEM;

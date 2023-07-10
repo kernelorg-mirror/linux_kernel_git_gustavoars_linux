@@ -456,7 +456,7 @@ static unsigned int trace_string(struct synth_trace_event *entry,
 	if (is_dynamic) {
 		u32 data_offset;
 
-		data_offset = struct_size(entry, fields, event->n_u64);
+		data_offset = flex_struct_size(entry, fields, event->n_u64);
 		data_offset += data_size;
 
 		len = fetch_store_strlen((unsigned long)str_val);
@@ -496,7 +496,7 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
 	u32 data_offset;
 	void *data_loc;
 
-	data_offset = struct_size(entry, fields, event->n_u64);
+	data_offset = flex_struct_size(entry, fields, event->n_u64);
 	data_offset += data_size;
 
 	for (len = 0; len < HIST_STACKTRACE_DEPTH; len++) {

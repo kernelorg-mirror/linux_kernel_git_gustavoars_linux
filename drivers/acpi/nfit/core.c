@@ -894,7 +894,7 @@ static size_t sizeof_flush(struct acpi_nfit_flush_address *flush)
 {
 	if (flush->header.length < sizeof(*flush))
 		return 0;
-	return struct_size(flush, hint_address, flush->hint_count);
+	return flex_struct_size(flush, hint_address, flush->hint_count);
 }
 
 static bool add_flush(struct acpi_nfit_desc *acpi_desc,

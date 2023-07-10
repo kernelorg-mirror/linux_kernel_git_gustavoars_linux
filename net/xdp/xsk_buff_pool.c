@@ -61,7 +61,8 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
 	u32 i, entries;
 
 	entries = unaligned ? umem->chunks : 0;
-	pool = kvzalloc(struct_size(pool, free_heads, entries),	GFP_KERNEL);
+	pool = kvzalloc(flex_struct_size(pool, free_heads, entries),
+				GFP_KERNEL);
 	if (!pool)
 		goto out;
 

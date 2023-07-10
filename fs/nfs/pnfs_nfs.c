@@ -99,7 +99,7 @@ pnfs_alloc_commit_array(size_t n, gfp_t gfp_flags)
 	struct pnfs_commit_array *p;
 	struct pnfs_commit_bucket *b;
 
-	p = kmalloc(struct_size(p, buckets, n), gfp_flags);
+	p = kmalloc(flex_struct_size(p, buckets, n), gfp_flags);
 	if (!p)
 		return NULL;
 	p->nbuckets = n;

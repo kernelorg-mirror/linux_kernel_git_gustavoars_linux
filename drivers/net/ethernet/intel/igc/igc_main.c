@@ -4570,10 +4570,11 @@ static int igc_alloc_q_vector(struct igc_adapter *adapter,
 	/* allocate q_vector and rings */
 	q_vector = adapter->q_vector[v_idx];
 	if (!q_vector)
-		q_vector = kzalloc(struct_size(q_vector, ring, ring_count),
+		q_vector = kzalloc(flex_struct_size(q_vector, ring, ring_count),
 				   GFP_KERNEL);
 	else
-		memset(q_vector, 0, struct_size(q_vector, ring, ring_count));
+		memset(q_vector, 0,
+		       flex_struct_size(q_vector, ring, ring_count));
 	if (!q_vector)
 		return -ENOMEM;
 

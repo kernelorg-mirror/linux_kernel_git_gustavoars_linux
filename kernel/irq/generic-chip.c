@@ -244,7 +244,7 @@ irq_alloc_generic_chip(const char *name, int num_ct, unsigned int irq_base,
 {
 	struct irq_chip_generic *gc;
 
-	gc = kzalloc(struct_size(gc, chip_types, num_ct), GFP_KERNEL);
+	gc = kzalloc(flex_struct_size(gc, chip_types, num_ct), GFP_KERNEL);
 	if (gc) {
 		irq_init_generic_chip(gc, name, num_ct, irq_base, reg_base,
 				      handler);
@@ -305,8 +305,8 @@ int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
 		return -EINVAL;
 
 	/* Allocate a pointer, generic chip and chiptypes for each chip */
-	gc_sz = struct_size(gc, chip_types, num_ct);
-	dgc_sz = struct_size(dgc, gc, numchips);
+	gc_sz = flex_struct_size(gc, chip_types, num_ct);
+	dgc_sz = flex_struct_size(dgc, gc, numchips);
 	sz = dgc_sz + numchips * gc_sz;
 
 	tmp = dgc = kzalloc(sz, GFP_KERNEL);

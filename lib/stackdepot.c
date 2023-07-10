@@ -260,7 +260,7 @@ static struct stack_record *
 depot_alloc_stack(unsigned long *entries, int size, u32 hash, void **prealloc)
 {
 	struct stack_record *stack;
-	size_t required_size = struct_size(stack, entries, size);
+	size_t required_size = flex_struct_size(stack, entries, size);
 
 	required_size = ALIGN(required_size, 1 << DEPOT_STACK_ALIGN);
 

@@ -1827,7 +1827,7 @@ int ice_vsi_cfg_single_txq(struct ice_vsi *vsi, struct ice_tx_ring **tx_rings, u
 	if (q_idx >= vsi->alloc_txq || !tx_rings || !tx_rings[q_idx])
 		return -EINVAL;
 
-	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
+	qg_buf = kzalloc(flex_struct_size(qg_buf, txqs, 1), GFP_KERNEL);
 	if (!qg_buf)
 		return -ENOMEM;
 
@@ -1881,7 +1881,7 @@ ice_vsi_cfg_txqs(struct ice_vsi *vsi, struct ice_tx_ring **rings, u16 count)
 	u16 q_idx = 0;
 	int err = 0;
 
-	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
+	qg_buf = kzalloc(flex_struct_size(qg_buf, txqs, 1), GFP_KERNEL);
 	if (!qg_buf)
 		return -ENOMEM;
 

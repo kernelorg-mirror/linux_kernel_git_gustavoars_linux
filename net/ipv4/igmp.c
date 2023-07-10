@@ -2247,7 +2247,8 @@ static int ip_mc_leave_src(struct sock *sk, struct ip_mc_socklist *iml,
 			iml->sfmode, psf->sl_count, psf->sl_addr, 0);
 	RCU_INIT_POINTER(iml->sflist, NULL);
 	/* decrease mem now to avoid the memleak warning */
-	atomic_sub(struct_size(psf, sl_addr, psf->sl_max), &sk->sk_omem_alloc);
+	atomic_sub(flex_struct_size(psf, sl_addr, psf->sl_max),
+		   &sk->sk_omem_alloc);
 	kfree_rcu(psf, rcu);
 	return err;
 }
@@ -2396,7 +2397,8 @@ int ip_mc_source(int add, int omode, struct sock *sk, struct
 
 		if (psl)
 			count += psl->sl_max;
-		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr, count),
+		newpsl = sock_kmalloc(sk,
+				      flex_struct_size(newpsl, sl_addr, count),
 				      GFP_KERNEL);
 		if (!newpsl) {
 			err = -ENOBUFS;
@@ -2408,7 +2410,7 @@ int ip_mc_source(int add, int omode, struct sock *sk, struct
 			for (i = 0; i < psl->sl_count; i++)
 				newpsl->sl_addr[i] = psl->sl_addr[i];
 			/* decrease mem now to avoid the memleak warning */
-			atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
+			atomic_sub(flex_struct_size(psl, sl_addr, psl->sl_max),
 				   &sk->sk_omem_alloc);
 		}
 		rcu_assign_pointer(pmc->sflist, newpsl);
@@ -2485,8 +2487,8 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
 		goto done;
 	}
 	if (msf->imsf_numsrc) {
-		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr,
-						      msf->imsf_numsrc),
+		newpsl = sock_kmalloc(sk, flex_struct_size(newpsl, sl_addr,
+							   msf->imsf_numsrc),
 				      GFP_KERNEL);
 		if (!newpsl) {
 			err = -ENOBUFS;
@@ -2499,8 +2501,8 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
 			msf->imsf_fmode, newpsl->sl_count, newpsl->sl_addr, 0);
 		if (err) {
 			sock_kfree_s(sk, newpsl,
-				     struct_size(newpsl, sl_addr,
-						 newpsl->sl_max));
+				     flex_struct_size(newpsl, sl_addr,
+						      newpsl->sl_max));
 			goto done;
 		}
 	} else {
@@ -2513,7 +2515,7 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
 		(void) ip_mc_del_src(in_dev, &msf->imsf_multiaddr, pmc->sfmode,
 			psl->sl_count, psl->sl_addr, 0);
 		/* decrease mem now to avoid the memleak warning */
-		atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
+		atomic_sub(flex_struct_size(psl, sl_addr, psl->sl_max),
 			   &sk->sk_omem_alloc);
 	} else {
 		(void) ip_mc_del_src(in_dev, &msf->imsf_multiaddr, pmc->sfmode,

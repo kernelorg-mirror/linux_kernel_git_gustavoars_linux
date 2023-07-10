@@ -340,7 +340,7 @@ static struct list_lru_memcg *memcg_init_list_lru_one(gfp_t gfp)
 	int nid;
 	struct list_lru_memcg *mlru;
 
-	mlru = kmalloc(struct_size(mlru, node, nr_node_ids), gfp);
+	mlru = kmalloc(flex_struct_size(mlru, node, nr_node_ids), gfp);
 	if (!mlru)
 		return NULL;
 

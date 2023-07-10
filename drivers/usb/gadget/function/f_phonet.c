@@ -669,7 +669,8 @@ static struct usb_function *phonet_alloc(struct usb_function_instance *fi)
 	struct f_phonet *fp;
 	struct f_phonet_opts *opts;
 
-	fp = kzalloc(struct_size(fp, out_reqv, phonet_rxq_size), GFP_KERNEL);
+	fp = kzalloc(flex_struct_size(fp, out_reqv, phonet_rxq_size),
+		     GFP_KERNEL);
 	if (!fp)
 		return ERR_PTR(-ENOMEM);
 

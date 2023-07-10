@@ -761,7 +761,7 @@ static int cfi_intelext_partition_fixup(struct mtd_info *mtd,
 		}
 
 		numvirtchips = cfi->numchips * numparts;
-		newcfi = kmalloc(struct_size(newcfi, chips, numvirtchips),
+		newcfi = kmalloc(flex_struct_size(newcfi, chips, numvirtchips),
 				 GFP_KERNEL);
 		if (!newcfi)
 			return -ENOMEM;

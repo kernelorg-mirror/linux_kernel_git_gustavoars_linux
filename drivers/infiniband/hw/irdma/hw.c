@@ -472,7 +472,7 @@ static int irdma_save_msix_info(struct irdma_pci_f *rf)
 		return -EINVAL;
 
 	size = sizeof(struct irdma_msix_vector) * rf->msix_count;
-	size += struct_size(iw_qvlist, qv_info, rf->msix_count);
+	size += flex_struct_size(iw_qvlist, qv_info, rf->msix_count);
 	rf->iw_msixtbl = kzalloc(size, GFP_KERNEL);
 	if (!rf->iw_msixtbl)
 		return -ENOMEM;

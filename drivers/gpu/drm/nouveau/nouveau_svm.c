@@ -902,7 +902,7 @@ nouveau_pfns_alloc(unsigned long npages)
 {
 	struct nouveau_pfnmap_args *args;
 
-	args = kzalloc(struct_size(args, p.phys, npages), GFP_KERNEL);
+	args = kzalloc(flex_struct_size(args, p.phys, npages), GFP_KERNEL);
 	if (!args)
 		return NULL;
 
@@ -934,7 +934,7 @@ nouveau_pfns_map(struct nouveau_svmm *svmm, struct mm_struct *mm,
 	mutex_lock(&svmm->mutex);
 
 	ret = nvif_object_ioctl(&svmm->vmm->vmm.object, args,
-				struct_size(args, p.phys, npages), NULL);
+				flex_struct_size(args, p.phys, npages), NULL);
 
 	mutex_unlock(&svmm->mutex);
 }

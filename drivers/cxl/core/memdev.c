@@ -745,7 +745,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
 	struct cxl_mbox_cmd mbox_cmd;
 	int rc;
 
-	transfer = kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+	transfer = kzalloc(flex_struct_size(transfer, data, 0), GFP_KERNEL);
 	if (!transfer)
 		return -ENOMEM;
 
@@ -795,7 +795,7 @@ static enum fw_upload_err cxl_fw_prepare(struct fw_upload *fwl, const u8 *data,
 	if (!size)
 		return FW_UPLOAD_ERR_INVALID_SIZE;
 
-	mds->fw.oneshot = struct_size(transfer, data, size) <
+	mds->fw.oneshot = flex_struct_size(transfer, data, size) <
 			    mds->payload_size;
 
 	if (cxl_mem_get_fw_info(mds))
@@ -842,7 +842,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
 	cur_size = min_t(size_t, size, mds->payload_size - sizeof(*transfer));
 
 	remaining = size - cur_size;
-	size_in = struct_size(transfer, data, cur_size);
+	size_in = flex_struct_size(transfer, data, cur_size);
 
 	if (test_and_clear_bit(CXL_FW_CANCEL, mds->fw.state))
 		return cxl_fw_do_cancel(fwl);

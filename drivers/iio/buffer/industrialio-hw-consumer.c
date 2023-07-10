@@ -59,7 +59,7 @@ static struct hw_consumer_buffer *iio_hw_consumer_get_buffer(
 			return buf;
 	}
 
-	buf = kzalloc(struct_size(buf, scan_mask, BITS_TO_LONGS(indio_dev->masklength)),
+	buf = kzalloc(flex_struct_size(buf, scan_mask, BITS_TO_LONGS(indio_dev->masklength)),
 		      GFP_KERNEL);
 	if (!buf)
 		return NULL;

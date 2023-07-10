@@ -658,7 +658,8 @@ static void overflow_size_helpers_test(struct kunit *test)
 	/* Verify constant expression against runtime version. */
 	var = 55;
 	OPTIMIZER_HIDE_VAR(var);
-	KUNIT_EXPECT_EQ(test, sizeof(ce_array), struct_size(obj, data, var));
+	KUNIT_EXPECT_EQ(test, sizeof(ce_array),
+			flex_struct_size(obj, data, var));
 
 #define check_one_size_helper(expected, func, args...)	do {	\
 	size_t _r = func(args);					\
@@ -721,16 +722,16 @@ static void overflow_size_helpers_test(struct kunit *test)
 
 	var = 4;
 	check_one_size_helper(sizeof(*obj) + (4 * sizeof(*obj->data)),
-			      struct_size, obj, data, var++);
+			      flex_struct_size, obj, data, var++);
 	check_one_size_helper(sizeof(*obj) + (5 * sizeof(*obj->data)),
-			      struct_size, obj, data, var++);
-	check_one_size_helper(sizeof(*obj), struct_size, obj, data, 0 + unconst);
+			      flex_struct_size, obj, data, var++);
+	check_one_size_helper(sizeof(*obj), flex_struct_size, obj, data, 0 + unconst);
 	check_one_size_helper(sizeof(*obj) + sizeof(*obj->data),
-			      struct_size, obj, data, 1 + unconst);
+			      flex_struct_size, obj, data, 1 + unconst);
 	check_one_size_helper(SIZE_MAX,
-			      struct_size, obj, data, -3 + unconst);
+			      flex_struct_size, obj, data, -3 + unconst);
 	check_one_size_helper(SIZE_MAX,
-			      struct_size, obj, data, SIZE_MAX - 3 + unconst);
+			      flex_struct_size, obj, data, SIZE_MAX - 3 + unconst);
 
 	kunit_info(test, "%d overflow size helper tests finished\n", count);
 #undef check_one_size_helper

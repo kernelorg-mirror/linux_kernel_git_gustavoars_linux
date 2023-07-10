@@ -1657,7 +1657,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
 	if (!is_cxl_root(port))
 		return ERR_PTR(-EINVAL);
 
-	cxlrd = kzalloc(struct_size(cxlrd, cxlsd.target, nr_targets),
+	cxlrd = kzalloc(flex_struct_size(cxlrd, cxlsd.target, nr_targets),
 			GFP_KERNEL);
 	if (!cxlrd)
 		return ERR_PTR(-ENOMEM);
@@ -1711,7 +1711,8 @@ struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
 	if (is_cxl_root(port) || is_cxl_endpoint(port))
 		return ERR_PTR(-EINVAL);
 
-	cxlsd = kzalloc(struct_size(cxlsd, target, nr_targets), GFP_KERNEL);
+	cxlsd = kzalloc(flex_struct_size(cxlsd, target, nr_targets),
+			GFP_KERNEL);
 	if (!cxlsd)
 		return ERR_PTR(-ENOMEM);
 

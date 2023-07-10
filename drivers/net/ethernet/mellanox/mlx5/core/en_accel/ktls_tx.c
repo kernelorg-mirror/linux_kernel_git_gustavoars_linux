@@ -146,7 +146,7 @@ static struct mlx5e_bulk_async_ctx *mlx5e_bulk_async_init(struct mlx5_core_dev *
 	int sz;
 	int i;
 
-	sz = struct_size(bulk_async, arr, n);
+	sz = flex_struct_size(bulk_async, arr, n);
 	bulk_async = kvzalloc(sz, GFP_KERNEL);
 	if (!bulk_async)
 		return NULL;

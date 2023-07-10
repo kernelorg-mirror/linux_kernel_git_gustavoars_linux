@@ -574,9 +574,9 @@ static void amdgpu_discovery_read_harvest_bit_per_ip(struct amdgpu_device *adev,
 			}
 next_ip:
 			if (ihdr->base_addr_64_bit)
-				ip_offset += struct_size(ip, base_address_64, ip->num_base_address);
+				ip_offset += flex_struct_size(ip, base_address_64, ip->num_base_address);
 			else
-				ip_offset += struct_size(ip, base_address, ip->num_base_address);
+				ip_offset += flex_struct_size(ip, base_address, ip->num_base_address);
 		}
 	}
 }
@@ -982,9 +982,9 @@ static int amdgpu_discovery_sysfs_ips(struct amdgpu_device *adev,
 
 			/* Now register its instance.
 			 */
-			ip_hw_instance = kzalloc(struct_size(ip_hw_instance,
-							     base_addr,
-							     ip->num_base_address),
+			ip_hw_instance = kzalloc(flex_struct_size(ip_hw_instance,
+								  base_addr,
+								  ip->num_base_address),
 						 GFP_KERNEL);
 			if (!ip_hw_instance) {
 				DRM_ERROR("no memory for ip_hw_instance");
@@ -1015,10 +1015,10 @@ static int amdgpu_discovery_sysfs_ips(struct amdgpu_device *adev,
 					  "%d", ip_hw_instance->num_instance);
 next_ip:
 			if (reg_base_64)
-				ip_offset += struct_size(ip, base_address_64,
+				ip_offset += flex_struct_size(ip, base_address_64,
 							 ip->num_base_address);
 			else
-				ip_offset += struct_size(ip, base_address,
+				ip_offset += flex_struct_size(ip, base_address,
 							 ip->num_base_address);
 		}
 	}
@@ -1336,9 +1336,9 @@ static int amdgpu_discovery_reg_base_init(struct amdgpu_device *adev)
 
 next_ip:
 			if (ihdr->base_addr_64_bit)
-				ip_offset += struct_size(ip, base_address_64, ip->num_base_address);
+				ip_offset += flex_struct_size(ip, base_address_64, ip->num_base_address);
 			else
-				ip_offset += struct_size(ip, base_address, ip->num_base_address);
+				ip_offset += flex_struct_size(ip, base_address, ip->num_base_address);
 		}
 	}
 

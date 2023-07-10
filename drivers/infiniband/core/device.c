@@ -803,8 +803,8 @@ static int alloc_port_data(struct ib_device *device)
 	 * Therefore port_data is declared as a 1 based array with potential
 	 * empty slots at the beginning.
 	 */
-	pdata_rcu = kzalloc(struct_size(pdata_rcu, pdata,
-					rdma_end_port(device) + 1),
+	pdata_rcu = kzalloc(flex_struct_size(pdata_rcu, pdata,
+					     rdma_end_port(device) + 1),
 			    GFP_KERNEL);
 	if (!pdata_rcu)
 		return -ENOMEM;

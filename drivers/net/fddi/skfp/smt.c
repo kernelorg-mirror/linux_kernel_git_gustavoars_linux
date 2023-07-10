@@ -1063,7 +1063,7 @@ static void smt_send_sif_operation(struct s_smc *smc, struct fddi_addr *dest,
 #endif
 
 	if (!(mb = smt_build_frame(smc,SMT_SIF_OPER,SMT_REPLY,
-				   struct_size(sif, lem, ports))))
+				   flex_struct_size(sif, lem, ports))))
 		return ;
 	sif = smtod(mb, typeof(sif));
 	smt_fill_timestamp(smc,&sif->ts) ;	/* set time stamp */

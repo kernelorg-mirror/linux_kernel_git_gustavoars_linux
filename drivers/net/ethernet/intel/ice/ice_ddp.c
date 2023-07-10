@@ -35,7 +35,7 @@ enum ice_ddp_state ice_verify_pkg(struct ice_pkg_hdr *pkg, u32 len)
 	u32 seg_count;
 	u32 i;
 
-	if (len < struct_size(pkg, seg_offset, 1))
+	if (len < flex_struct_size(pkg, seg_offset, 1))
 		return ICE_DDP_PKG_INVALID_FILE;
 
 	if (pkg->pkg_format_ver.major != ICE_PKG_FMT_VER_MAJ ||
@@ -50,7 +50,7 @@ enum ice_ddp_state ice_verify_pkg(struct ice_pkg_hdr *pkg, u32 len)
 		return ICE_DDP_PKG_INVALID_FILE;
 
 	/* make sure segment array fits in package length */
-	if (len < struct_size(pkg, seg_offset, seg_count))
+	if (len < flex_struct_size(pkg, seg_offset, seg_count))
 		return ICE_DDP_PKG_INVALID_FILE;
 
 	/* all segments must fit within length */
@@ -1563,7 +1563,7 @@ static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
 	u16 size;
 	u32 i;
 
-	size = struct_size(pkg_info, pkg_info, ICE_PKG_CNT);
+	size = flex_struct_size(pkg_info, pkg_info, ICE_PKG_CNT);
 	pkg_info = kzalloc(size, GFP_KERNEL);
 	if (!pkg_info)
 		return ICE_DDP_PKG_ERR;
@@ -1641,7 +1641,7 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
 	}
 
 	/* Check if FW is compatible with the OS package */
-	size = struct_size(pkg, pkg_info, ICE_PKG_CNT);
+	size = flex_struct_size(pkg, pkg_info, ICE_PKG_CNT);
 	pkg = kzalloc(size, GFP_KERNEL);
 	if (!pkg)
 		return ICE_DDP_PKG_ERR;

@@ -4049,7 +4049,7 @@ static void cm_recv_handler(struct ib_mad_agent *mad_agent,
 	attr_id = be16_to_cpu(mad_recv_wc->recv_buf.mad->mad_hdr.attr_id);
 	atomic_long_inc(&port->counters[CM_RECV][attr_id - CM_ATTR_ID_OFFSET]);
 
-	work = kmalloc(struct_size(work, path, paths), GFP_KERNEL);
+	work = kmalloc(flex_struct_size(work, path, paths), GFP_KERNEL);
 	if (!work) {
 		ib_free_recv_mad(mad_recv_wc);
 		return;
@@ -4347,7 +4347,7 @@ static int cm_add_one(struct ib_device *ib_device)
 	int count = 0;
 	u32 i;
 
-	cm_dev = kzalloc(struct_size(cm_dev, port, ib_device->phys_port_cnt),
+	cm_dev = kzalloc(flex_struct_size(cm_dev, port, ib_device->phys_port_cnt),
 			 GFP_KERNEL);
 	if (!cm_dev)
 		return -ENOMEM;

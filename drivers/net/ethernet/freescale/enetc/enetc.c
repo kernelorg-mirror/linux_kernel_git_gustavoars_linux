@@ -2996,7 +2996,8 @@ int enetc_alloc_msix(struct enetc_ndev_priv *priv)
 		struct enetc_bdr *bdr;
 		int j;
 
-		v = kzalloc(struct_size(v, tx_ring, v_tx_rings), GFP_KERNEL);
+		v = kzalloc(flex_struct_size(v, tx_ring, v_tx_rings),
+			    GFP_KERNEL);
 		if (!v) {
 			err = -ENOMEM;
 			goto fail;

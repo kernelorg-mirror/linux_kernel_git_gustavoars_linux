@@ -105,7 +105,8 @@ static int u8500_hsem_probe(struct platform_device *pdev)
 	/* clear all interrupts */
 	writel(0xFFFF, io_base + HSEM_ICRALL);
 
-	bank = devm_kzalloc(&pdev->dev, struct_size(bank, lock, num_locks),
+	bank = devm_kzalloc(&pdev->dev,
+			    flex_struct_size(bank, lock, num_locks),
 			    GFP_KERNEL);
 	if (!bank)
 		return -ENOMEM;

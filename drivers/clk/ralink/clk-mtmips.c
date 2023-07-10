@@ -907,7 +907,7 @@ static void __init mtmips_clk_init(struct device_node *node)
 	priv->data = data;
 	count = priv->data->num_clk_base + priv->data->num_clk_fixed +
 		priv->data->num_clk_factor + priv->data->num_clk_periph;
-	clk_data = kzalloc(struct_size(clk_data, hws, count), GFP_KERNEL);
+	clk_data = kzalloc(flex_struct_size(clk_data, hws, count), GFP_KERNEL);
 	if (!clk_data)
 		goto free_clk_priv;
 

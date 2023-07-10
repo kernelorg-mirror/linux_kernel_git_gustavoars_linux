@@ -269,7 +269,7 @@ static u32 nvmet_format_ana_group(struct nvmet_req *req, u32 grpid,
 	desc->chgcnt = cpu_to_le64(nvmet_ana_chgcnt);
 	desc->state = req->port->ana_state[grpid];
 	memset(desc->rsvd17, 0, sizeof(desc->rsvd17));
-	return struct_size(desc, nsids, count);
+	return flex_struct_size(desc, nsids, count);
 }
 
 static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
@@ -283,7 +283,7 @@ static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
 	u16 status;
 
 	status = NVME_SC_INTERNAL;
-	desc = kmalloc(struct_size(desc, nsids, NVMET_MAX_NAMESPACES),
+	desc = kmalloc(flex_struct_size(desc, nsids, NVMET_MAX_NAMESPACES),
 		       GFP_KERNEL);
 	if (!desc)
 		goto out;

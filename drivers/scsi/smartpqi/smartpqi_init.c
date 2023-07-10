@@ -1232,8 +1232,9 @@ static inline int pqi_report_phys_luns(struct pqi_ctrl_info *ctrl_info, void **b
 	rpl_8byte_wwid_list = rpl_list;
 	num_physicals = get_unaligned_be32(&rpl_8byte_wwid_list->header.list_length) / sizeof(rpl_8byte_wwid_list->lun_entries[0]);
 
-	rpl_16byte_wwid_list = kmalloc(struct_size(rpl_16byte_wwid_list, lun_entries,
-						   num_physicals), GFP_KERNEL);
+	rpl_16byte_wwid_list = kmalloc(flex_struct_size(rpl_16byte_wwid_list, lun_entries,
+							num_physicals),
+				       GFP_KERNEL);
 	if (!rpl_16byte_wwid_list)
 		return -ENOMEM;
 

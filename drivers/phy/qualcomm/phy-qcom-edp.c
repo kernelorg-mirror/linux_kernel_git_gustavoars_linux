@@ -743,7 +743,8 @@ static int qcom_edp_clks_register(struct qcom_edp *edp, struct device_node *np)
 	char name[64];
 	int ret;
 
-	data = devm_kzalloc(edp->dev, struct_size(data, hws, 2), GFP_KERNEL);
+	data = devm_kzalloc(edp->dev, flex_struct_size(data, hws, 2),
+			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 

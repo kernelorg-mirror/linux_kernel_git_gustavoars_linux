@@ -1793,7 +1793,7 @@ int mlx5_ib_advise_mr_prefetch(struct ib_pd *pd,
 		return mlx5_ib_prefetch_sg_list(pd, advice, pf_flags, sg_list,
 						num_sge);
 
-	work = kvzalloc(struct_size(work, frags, num_sge), GFP_KERNEL);
+	work = kvzalloc(flex_struct_size(work, frags, num_sge), GFP_KERNEL);
 	if (!work)
 		return -ENOMEM;
 

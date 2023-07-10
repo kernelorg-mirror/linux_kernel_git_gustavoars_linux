@@ -906,7 +906,7 @@ static int qib_user_sdma_queue_pkts(const struct qib_devdata *dd,
 			size_t tidsmsize, n, pktsize, sz, addrlimit;
 
 			n = npages*((2*PAGE_SIZE/frag_size)+1);
-			pktsize = struct_size(pkt, addr, n);
+			pktsize = flex_struct_size(pkt, addr, n);
 
 			/*
 			 * Determine if this is tid-sdma or just sdma.

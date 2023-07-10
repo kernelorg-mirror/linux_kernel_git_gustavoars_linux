@@ -1628,10 +1628,10 @@ static bool check_read_regs(struct zd_usb *usb, struct usb_req_read_regs *req,
 	/* The created block size seems to be larger than expected.
 	 * However results appear to be correct.
 	 */
-	if (rr->length < struct_size(regs, regs, count)) {
+	if (rr->length < flex_struct_size(regs, regs, count)) {
 		dev_dbg_f(zd_usb_dev(usb),
 			 "error: actual length %d less than expected %zu\n",
-			 rr->length, struct_size(regs, regs, count));
+			 rr->length, flex_struct_size(regs, regs, count));
 		return false;
 	}
 
@@ -1887,7 +1887,7 @@ int zd_usb_iowrite16v_async(struct zd_usb *usb, const struct zd_ioreq16 *ioreqs,
 	if (!urb)
 		return -ENOMEM;
 
-	req_len = struct_size(req, reg_writes, count);
+	req_len = flex_struct_size(req, reg_writes, count);
 	req = kmalloc(req_len, GFP_KERNEL);
 	if (!req) {
 		r = -ENOMEM;

@@ -229,7 +229,9 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
 	qnodes = desc->nodes;
 	num_nodes = desc->num_nodes;
 
-	data = devm_kzalloc(&pdev->dev, struct_size(data, nodes, num_nodes), GFP_KERNEL);
+	data = devm_kzalloc(&pdev->dev,
+			    flex_struct_size(data, nodes, num_nodes),
+			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 

@@ -319,7 +319,7 @@ static struct stm32_mdma_desc *stm32_mdma_alloc_desc(
 	struct stm32_mdma_desc *desc;
 	int i;
 
-	desc = kzalloc(struct_size(desc, node, count), GFP_NOWAIT);
+	desc = kzalloc(flex_struct_size(desc, node, count), GFP_NOWAIT);
 	if (!desc)
 		return NULL;
 
@@ -1609,7 +1609,7 @@ static int stm32_mdma_probe(struct platform_device *pdev)
 		count = 0;
 
 	dmadev = devm_kzalloc(&pdev->dev,
-			      struct_size(dmadev, ahb_addr_masks, count),
+			      flex_struct_size(dmadev, ahb_addr_masks, count),
 			      GFP_KERNEL);
 	if (!dmadev)
 		return -ENOMEM;

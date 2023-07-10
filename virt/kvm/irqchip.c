@@ -183,7 +183,8 @@ int kvm_set_irq_routing(struct kvm *kvm,
 
 	nr_rt_entries += 1;
 
-	new = kzalloc(struct_size(new, map, nr_rt_entries), GFP_KERNEL_ACCOUNT);
+	new = kzalloc(flex_struct_size(new, map, nr_rt_entries),
+		      GFP_KERNEL_ACCOUNT);
 	if (!new)
 		return -ENOMEM;
 

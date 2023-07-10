@@ -2527,7 +2527,9 @@ static int cdns_torrent_clk_register(struct cdns_torrent_phy *cdns_phy)
 	struct clk_hw_onecell_data *data;
 	int ret;
 
-	data = devm_kzalloc(dev, struct_size(data, hws, CDNS_TORRENT_OUTPUT_CLOCKS), GFP_KERNEL);
+	data = devm_kzalloc(dev,
+			    flex_struct_size(data, hws, CDNS_TORRENT_OUTPUT_CLOCKS),
+			    GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 

@@ -1249,7 +1249,7 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
 		if (ret < 0)
 			return ret;
 		command = ContainerRawIo2;
-		fibsize = struct_size(readcmd2, sge,
+		fibsize = flex_struct_size(readcmd2, sge,
 				     le32_to_cpu(readcmd2->sgeCnt));
 	} else {
 		struct aac_raw_io *readcmd;
@@ -1380,7 +1380,7 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
 		if (ret < 0)
 			return ret;
 		command = ContainerRawIo2;
-		fibsize = struct_size(writecmd2, sge,
+		fibsize = flex_struct_size(writecmd2, sge,
 				      le32_to_cpu(writecmd2->sgeCnt));
 	} else {
 		struct aac_raw_io *writecmd;

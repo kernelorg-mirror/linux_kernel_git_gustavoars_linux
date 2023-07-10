@@ -51,7 +51,7 @@ static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
 	int i;
 
 	event_header = addr;
-	size = struct_size(event_header, event, event_header->event_size);
+	size = flex_struct_size(event_header, event, event_header->event_size);
 
 	if (*pos == 0) {
 		if (addr + size < limit) {
@@ -97,7 +97,7 @@ static void *tpm2_bios_measurements_next(struct seq_file *m, void *v,
 	event_header = log->bios_event_log;
 
 	if (v == SEQ_START_TOKEN) {
-		event_size = struct_size(event_header, event,
+		event_size = flex_struct_size(event_header, event,
 					 event_header->event_size);
 		marker = event_header;
 	} else {
@@ -135,7 +135,7 @@ static int tpm2_binary_bios_measurements_show(struct seq_file *m, void *v)
 	size_t size;
 
 	if (v == SEQ_START_TOKEN) {
-		size = struct_size(event_header, event,
+		size = flex_struct_size(event_header, event,
 				   event_header->event_size);
 		temp_ptr = event_header;
 

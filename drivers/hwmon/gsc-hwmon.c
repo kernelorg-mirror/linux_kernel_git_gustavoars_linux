@@ -257,7 +257,8 @@ gsc_hwmon_get_devtree_pdata(struct device *dev)
 	if (nchannels == 0)
 		return ERR_PTR(-ENODEV);
 
-	pdata = devm_kzalloc(dev, struct_size(pdata, channels, nchannels),
+	pdata = devm_kzalloc(dev,
+			     flex_struct_size(pdata, channels, nchannels),
 			     GFP_KERNEL);
 	if (!pdata)
 		return ERR_PTR(-ENOMEM);

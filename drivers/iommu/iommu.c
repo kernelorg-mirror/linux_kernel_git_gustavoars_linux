@@ -2737,7 +2737,7 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
 		return -ENOMEM;
 
 	/* Preallocate for the overwhelmingly common case of 1 ID */
-	fwspec = kzalloc(struct_size(fwspec, ids, 1), GFP_KERNEL);
+	fwspec = kzalloc(flex_struct_size(fwspec, ids, 1), GFP_KERNEL);
 	if (!fwspec)
 		return -ENOMEM;
 
@@ -2771,7 +2771,8 @@ int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
 
 	new_num = fwspec->num_ids + num_ids;
 	if (new_num > 1) {
-		fwspec = krealloc(fwspec, struct_size(fwspec, ids, new_num),
+		fwspec = krealloc(fwspec,
+				  flex_struct_size(fwspec, ids, new_num),
 				  GFP_KERNEL);
 		if (!fwspec)
 			return -ENOMEM;

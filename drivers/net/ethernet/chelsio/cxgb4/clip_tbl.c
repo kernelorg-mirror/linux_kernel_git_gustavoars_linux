@@ -287,7 +287,8 @@ struct clip_tbl *t4_init_clip_tbl(unsigned int clipt_start,
 	if (clipt_size < CLIPT_MIN_HASH_BUCKETS)
 		return NULL;
 
-	ctbl = kvzalloc(struct_size(ctbl, hash_list, clipt_size), GFP_KERNEL);
+	ctbl = kvzalloc(flex_struct_size(ctbl, hash_list, clipt_size),
+			GFP_KERNEL);
 	if (!ctbl)
 		return NULL;
 

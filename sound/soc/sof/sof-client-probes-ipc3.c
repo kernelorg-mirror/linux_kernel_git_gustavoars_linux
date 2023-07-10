@@ -64,7 +64,7 @@ static int ipc3_probes_init(struct sof_client_dev *cdev, u32 stream_tag,
 			    size_t buffer_size)
 {
 	struct sof_ipc_probe_dma_add_params *msg;
-	size_t size = struct_size(msg, dma, 1);
+	size_t size = flex_struct_size(msg, dma, 1);
 	int ret;
 
 	msg = kmalloc(size, GFP_KERNEL);
@@ -177,7 +177,7 @@ static int ipc3_probes_points_add(struct sof_client_dev *cdev,
 				  size_t num_desc)
 {
 	struct sof_ipc_probe_point_add_params *msg;
-	size_t size = struct_size(msg, desc, num_desc);
+	size_t size = flex_struct_size(msg, desc, num_desc);
 	int ret;
 
 	msg = kmalloc(size, GFP_KERNEL);
@@ -207,7 +207,7 @@ static int ipc3_probes_points_remove(struct sof_client_dev *cdev,
 				     size_t num_buffer_id)
 {
 	struct sof_ipc_probe_point_remove_params *msg;
-	size_t size = struct_size(msg, buffer_id, num_buffer_id);
+	size_t size = flex_struct_size(msg, buffer_id, num_buffer_id);
 	int ret;
 
 	msg = kmalloc(size, GFP_KERNEL);

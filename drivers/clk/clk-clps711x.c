@@ -53,8 +53,8 @@ static void __init clps711x_clk_init_dt(struct device_node *np)
 	base = of_iomap(np, 0);
 	BUG_ON(!base);
 
-	clps711x_clk = kzalloc(struct_size(clps711x_clk, clk_data.hws,
-					   CLPS711X_CLK_MAX),
+	clps711x_clk = kzalloc(flex_struct_size(clps711x_clk, clk_data.hws,
+						CLPS711X_CLK_MAX),
 			       GFP_KERNEL);
 	BUG_ON(!clps711x_clk);
 

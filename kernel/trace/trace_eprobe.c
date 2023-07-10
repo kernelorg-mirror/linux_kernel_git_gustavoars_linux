@@ -203,7 +203,7 @@ static struct trace_eprobe *alloc_event_probe(const char *group,
 	sys_name = event->class->system;
 	event_name = trace_event_name(event);
 
-	ep = kzalloc(struct_size(ep, tp.args, nargs), GFP_KERNEL);
+	ep = kzalloc(flex_struct_size(ep, tp.args, nargs), GFP_KERNEL);
 	if (!ep) {
 		trace_event_put_ref(event);
 		goto error;

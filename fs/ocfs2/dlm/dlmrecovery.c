@@ -1121,7 +1121,7 @@ static int dlm_send_mig_lockres_msg(struct dlm_ctxt *dlm,
 
 	/* send it */
 	ret = o2net_send_message(DLM_MIG_LOCKRES_MSG, dlm->key, mres,
-				 struct_size(mres, ml, mres->num_locks),
+				 flex_struct_size(mres, ml, mres->num_locks),
 				 send_to, &status);
 	if (ret < 0) {
 		/* XXX: negative status is not handled.

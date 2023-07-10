@@ -566,7 +566,7 @@ static int read_ext_index_list(struct sock *sk, struct hci_dev *hdev,
 			count++;
 	}
 
-	rp = kmalloc(struct_size(rp, entry, count), GFP_ATOMIC);
+	rp = kmalloc(flex_struct_size(rp, entry, count), GFP_ATOMIC);
 	if (!rp) {
 		read_unlock(&hci_dev_list_lock);
 		return -ENOMEM;
@@ -615,7 +615,7 @@ static int read_ext_index_list(struct sock *sk, struct hci_dev *hdev,
 
 	err = mgmt_cmd_complete(sk, MGMT_INDEX_NONE,
 				MGMT_OP_READ_EXT_INDEX_LIST, 0, rp,
-				struct_size(rp, entry, count));
+				flex_struct_size(rp, entry, count));
 
 	kfree(rp);
 
@@ -2879,7 +2879,7 @@ static int load_link_keys(struct sock *sk, struct hci_dev *hdev, void *data,
 				       MGMT_STATUS_INVALID_PARAMS);
 	}
 
-	expected_len = struct_size(cp, keys, key_count);
+	expected_len = flex_struct_size(cp, keys, key_count);
 	if (expected_len != len) {
 		bt_dev_err(hdev, "load_link_keys: expected %u bytes, got %u bytes",
 			   expected_len, len);
@@ -3225,7 +3225,7 @@ static int get_connections(struct sock *sk, struct hci_dev *hdev, void *data,
 			i++;
 	}
 
-	rp = kmalloc(struct_size(rp, addr, i), GFP_KERNEL);
+	rp = kmalloc(flex_struct_size(rp, addr, i), GFP_KERNEL);
 	if (!rp) {
 		err = -ENOMEM;
 		goto unlock;
@@ -3246,7 +3246,7 @@ static int get_connections(struct sock *sk, struct hci_dev *hdev, void *data,
 
 	/* Recalculate length in case of filtered SCO connections, etc */
 	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_GET_CONNECTIONS, 0, rp,
-				struct_size(rp, addr, i));
+				flex_struct_size(rp, addr, i));
 
 	kfree(rp);
 
@@ -4207,7 +4207,7 @@ static int set_blocked_keys(struct sock *sk, struct hci_dev *hdev, void *data,
 				       MGMT_STATUS_INVALID_PARAMS);
 	}
 
-	expected_len = struct_size(keys, keys, key_count);
+	expected_len = flex_struct_size(keys, keys, key_count);
 	if (expected_len != len) {
 		bt_dev_err(hdev, "expected %u bytes, got %u bytes",
 			   expected_len, len);
@@ -7105,7 +7105,7 @@ static int load_irks(struct sock *sk, struct hci_dev *hdev, void *cp_data,
 				       MGMT_STATUS_INVALID_PARAMS);
 	}
 
-	expected_len = struct_size(cp, irks, irk_count);
+	expected_len = flex_struct_size(cp, irks, irk_count);
 	if (expected_len != len) {
 		bt_dev_err(hdev, "load_irks: expected %u bytes, got %u bytes",
 			   expected_len, len);
@@ -7195,7 +7195,7 @@ static int load_long_term_keys(struct sock *sk, struct hci_dev *hdev,
 				       MGMT_STATUS_INVALID_PARAMS);
 	}
 
-	expected_len = struct_size(cp, keys, key_count);
+	expected_len = flex_struct_size(cp, keys, key_count);
 	if (expected_len != len) {
 		bt_dev_err(hdev, "load_keys: expected %u bytes, got %u bytes",
 			   expected_len, len);
@@ -7885,7 +7885,7 @@ static int load_conn_param(struct sock *sk, struct hci_dev *hdev, void *data,
 				       MGMT_STATUS_INVALID_PARAMS);
 	}
 
-	expected_len = struct_size(cp, params, param_count);
+	expected_len = flex_struct_size(cp, params, param_count);
 	if (expected_len != len) {
 		bt_dev_err(hdev, "load_conn_param: expected %u bytes, got %u bytes",
 			   expected_len, len);

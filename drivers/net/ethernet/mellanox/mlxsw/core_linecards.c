@@ -1517,7 +1517,7 @@ int mlxsw_linecards_init(struct mlxsw_core *mlxsw_core,
 	if (!slot_count)
 		return 0;
 
-	linecards = vzalloc(struct_size(linecards, linecards, slot_count));
+	linecards = vzalloc(flex_struct_size(linecards, linecards, slot_count));
 	if (!linecards)
 		return -ENOMEM;
 	linecards->count = slot_count;

@@ -569,8 +569,9 @@ static int i40e_client_setup_qvlist(struct i40e_info *ldev,
 	struct i40e_qv_info *qv_info;
 	u32 v_idx, i, reg_idx, reg;
 
-	ldev->qvlist_info = kzalloc(struct_size(ldev->qvlist_info, qv_info,
-				    qvlist_info->num_vectors), GFP_KERNEL);
+	ldev->qvlist_info = kzalloc(flex_struct_size(ldev->qvlist_info, qv_info,
+						     qvlist_info->num_vectors),
+				    GFP_KERNEL);
 	if (!ldev->qvlist_info)
 		return -ENOMEM;
 	ldev->qvlist_info->num_vectors = qvlist_info->num_vectors;

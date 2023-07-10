@@ -304,7 +304,7 @@ net_dm_hw_reset_per_cpu_data(struct per_cpu_dm_data *hw_data)
 	struct net_dm_hw_entries *hw_entries;
 	unsigned long flags;
 
-	hw_entries = kzalloc(struct_size(hw_entries, entries, dm_hit_limit),
+	hw_entries = kzalloc(flex_struct_size(hw_entries, entries, dm_hit_limit),
 			     GFP_KERNEL);
 	if (!hw_entries) {
 		/* If the memory allocation failed, we try to perform another

@@ -1440,7 +1440,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
 	int ret;
 
 	cdata = of_device_get_match_data(&pdev->dev);
-	size = struct_size(tdma, channels, cdata->nr_channels);
+	size = flex_struct_size(tdma, channels, cdata->nr_channels);
 
 	tdma = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
 	if (!tdma)

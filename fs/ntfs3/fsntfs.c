@@ -1714,7 +1714,7 @@ static_assert(sizeof(s_default_security) == 0x50);
 
 static inline u32 sid_length(const struct SID *sid)
 {
-	return struct_size(sid, SubAuthority, sid->SubAuthorityCount);
+	return flex_struct_size(sid, SubAuthority, sid->SubAuthorityCount);
 }
 
 /*

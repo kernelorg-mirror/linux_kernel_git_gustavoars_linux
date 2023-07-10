@@ -1089,7 +1089,7 @@ static struct i915_gem_engines *alloc_engines(unsigned int count)
 {
 	struct i915_gem_engines *e;
 
-	e = kzalloc(struct_size(e, engines, count), GFP_KERNEL);
+	e = kzalloc(flex_struct_size(e, engines, count), GFP_KERNEL);
 	if (!e)
 		return NULL;
 

@@ -223,7 +223,8 @@ static int hci_dma_init(struct i3c_hci *hci)
 	}
 	if (nr_rings > XFER_RINGS)
 		nr_rings = XFER_RINGS;
-	rings = kzalloc(struct_size(rings, headers, nr_rings), GFP_KERNEL);
+	rings = kzalloc(flex_struct_size(rings, headers, nr_rings),
+			GFP_KERNEL);
 	if (!rings)
 		return -ENOMEM;
 	hci->io_data = rings;

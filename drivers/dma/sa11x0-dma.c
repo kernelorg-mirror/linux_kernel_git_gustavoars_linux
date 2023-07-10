@@ -553,7 +553,7 @@ static struct dma_async_tx_descriptor *sa11x0_dma_prep_slave_sg(
 		}
 	}
 
-	txd = kzalloc(struct_size(txd, sg, j), GFP_ATOMIC);
+	txd = kzalloc(flex_struct_size(txd, sg, j), GFP_ATOMIC);
 	if (!txd) {
 		dev_dbg(chan->device->dev, "vchan %p: kzalloc failed\n", &c->vc);
 		return NULL;
@@ -623,7 +623,7 @@ static struct dma_async_tx_descriptor *sa11x0_dma_prep_dma_cyclic(
 	if (sglen == 0)
 		return NULL;
 
-	txd = kzalloc(struct_size(txd, sg, sglen), GFP_ATOMIC);
+	txd = kzalloc(flex_struct_size(txd, sg, sglen), GFP_ATOMIC);
 	if (!txd) {
 		dev_dbg(chan->device->dev, "vchan %p: kzalloc failed\n", &c->vc);
 		return NULL;

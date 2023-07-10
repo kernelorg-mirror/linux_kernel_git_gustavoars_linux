@@ -4973,7 +4973,7 @@ mlxsw_sp_nexthop_obj_group_info_init(struct mlxsw_sp *mlxsw_sp,
 		return -EINVAL;
 	}
 
-	nhgi = kzalloc(struct_size(nhgi, nexthops, nhs), GFP_KERNEL);
+	nhgi = kzalloc(flex_struct_size(nhgi, nexthops, nhs), GFP_KERNEL);
 	if (!nhgi)
 		return -ENOMEM;
 	nh_grp->nhgi = nhgi;
@@ -5431,7 +5431,7 @@ mlxsw_sp_nexthop4_group_info_init(struct mlxsw_sp *mlxsw_sp,
 	struct mlxsw_sp_nexthop *nh;
 	int err, i;
 
-	nhgi = kzalloc(struct_size(nhgi, nexthops, nhs), GFP_KERNEL);
+	nhgi = kzalloc(flex_struct_size(nhgi, nexthops, nhs), GFP_KERNEL);
 	if (!nhgi)
 		return -ENOMEM;
 	nh_grp->nhgi = nhgi;
@@ -6681,7 +6681,7 @@ mlxsw_sp_nexthop6_group_info_init(struct mlxsw_sp *mlxsw_sp,
 	struct mlxsw_sp_nexthop *nh;
 	int err, i;
 
-	nhgi = kzalloc(struct_size(nhgi, nexthops, fib6_entry->nrt6),
+	nhgi = kzalloc(flex_struct_size(nhgi, nexthops, fib6_entry->nrt6),
 		       GFP_KERNEL);
 	if (!nhgi)
 		return -ENOMEM;

@@ -217,7 +217,7 @@ static int lan966x_clk_probe(struct platform_device *pdev)
 	struct resource *res;
 	int i, ret;
 
-	hw_data = devm_kzalloc(dev, struct_size(hw_data, hws, N_CLOCKS),
+	hw_data = devm_kzalloc(dev, flex_struct_size(hw_data, hws, N_CLOCKS),
 			       GFP_KERNEL);
 	if (!hw_data)
 		return -ENOMEM;

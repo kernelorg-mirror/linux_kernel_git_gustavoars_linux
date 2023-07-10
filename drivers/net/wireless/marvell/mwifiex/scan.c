@@ -2187,8 +2187,8 @@ int mwifiex_ret_802_11_scan(struct mwifiex_private *priv,
 
 	if (nd_config) {
 		adapter->nd_info =
-			kzalloc(struct_size(adapter->nd_info, matches,
-					    scan_rsp->number_of_sets),
+			kzalloc(flex_struct_size(adapter->nd_info, matches,
+						 scan_rsp->number_of_sets),
 				GFP_ATOMIC);
 
 		if (adapter->nd_info)

@@ -1487,7 +1487,7 @@ static int sba_prealloc_channel_resources(struct sba_device *sba)
 
 	for (i = 0; i < sba->max_req; i++) {
 		req = devm_kzalloc(sba->dev,
-				   struct_size(req, cmds, sba->max_cmd_per_req),
+				   flex_struct_size(req, cmds, sba->max_cmd_per_req),
 				   GFP_KERNEL);
 		if (!req) {
 			ret = -ENOMEM;

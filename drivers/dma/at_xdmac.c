@@ -2286,7 +2286,7 @@ static int at_xdmac_probe(struct platform_device *pdev)
 	}
 
 	atxdmac = devm_kzalloc(&pdev->dev,
-			       struct_size(atxdmac, chan, nr_channels),
+			       flex_struct_size(atxdmac, chan, nr_channels),
 			       GFP_KERNEL);
 	if (!atxdmac) {
 		dev_err(&pdev->dev, "can't allocate at_xdmac structure\n");

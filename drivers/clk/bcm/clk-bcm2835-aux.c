@@ -31,8 +31,8 @@ static int bcm2835_aux_clk_probe(struct platform_device *pdev)
 		return PTR_ERR(reg);
 
 	onecell = devm_kmalloc(dev,
-			       struct_size(onecell, hws,
-					   BCM2835_AUX_CLOCK_COUNT),
+			       flex_struct_size(onecell, hws,
+						BCM2835_AUX_CLOCK_COUNT),
 			       GFP_KERNEL);
 	if (!onecell)
 		return -ENOMEM;

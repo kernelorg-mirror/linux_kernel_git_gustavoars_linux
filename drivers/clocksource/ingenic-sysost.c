@@ -453,7 +453,7 @@ static int __init ingenic_ost_probe(struct device_node *np)
 
 	ost->soc_info = id->data;
 
-	ost->clocks = kzalloc(struct_size(ost->clocks, hws, ost->soc_info->num_channels),
+	ost->clocks = kzalloc(flex_struct_size(ost->clocks, hws, ost->soc_info->num_channels),
 			      GFP_KERNEL);
 	if (!ost->clocks) {
 		ret = -ENOMEM;

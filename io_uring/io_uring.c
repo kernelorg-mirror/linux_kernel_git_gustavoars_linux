@@ -2721,7 +2721,7 @@ static unsigned long rings_size(struct io_ring_ctx *ctx, unsigned int sq_entries
 	struct io_rings *rings;
 	size_t off, sq_array_size;
 
-	off = struct_size(rings, cqes, cq_entries);
+	off = flex_struct_size(rings, cqes, cq_entries);
 	if (off == SIZE_MAX)
 		return SIZE_MAX;
 	if (ctx->flags & IORING_SETUP_CQE32) {
@@ -4028,7 +4028,7 @@ static __cold int io_probe(struct io_ring_ctx *ctx, void __user *arg,
 	size_t size;
 	int i, ret;
 
-	size = struct_size(p, ops, nr_args);
+	size = flex_struct_size(p, ops, nr_args);
 	if (size == SIZE_MAX)
 		return -EOVERFLOW;
 	p = kzalloc(size, GFP_KERNEL);

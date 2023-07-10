@@ -512,7 +512,7 @@ static int am65_cpsw_set_taprio(struct net_device *ndev, void *type_data)
 	}
 
 	est_new = devm_kzalloc(&ndev->dev,
-			       struct_size(est_new, taprio.entries, taprio->num_entries),
+			       flex_struct_size(est_new, taprio.entries, taprio->num_entries),
 			       GFP_KERNEL);
 	if (!est_new)
 		return -ENOMEM;

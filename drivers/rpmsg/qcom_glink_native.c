@@ -810,7 +810,7 @@ static int qcom_glink_rx_defer(struct qcom_glink *glink, size_t extra)
 		return -ENXIO;
 	}
 
-	dcmd = kzalloc(struct_size(dcmd, data, extra), GFP_ATOMIC);
+	dcmd = kzalloc(flex_struct_size(dcmd, data, extra), GFP_ATOMIC);
 	if (!dcmd)
 		return -ENOMEM;
 
@@ -959,7 +959,7 @@ static void qcom_glink_handle_intent(struct qcom_glink *glink,
 		struct intent_pair intents[];
 	} __packed * msg;
 
-	const size_t msglen = struct_size(msg, intents, count);
+	const size_t msglen = flex_struct_size(msg, intents, count);
 	int ret;
 	int i;
 	unsigned long flags;

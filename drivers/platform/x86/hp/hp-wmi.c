@@ -326,7 +326,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
 		return mid;
 
 	actual_insize = max(insize, 128);
-	bios_args_size = struct_size(args, data, actual_insize);
+	bios_args_size = flex_struct_size(args, data, actual_insize);
 	args = kmalloc(bios_args_size, GFP_KERNEL);
 	if (!args)
 		return -ENOMEM;

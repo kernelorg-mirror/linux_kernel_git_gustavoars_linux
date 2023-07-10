@@ -80,7 +80,7 @@ static int hns_ppe_common_get_cfg(struct dsaf_device *dsaf_dev, int comm_index)
 		ppe_num = HNS_PPE_DEBUG_NW_ENGINE_NUM;
 
 	ppe_common = devm_kzalloc(dsaf_dev->dev,
-				  struct_size(ppe_common, ppe_cb, ppe_num),
+				  flex_struct_size(ppe_common, ppe_cb, ppe_num),
 				  GFP_KERNEL);
 	if (!ppe_common)
 		return -ENOMEM;

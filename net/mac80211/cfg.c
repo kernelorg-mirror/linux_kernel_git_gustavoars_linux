@@ -1147,19 +1147,19 @@ ieee80211_assign_beacon(struct ieee80211_sub_if_data *sdata,
 	/* new or old multiple BSSID elements? */
 	if (params->mbssid_ies) {
 		mbssid = params->mbssid_ies;
-		size += struct_size(new->mbssid_ies, elem, mbssid->cnt);
+		size += flex_struct_size(new->mbssid_ies, elem, mbssid->cnt);
 		if (params->rnr_ies) {
 			rnr = params->rnr_ies;
-			size += struct_size(new->rnr_ies, elem, rnr->cnt);
+			size += flex_struct_size(new->rnr_ies, elem, rnr->cnt);
 		}
 		size += ieee80211_get_mbssid_beacon_len(mbssid, rnr,
 							mbssid->cnt);
 	} else if (old && old->mbssid_ies) {
 		mbssid = old->mbssid_ies;
-		size += struct_size(new->mbssid_ies, elem, mbssid->cnt);
+		size += flex_struct_size(new->mbssid_ies, elem, mbssid->cnt);
 		if (old && old->rnr_ies) {
 			rnr = old->rnr_ies;
-			size += struct_size(new->rnr_ies, elem, rnr->cnt);
+			size += flex_struct_size(new->rnr_ies, elem, rnr->cnt);
 		}
 		size += ieee80211_get_mbssid_beacon_len(mbssid, rnr,
 							mbssid->cnt);
@@ -1184,12 +1184,12 @@ ieee80211_assign_beacon(struct ieee80211_sub_if_data *sdata,
 		u8 *pos = new->tail + new->tail_len;
 
 		new->mbssid_ies = (void *)pos;
-		pos += struct_size(new->mbssid_ies, elem, mbssid->cnt);
+		pos += flex_struct_size(new->mbssid_ies, elem, mbssid->cnt);
 		pos += ieee80211_copy_mbssid_beacon(pos, new->mbssid_ies,
 						    mbssid);
 		if (rnr) {
 			new->rnr_ies = (void *)pos;
-			pos += struct_size(new->rnr_ies, elem, rnr->cnt);
+			pos += flex_struct_size(new->rnr_ies, elem, rnr->cnt);
 			ieee80211_copy_rnr_beacon(pos, new->rnr_ies, rnr);
 		}
 		/* update bssid_indicator */
@@ -3471,8 +3471,8 @@ cfg80211_beacon_dup(struct cfg80211_beacon_data *beacon)
 
 	if (beacon->mbssid_ies && beacon->mbssid_ies->cnt) {
 		new_beacon->mbssid_ies =
-			kzalloc(struct_size(new_beacon->mbssid_ies,
-					    elem, beacon->mbssid_ies->cnt),
+			kzalloc(flex_struct_size(new_beacon->mbssid_ies,
+						 elem, beacon->mbssid_ies->cnt),
 				GFP_KERNEL);
 		if (!new_beacon->mbssid_ies) {
 			kfree(new_beacon);
@@ -3481,8 +3481,8 @@ cfg80211_beacon_dup(struct cfg80211_beacon_data *beacon)
 
 		if (beacon->rnr_ies && beacon->rnr_ies->cnt) {
 			new_beacon->rnr_ies =
-				kzalloc(struct_size(new_beacon->rnr_ies,
-						    elem, beacon->rnr_ies->cnt),
+				kzalloc(flex_struct_size(new_beacon->rnr_ies,
+							 elem, beacon->rnr_ies->cnt),
 					GFP_KERNEL);
 			if (!new_beacon->rnr_ies) {
 				kfree(new_beacon->mbssid_ies);

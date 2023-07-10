@@ -607,8 +607,9 @@ const struct objagg_stats *objagg_stats_get(struct objagg *objagg)
 	struct objagg_obj *objagg_obj;
 	int i;
 
-	objagg_stats = kzalloc(struct_size(objagg_stats, stats_info,
-					   objagg->obj_count), GFP_KERNEL);
+	objagg_stats = kzalloc(flex_struct_size(objagg_stats, stats_info,
+						objagg->obj_count),
+			       GFP_KERNEL);
 	if (!objagg_stats)
 		return ERR_PTR(-ENOMEM);
 
@@ -1022,8 +1023,8 @@ objagg_hints_stats_get(struct objagg_hints *objagg_hints)
 	struct objagg_hints_node *hnode;
 	int i;
 
-	objagg_stats = kzalloc(struct_size(objagg_stats, stats_info,
-					   objagg_hints->node_count),
+	objagg_stats = kzalloc(flex_struct_size(objagg_stats, stats_info,
+						objagg_hints->node_count),
 			       GFP_KERNEL);
 	if (!objagg_stats)
 		return ERR_PTR(-ENOMEM);

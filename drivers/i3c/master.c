@@ -937,8 +937,8 @@ int i3c_master_defslvs_locked(struct i3c_master_controller *master)
 		ndevs++;
 
 	defslvs = i3c_ccc_cmd_dest_init(&dest, I3C_BROADCAST_ADDR,
-					struct_size(defslvs, slaves,
-						    ndevs - 1));
+					flex_struct_size(defslvs, slaves,
+							 ndevs - 1));
 	if (!defslvs)
 		return -ENOMEM;
 

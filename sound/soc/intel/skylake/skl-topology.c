@@ -828,7 +828,7 @@ static int skl_tplg_find_moduleid_from_uuid(struct skl_dev *skl,
 
 	if (bc->set_params == SKL_PARAM_BIND && bc->max) {
 		uuid_params = (struct skl_kpb_params *)bc->params;
-		size = struct_size(params, u.map, uuid_params->num_modules);
+		size = flex_struct_size(params, u.map, uuid_params->num_modules);
 
 		params = devm_kzalloc(bus->dev, size, GFP_KERNEL);
 		if (!params)
@@ -3337,7 +3337,7 @@ static int skl_tplg_get_int_tkn(struct device *dev,
 			return -EINVAL;
 		}
 
-		size = struct_size(skl->cfg.astate_cfg, astate_table,
+		size = flex_struct_size(skl->cfg.astate_cfg, astate_table,
 				   tkn_elem->value);
 		skl->cfg.astate_cfg = devm_kzalloc(dev, size, GFP_KERNEL);
 		if (!skl->cfg.astate_cfg)

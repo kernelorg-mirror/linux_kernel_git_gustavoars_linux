@@ -218,7 +218,8 @@ static int omnia_leds_probe(struct i2c_client *client)
 		return -EINVAL;
 	}
 
-	leds = devm_kzalloc(dev, struct_size(leds, leds, count), GFP_KERNEL);
+	leds = devm_kzalloc(dev, flex_struct_size(leds, leds, count),
+			    GFP_KERNEL);
 	if (!leds)
 		return -ENOMEM;
 

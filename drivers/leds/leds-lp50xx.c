@@ -533,7 +533,7 @@ static int lp50xx_probe(struct i2c_client *client)
 		return -ENODEV;
 	}
 
-	led = devm_kzalloc(&client->dev, struct_size(led, leds, count),
+	led = devm_kzalloc(&client->dev, flex_struct_size(led, leds, count),
 			   GFP_KERNEL);
 	if (!led)
 		return -ENOMEM;

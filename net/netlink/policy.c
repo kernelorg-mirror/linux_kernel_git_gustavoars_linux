@@ -47,7 +47,7 @@ static int add_policy(struct netlink_policy_dump_state **statep,
 	}
 
 	n_alloc = state->n_alloc + INITIAL_POLICIES_ALLOC;
-	state = krealloc(state, struct_size(state, policies, n_alloc),
+	state = krealloc(state, flex_struct_size(state, policies, n_alloc),
 			 GFP_KERNEL);
 	if (!state)
 		return -ENOMEM;
@@ -101,7 +101,7 @@ static struct netlink_policy_dump_state *alloc_state(void)
 {
 	struct netlink_policy_dump_state *state;
 
-	state = kzalloc(struct_size(state, policies, INITIAL_POLICIES_ALLOC),
+	state = kzalloc(flex_struct_size(state, policies, INITIAL_POLICIES_ALLOC),
 			GFP_KERNEL);
 	if (!state)
 		return ERR_PTR(-ENOMEM);

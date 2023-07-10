@@ -153,7 +153,7 @@ static int ipc3_trace_update_filter(struct snd_sof_dev *sdev, int num_elems,
 	size_t size;
 	int ret;
 
-	size = struct_size(msg, elems, num_elems);
+	size = flex_struct_size(msg, elems, num_elems);
 	if (size > SOF_IPC_MSG_MAX_SIZE)
 		return -EINVAL;
 

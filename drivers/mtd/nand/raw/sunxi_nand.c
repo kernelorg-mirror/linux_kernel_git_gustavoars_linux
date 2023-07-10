@@ -1956,7 +1956,8 @@ static int sunxi_nand_chip_init(struct device *dev, struct sunxi_nfc *nfc,
 		return -EINVAL;
 	}
 
-	sunxi_nand = devm_kzalloc(dev, struct_size(sunxi_nand, sels, nsels),
+	sunxi_nand = devm_kzalloc(dev,
+				  flex_struct_size(sunxi_nand, sels, nsels),
 				  GFP_KERNEL);
 	if (!sunxi_nand)
 		return -ENOMEM;

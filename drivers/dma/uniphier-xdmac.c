@@ -292,7 +292,7 @@ uniphier_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
 
 	nr = 1 + len / XDMAC_MAX_WORD_SIZE;
 
-	xd = kzalloc(struct_size(xd, nodes, nr), GFP_NOWAIT);
+	xd = kzalloc(flex_struct_size(xd, nodes, nr), GFP_NOWAIT);
 	if (!xd)
 		return NULL;
 
@@ -348,7 +348,7 @@ uniphier_xdmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 		return NULL;
 	}
 
-	xd = kzalloc(struct_size(xd, nodes, sg_len), GFP_NOWAIT);
+	xd = kzalloc(flex_struct_size(xd, nodes, sg_len), GFP_NOWAIT);
 	if (!xd)
 		return NULL;
 
@@ -492,7 +492,7 @@ static int uniphier_xdmac_probe(struct platform_device *pdev)
 	if (nr_chans > XDMAC_MAX_CHANS)
 		nr_chans = XDMAC_MAX_CHANS;
 
-	xdev = devm_kzalloc(dev, struct_size(xdev, channels, nr_chans),
+	xdev = devm_kzalloc(dev, flex_struct_size(xdev, channels, nr_chans),
 			    GFP_KERNEL);
 	if (!xdev)
 		return -ENOMEM;

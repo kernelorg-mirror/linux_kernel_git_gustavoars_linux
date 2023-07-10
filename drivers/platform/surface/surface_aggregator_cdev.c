@@ -95,7 +95,7 @@ static u32 ssam_cdev_notifier(struct ssam_event_notifier *nf, const struct ssam_
 	struct ssam_cdev_notifier *cdev_nf = container_of(nf, struct ssam_cdev_notifier, nf);
 	struct ssam_cdev_client *client = cdev_nf->client;
 	struct ssam_cdev_event event;
-	size_t n = struct_size(&event, data, in->length);
+	size_t n = flex_struct_size(&event, data, in->length);
 
 	/* Translate event. */
 	event.target_category = in->target_category;
@@ -116,7 +116,8 @@ static u32 ssam_cdev_notifier(struct ssam_event_notifier *nf, const struct ssam_
 	}
 
 	/* Copy event header and payload. */
-	kfifo_in(&client->buffer, (const u8 *)&event, struct_size(&event, data, 0));
+	kfifo_in(&client->buffer, (const u8 *)&event,
+		 flex_struct_size(&event, data, 0));
 	kfifo_in(&client->buffer, &in->data[0], in->length);
 
 	mutex_unlock(&client->write_lock);

@@ -24,15 +24,15 @@
 static inline size_t unpacked_ea_size(const struct EA_FULL *ea)
 {
 	return ea->size ? le32_to_cpu(ea->size) :
-			  ALIGN(struct_size(ea, name,
-					    1 + ea->name_len +
-						    le16_to_cpu(ea->elength)),
+			  ALIGN(flex_struct_size(ea, name,
+			                         1 + ea->name_len +
+			                         le16_to_cpu(ea->elength)),
 				4);
 }
 
 static inline size_t packed_ea_size(const struct EA_FULL *ea)
 {
-	return struct_size(ea, name,
+	return flex_struct_size(ea, name,
 			   1 + ea->name_len + le16_to_cpu(ea->elength)) -
 	       offsetof(struct EA_FULL, flags);
 }
@@ -162,9 +162,9 @@ static int ntfs_read_ea(struct ntfs_inode *ni, struct EA_FULL **ea,
 		if (bytes < offsetof(struct EA_FULL, name))
 			goto out1;
 
-		ea_size = ALIGN(struct_size(ef, name,
-					    1 + ef->name_len +
-						    le16_to_cpu(ef->elength)),
+		ea_size = ALIGN(flex_struct_size(ef, name,
+						 1 + ef->name_len +
+						 le16_to_cpu(ef->elength)),
 				4);
 		if (ea_size > bytes)
 			goto out1;
@@ -330,7 +330,8 @@ static noinline int ntfs_set_ea(struct inode *inode, const char *name,
 		goto out;
 	}
 
-	add = ALIGN(struct_size(ea_all, name, 1 + name_len + val_size), 4);
+	add = ALIGN(flex_struct_size(ea_all, name, 1 + name_len + val_size),
+		    4);
 
 	err = ntfs_read_ea(ni, &ea_all, add, &info);
 	if (err)

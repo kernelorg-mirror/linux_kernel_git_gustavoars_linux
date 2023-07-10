@@ -402,7 +402,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
 		goto out_err_free;
 
 	rc = -ENOMEM;
-	fls = kzalloc(struct_size(fls, mirror_array, mirror_array_cnt),
+	fls = kzalloc(flex_struct_size(fls, mirror_array, mirror_array_cnt),
 			gfp_flags);
 	if (!fls)
 		goto out_err_free;

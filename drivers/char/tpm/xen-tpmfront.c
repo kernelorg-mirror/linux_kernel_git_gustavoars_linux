@@ -128,7 +128,7 @@ static void vtpm_cancel(struct tpm_chip *chip)
 
 static size_t shr_data_offset(struct vtpm_shared_page *shr)
 {
-	return struct_size(shr, extra_pages, shr->nr_extra_pages);
+	return flex_struct_size(shr, extra_pages, shr->nr_extra_pages);
 }
 
 static int vtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)

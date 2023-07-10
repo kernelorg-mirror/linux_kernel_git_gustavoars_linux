@@ -2093,7 +2093,7 @@ void iwl_mvm_rx_ba_notif(struct iwl_mvm *mvm, struct iwl_rx_cmd_buffer *rxb)
 			return;
 
 		if (IWL_FW_CHECK(mvm,
-				 struct_size(ba_res, tfd, tfd_cnt) > pkt_len,
+				 flex_struct_size(ba_res, tfd, tfd_cnt) > pkt_len,
 				 "short BA notification (tfds:%d, size:%d)\n",
 				 tfd_cnt, pkt_len))
 			return;

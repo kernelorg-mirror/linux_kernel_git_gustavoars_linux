@@ -482,7 +482,7 @@ struct fifo_buffer *fifo_alloc(unsigned int fifo_size)
 {
 	struct fifo_buffer *fb;
 
-	fb = kzalloc(struct_size(fb, values, fifo_size), GFP_NOIO);
+	fb = kzalloc(flex_struct_size(fb, values, fifo_size), GFP_NOIO);
 	if (!fb)
 		return NULL;
 

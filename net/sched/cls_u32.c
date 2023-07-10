@@ -355,7 +355,7 @@ static int u32_init(struct tcf_proto *tp)
 	void *key = tc_u_common_ptr(tp);
 	struct tc_u_common *tp_c = tc_u_common_find(key);
 
-	root_ht = kzalloc(struct_size(root_ht, ht, 1), GFP_KERNEL);
+	root_ht = kzalloc(flex_struct_size(root_ht, ht, 1), GFP_KERNEL);
 	if (root_ht == NULL)
 		return -ENOBUFS;
 
@@ -366,7 +366,8 @@ static int u32_init(struct tcf_proto *tp)
 	idr_init(&root_ht->handle_idr);
 
 	if (tp_c == NULL) {
-		tp_c = kzalloc(struct_size(tp_c, hlist->ht, 1), GFP_KERNEL);
+		tp_c = kzalloc(flex_struct_size(tp_c, hlist->ht, 1),
+			       GFP_KERNEL);
 		if (tp_c == NULL) {
 			kfree(root_ht);
 			return -ENOBUFS;
@@ -805,7 +806,7 @@ static struct tc_u_knode *u32_init_knode(struct net *net, struct tcf_proto *tp,
 	struct tc_u32_sel *s = &n->sel;
 	struct tc_u_knode *new;
 
-	new = kzalloc(struct_size(new, sel.keys, s->nkeys), GFP_KERNEL);
+	new = kzalloc(flex_struct_size(new, sel.keys, s->nkeys), GFP_KERNEL);
 	if (!new)
 		return NULL;
 
@@ -833,7 +834,7 @@ static struct tc_u_knode *u32_init_knode(struct net *net, struct tcf_proto *tp,
 	/* Similarly success statistics must be moved as pointers */
 	new->pcpu_success = n->pcpu_success;
 #endif
-	memcpy(&new->sel, s, struct_size(s, keys, s->nkeys));
+	memcpy(&new->sel, s, flex_struct_size(s, keys, s->nkeys));
 
 	if (tcf_exts_init(&new->exts, net, TCA_U32_ACT, TCA_U32_POLICE)) {
 		kfree(new);
@@ -943,7 +944,8 @@ static int u32_change(struct net *net, struct sk_buff *in_skb,
 			NL_SET_ERR_MSG_MOD(extack, "Divisor can only be used on a hash table");
 			return -EINVAL;
 		}
-		ht = kzalloc(struct_size(ht, ht, divisor + 1), GFP_KERNEL);
+		ht = kzalloc(flex_struct_size(ht, ht, divisor + 1),
+			     GFP_KERNEL);
 		if (ht == NULL)
 			return -ENOBUFS;
 		if (handle == 0) {
@@ -1023,20 +1025,20 @@ static int u32_change(struct net *net, struct sk_buff *in_skb,
 	}
 
 	s = nla_data(tb[TCA_U32_SEL]);
-	sel_size = struct_size(s, keys, s->nkeys);
+	sel_size = flex_struct_size(s, keys, s->nkeys);
 	if (nla_len(tb[TCA_U32_SEL]) < sel_size) {
 		err = -EINVAL;
 		goto erridr;
 	}
 
-	n = kzalloc(struct_size(n, sel.keys, s->nkeys), GFP_KERNEL);
+	n = kzalloc(flex_struct_size(n, sel.keys, s->nkeys), GFP_KERNEL);
 	if (n == NULL) {
 		err = -ENOBUFS;
 		goto erridr;
 	}
 
 #ifdef CONFIG_CLS_U32_PERF
-	n->pf = __alloc_percpu(struct_size(n->pf, kcnts, s->nkeys),
+	n->pf = __alloc_percpu(flex_struct_size(n->pf, kcnts, s->nkeys),
 			       __alignof__(struct tc_u32_pcnt));
 	if (!n->pf) {
 		err = -ENOBUFS;
@@ -1046,7 +1048,7 @@ static int u32_change(struct net *net, struct sk_buff *in_skb,
 
 	unsafe_memcpy(&n->sel, s, sel_size,
 		      /* A composite flex-array structure destination,
-		       * which was correctly sized with struct_size(),
+		       * which was correctly sized with flex_struct_size(),
 		       * bounds-checked against nla_len(), and allocated
 		       * above. */);
 	RCU_INIT_POINTER(n->ht_up, ht);
@@ -1285,7 +1287,7 @@ static int u32_dump(struct net *net, struct tcf_proto *tp, void *fh,
 		int cpu;
 #endif
 
-		if (nla_put(skb, TCA_U32_SEL, struct_size(&n->sel, keys, n->sel.nkeys),
+		if (nla_put(skb, TCA_U32_SEL, flex_struct_size(&n->sel, keys, n->sel.nkeys),
 			    &n->sel))
 			goto nla_put_failure;
 
@@ -1335,7 +1337,8 @@ static int u32_dump(struct net *net, struct tcf_proto *tp, void *fh,
 				goto nla_put_failure;
 		}
 #ifdef CONFIG_CLS_U32_PERF
-		gpf = kzalloc(struct_size(gpf, kcnts, n->sel.nkeys), GFP_KERNEL);
+		gpf = kzalloc(flex_struct_size(gpf, kcnts, n->sel.nkeys),
+			      GFP_KERNEL);
 		if (!gpf)
 			goto nla_put_failure;
 
@@ -1349,7 +1352,7 @@ static int u32_dump(struct net *net, struct tcf_proto *tp, void *fh,
 				gpf->kcnts[i] += pf->kcnts[i];
 		}
 
-		if (nla_put_64bit(skb, TCA_U32_PCNT, struct_size(gpf, kcnts, n->sel.nkeys),
+		if (nla_put_64bit(skb, TCA_U32_PCNT, flex_struct_size(gpf, kcnts, n->sel.nkeys),
 				  gpf, TCA_U32_PAD)) {
 			kfree(gpf);
 			goto nla_put_failure;

@@ -262,7 +262,7 @@ static int pci1xxxx_spi_probe(struct pci_dev *pdev, const struct pci_device_id *
 		only_sec_inst = 0;
 
 	spi_bus = devm_kzalloc(&pdev->dev,
-			       struct_size(spi_bus, spi_int, hw_inst_cnt),
+			       flex_struct_size(spi_bus, spi_int, hw_inst_cnt),
 			       GFP_KERNEL);
 	if (!spi_bus)
 		return -ENOMEM;

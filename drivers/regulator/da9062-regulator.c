@@ -942,8 +942,9 @@ static int da9062_regulator_probe(struct platform_device *pdev)
 	}
 
 	/* Allocate memory required by usable regulators */
-	regulators = devm_kzalloc(&pdev->dev, struct_size(regulators, regulator,
-				  max_regulators), GFP_KERNEL);
+	regulators = devm_kzalloc(&pdev->dev, flex_struct_size(regulators, regulator,
+							       max_regulators),
+				  GFP_KERNEL);
 	if (!regulators)
 		return -ENOMEM;
 

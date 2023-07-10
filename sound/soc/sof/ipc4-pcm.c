@@ -314,7 +314,7 @@ static int sof_ipc4_trigger_pipelines(struct snd_soc_component *component,
 		return sof_ipc4_chain_dma_trigger(sdev, pipeline_list, state, cmd);
 
 	/* allocate memory for the pipeline data */
-	trigger_list = kzalloc(struct_size(trigger_list, pipeline_ids, pipeline_list->count),
+	trigger_list = kzalloc(flex_struct_size(trigger_list, pipeline_ids, pipeline_list->count),
 			       GFP_KERNEL);
 	if (!trigger_list)
 		return -ENOMEM;

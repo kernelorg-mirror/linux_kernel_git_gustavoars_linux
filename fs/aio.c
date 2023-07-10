@@ -689,7 +689,8 @@ static int ioctx_add_table(struct kioctx *ctx, struct mm_struct *mm)
 		new_nr = (table ? table->nr : 1) * 4;
 		spin_unlock(&mm->ioctx_lock);
 
-		table = kzalloc(struct_size(table, table, new_nr), GFP_KERNEL);
+		table = kzalloc(flex_struct_size(table, table, new_nr),
+				GFP_KERNEL);
 		if (!table)
 			return -ENOMEM;
 

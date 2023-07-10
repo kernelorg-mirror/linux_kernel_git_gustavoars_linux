@@ -372,7 +372,7 @@ static void __init mt7621_clk_init(struct device_node *node)
 
 	count = ARRAY_SIZE(mt7621_clks_base) +
 		ARRAY_SIZE(mt7621_fixed_clks) + ARRAY_SIZE(mt7621_gates);
-	clk_data = kzalloc(struct_size(clk_data, hws, count), GFP_KERNEL);
+	clk_data = kzalloc(flex_struct_size(clk_data, hws, count), GFP_KERNEL);
 	if (!clk_data)
 		goto free_clk_priv;
 
@@ -517,7 +517,7 @@ static int mt7621_clk_probe(struct platform_device *pdev)
 
 	count = ARRAY_SIZE(mt7621_clks_base) +
 		ARRAY_SIZE(mt7621_fixed_clks) + ARRAY_SIZE(mt7621_gates);
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, count),
+	clk_data = devm_kzalloc(dev, flex_struct_size(clk_data, hws, count),
 				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;

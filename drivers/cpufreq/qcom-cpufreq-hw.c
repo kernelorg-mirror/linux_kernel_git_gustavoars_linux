@@ -676,7 +676,9 @@ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
 	if (!qcom_cpufreq.soc_data)
 		return -ENODEV;
 
-	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, num_domains), GFP_KERNEL);
+	clk_data = devm_kzalloc(dev,
+				flex_struct_size(clk_data, hws, num_domains),
+				GFP_KERNEL);
 	if (!clk_data)
 		return -ENOMEM;
 
