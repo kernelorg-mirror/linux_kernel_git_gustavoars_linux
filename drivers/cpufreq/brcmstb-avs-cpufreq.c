@@ -439,7 +439,7 @@ brcm_avs_get_freq_table(struct device *dev, struct private_data *priv)
 	if (!table)
 		return ERR_PTR(-ENOMEM);
 
-	for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
+	for (i = AVS_PSTATE_P0; i < AVS_PSTATE_MAX; i++) {
 		ret = brcm_avs_set_pstate(priv, i);
 		if (ret)
 			return ERR_PTR(ret);
