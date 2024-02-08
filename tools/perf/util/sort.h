@@ -166,7 +166,7 @@ struct hist_entry {
 		};				/* non-leaf entries */
 		struct rb_root	sorted_chain;	/* leaf entry has callchains */
 	};
-	struct callchain_root	callchain[0]; /* must be last member */
+	struct callchain_root	callchain[]; /* must be last member */
 };
 
 static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)

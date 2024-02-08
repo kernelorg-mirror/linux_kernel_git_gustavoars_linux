@@ -29,7 +29,7 @@ struct xe_ptw {
  * correctly sized.
  */
 struct xe_ptw_dir {
-	struct xe_ptw *entries[0];
+	DECLARE_FLEX_ARRAY(struct xe_ptw *, entries);
 };
 
 /**

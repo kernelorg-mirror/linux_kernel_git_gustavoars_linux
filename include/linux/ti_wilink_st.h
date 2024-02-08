@@ -309,7 +309,7 @@ struct bts_action {
 } __attribute__ ((packed));
 
 struct bts_action_send {
-	u8 data[0];
+	DECLARE_FLEX_ARRAY(u8, data);
 } __attribute__ ((packed));
 
 struct bts_action_wait {

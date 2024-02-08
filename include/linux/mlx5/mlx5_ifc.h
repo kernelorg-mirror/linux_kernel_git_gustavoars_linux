@@ -12659,7 +12659,7 @@ struct mlx5_ifc_page_track_bits {
 
 	u8         length[0x40];
 
-	struct     mlx5_ifc_page_track_range_bits track_range[0];
+	struct     mlx5_ifc_page_track_range_bits track_range[];
 };
 
 struct mlx5_ifc_create_page_track_obj_in_bits {
