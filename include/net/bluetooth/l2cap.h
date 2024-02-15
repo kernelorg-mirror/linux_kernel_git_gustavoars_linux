@@ -471,10 +471,12 @@ struct l2cap_ecred_conn_req {
 } __packed;
 
 struct l2cap_ecred_conn_rsp {
-	__le16 mtu;
-	__le16 mps;
-	__le16 credits;
-	__le16 result;
+	struct_group_tagged(l2cap_ecred_conn_rsp_hdr, hdr,
+			    __le16 mtu;
+			    __le16 mps;
+			    __le16 credits;
+			    __le16 result;
+	);
 	__le16 dcid[];
 };
 

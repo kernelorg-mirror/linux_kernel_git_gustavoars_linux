@@ -893,7 +893,7 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
 	struct wireless_dev *wdev = request->wdev;
 	struct wil6210_vif *vif = wdev_to_vif(wil, wdev);
 	struct {
-		struct wmi_start_scan_cmd cmd;
+		struct wmi_start_scan_cmd_hdr cmd;
 		u16 chnl[4];
 	} __packed cmd;
 	uint i, n;
@@ -991,7 +991,7 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
 			continue;
 		}
 		/* 0-based channel indexes */
-		cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
+		((struct wmi_start_scan_cmd *)&cmd.cmd)->channel_list[cmd.cmd.num_channels++].channel = ch - 1;
 		wil_dbg_misc(wil, "Scan for ch %d  : %d MHz\n", ch,
 			     request->channels[i]->center_freq);
 	}
@@ -1015,8 +1015,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
 	if (vif->mid == 0)
 		wil->radio_wdev = wdev;
 	rc = wmi_send(wil, WMI_START_SCAN_CMDID, vif->mid,
-		      &cmd, sizeof(cmd.cmd) +
-		      cmd.cmd.num_channels * sizeof(cmd.cmd.channel_list[0]));
+		      &cmd, struct_size_t(struct wmi_start_scan_cmd, channel_list,
+					  cmd.cmd.num_channels));
 
 out_restore:
 	if (rc) {

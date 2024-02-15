@@ -59,12 +59,14 @@
 
 /* Headers */
 struct ieee80211_header {
-	__le16 frame_ctl;
-	__le16 duration_id;
-	u8 da[ETH_ALEN];
-	u8 sa[ETH_ALEN];
-	u8 bssid[ETH_ALEN];
-	__le16 seq_ctl;
+	struct_group_tagged(ieee80211_header_hdr, hdr,
+			    __le16 frame_ctl;
+			    __le16 duration_id;
+			    u8 da[ETH_ALEN];
+			    u8 sa[ETH_ALEN];
+			    u8 bssid[ETH_ALEN];
+			    __le16 seq_ctl;
+	);
 	u8 payload[];
 } __packed;
 
@@ -106,7 +108,7 @@ struct wl12xx_ie_country {
 /* Templates */
 
 struct wl12xx_beacon_template {
-	struct ieee80211_header header;
+	struct ieee80211_header_hdr header;
 	__le32 time_stamp[2];
 	__le16 beacon_interval;
 	__le16 capability;
@@ -142,7 +144,7 @@ struct wl12xx_probe_req_template {
 
 
 struct wl12xx_probe_resp_template {
-	struct ieee80211_header header;
+	struct ieee80211_header_hdr header;
 	__le32 time_stamp[2];
 	__le16 beacon_interval;
 	__le16 capability;

@@ -853,8 +853,8 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
 	pclc_smcd = &pclc->pclc_smcd;
 	pclc_prfx = &pclc->pclc_prfx;
 	ipv6_prfx = pclc->pclc_prfx_ipv6;
-	v2_ext = &pclc->pclc_v2_ext;
-	smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
+	v2_ext = (struct smc_clc_v2_extension *)&pclc->pclc_v2_ext;
+	smcd_v2_ext = (struct smc_clc_smcd_v2_extension *)&pclc->pclc_smcd_v2_ext;
 	gidchids = pclc->pclc_gidchids;
 	trl = &pclc->pclc_trl;
 

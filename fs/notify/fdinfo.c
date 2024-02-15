@@ -42,7 +42,7 @@ static void show_fdinfo(struct seq_file *m, struct file *f,
 static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
 {
 	struct {
-		struct file_handle handle;
+		struct file_handle_hdr handle;
 		u8 pad[MAX_HANDLE_SZ];
 	} f;
 	int size, ret, i;
@@ -50,7 +50,7 @@ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
 	f.handle.handle_bytes = sizeof(f.pad);
 	size = f.handle.handle_bytes >> 2;
 
-	ret = exportfs_encode_fid(inode, (struct fid *)f.handle.f_handle, &size);
+	ret = exportfs_encode_fid(inode, (struct fid *)((struct file_handle *)&f.handle)->f_handle, &size);
 	if ((ret == FILEID_INVALID) || (ret < 0)) {
 		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
 		return;
@@ -63,7 +63,7 @@ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
 		   f.handle.handle_bytes, f.handle.handle_type);
 
 	for (i = 0; i < f.handle.handle_bytes; i++)
-		seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
+		seq_printf(m, "%02x", (int)((struct file_handle *)&f.handle)->f_handle[i]);
 }
 #else
 static void show_mark_fhandle(struct seq_file *m, struct inode *inode)

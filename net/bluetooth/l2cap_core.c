@@ -4996,7 +4996,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
 {
 	struct l2cap_ecred_conn_req *req = (void *) data;
 	struct {
-		struct l2cap_ecred_conn_rsp rsp;
+		struct l2cap_ecred_conn_rsp_hdr rsp;
 		__le16 dcid[L2CAP_ECRED_MAX_CID];
 	} __packed pdu;
 	struct l2cap_chan *chan, *pchan;

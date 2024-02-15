@@ -1039,9 +1039,11 @@ struct file {
   __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
 
 struct file_handle {
-	__u32 handle_bytes;
-	int handle_type;
-	/* file identifier */
+	struct_group_tagged(file_handle_hdr, _hdr,
+			    __u32 handle_bytes;
+			    int handle_type;
+			    /* file identifier */
+	);
 	unsigned char f_handle[];
 };
 

@@ -30,9 +30,11 @@
 #define RPM_GLINK_CID_MAX	65536
 
 struct glink_msg {
-	__le16 cmd;
-	__le16 param1;
-	__le32 param2;
+	struct_group_tagged(glink_msg_hdr, hdr,
+			    __le16 cmd;
+			    __le16 param1;
+			    __le32 param2;
+	);
 	u8 data[];
 } __packed;
 
@@ -456,7 +458,7 @@ static int qcom_glink_send_open_req(struct qcom_glink *glink,
 				    struct glink_channel *channel)
 {
 	struct {
-		struct glink_msg msg;
+		struct glink_msg_hdr msg;
 		u8 name[GLINK_NAME_SIZE];
 	} __packed req;
 	int name_len = strlen(channel->name) + 1;

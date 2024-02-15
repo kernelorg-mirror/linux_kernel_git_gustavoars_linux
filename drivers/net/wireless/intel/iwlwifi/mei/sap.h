@@ -303,9 +303,11 @@ enum iwl_sap_msg {
  * @payload: The payload of the message.
  */
 struct iwl_sap_hdr {
-	__le16 type;
-	__le16 len;
-	__le32 seq_num;
+	struct_group_tagged(iwl_sap_hdr_hdr, hdr,
+			    __le16 type;
+			    __le16 len;
+			    __le32 seq_num;
+	);
 	u8 payload[];
 };
 
@@ -503,7 +505,7 @@ struct iwl_sap_notif_host_link_down {
  * @nvm_address: The MAC address as configured in the NVM.
  */
 struct iwl_sap_notif_host_nic_info {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	u8 mac_address[6];
 	u8 nvm_address[6];
 } __packed;
@@ -524,7 +526,7 @@ struct iwl_sap_notif_dw {
  * @sar_chain_info_table: Tx power limits.
  */
 struct iwl_sap_notif_sar_limits {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le16 sar_chain_info_table[2][5];
 } __packed;
 
@@ -550,7 +552,7 @@ enum iwl_sap_nvm_caps {
  * @channels: The data for each channel.
  */
 struct iwl_sap_nvm {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	u8 hw_addr[6];
 	u8 n_hw_addrs;
 	u8 reserved;
@@ -732,7 +734,7 @@ struct iwl_sap_csme_filters {
  * @payload: The payload of the transmitted packet.
  */
 struct iwl_sap_cb_data {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 reserved[7];
 	__le32 to_me_filt_status;
 	__le32 reserved2;

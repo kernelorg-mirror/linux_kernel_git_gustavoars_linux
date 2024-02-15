@@ -134,12 +134,14 @@ struct smc_clc_smcd_gid_chid {
 			 */
 
 struct smc_clc_v2_extension {
-	struct smc_clnt_opts_area_hdr hdr;
-	u8 roce[16];		/* RoCEv2 GID */
-	u8 max_conns;
-	u8 max_links;
-	__be16 feature_mask;
-	u8 reserved[12];
+	struct_group_tagged(smc_clc_v2_extension_hdr, _hdr,
+			    struct smc_clnt_opts_area_hdr hdr;
+			    u8 roce[16];		/* RoCEv2 GID */
+			    u8 max_conns;
+			    u8 max_links;
+			    __be16 feature_mask;
+			    u8 reserved[12];
+	);
 	u8 user_eids[][SMC_MAX_EID_LEN];
 };
 
@@ -159,8 +161,10 @@ struct smc_clc_msg_smcd {	/* SMC-D GID information */
 };
 
 struct smc_clc_smcd_v2_extension {
-	u8 system_eid[SMC_MAX_EID_LEN];
-	u8 reserved[16];
+	struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
+			    u8 system_eid[SMC_MAX_EID_LEN];
+			    u8 reserved[16];
+	);
 	struct smc_clc_smcd_gid_chid gidchid[];
 };
 
@@ -183,9 +187,9 @@ struct smc_clc_msg_proposal_area {
 	struct smc_clc_msg_smcd			pclc_smcd;
 	struct smc_clc_msg_proposal_prefix	pclc_prfx;
 	struct smc_clc_ipv6_prefix	pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
-	struct smc_clc_v2_extension		pclc_v2_ext;
+	struct smc_clc_v2_extension_hdr		pclc_v2_ext;
 	u8			user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
-	struct smc_clc_smcd_v2_extension	pclc_smcd_v2_ext;
+	struct smc_clc_smcd_v2_extension_hdr	pclc_smcd_v2_ext;
 	struct smc_clc_smcd_gid_chid
 				pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
 	struct smc_clc_msg_trail		pclc_trl;

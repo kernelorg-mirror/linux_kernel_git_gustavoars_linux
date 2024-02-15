@@ -62,7 +62,7 @@ static unsigned int um_pci_max_delay_us = 40000;
 module_param_named(max_delay_us, um_pci_max_delay_us, uint, 0644);
 
 struct um_pci_message_buffer {
-	struct virtio_pcidev_msg hdr;
+	struct virtio_pcidev_msg_hdr hdr;
 	u8 data[8];
 };
 
@@ -248,7 +248,7 @@ static void um_pci_cfgspace_write(void *priv, unsigned int offset, int size,
 	struct um_pci_device_reg *reg = priv;
 	struct um_pci_device *dev = reg->dev;
 	struct {
-		struct virtio_pcidev_msg hdr;
+		struct virtio_pcidev_msg_hdr hdr;
 		/* maximum size - we may only use parts of it */
 		u8 data[8];
 	} msg = {
@@ -282,7 +282,8 @@ static void um_pci_cfgspace_write(void *priv, unsigned int offset, int size,
 		return;
 	}
 
-	WARN_ON(um_pci_send_cmd(dev, &msg.hdr, sizeof(msg), NULL, 0, NULL, 0));
+	WARN_ON(um_pci_send_cmd(dev, (struct virtio_pcidev_msg *)&msg.hdr,
+				sizeof(msg), NULL, 0, NULL, 0));
 }
 
 static const struct logic_iomem_ops um_pci_device_cfgspace_ops = {

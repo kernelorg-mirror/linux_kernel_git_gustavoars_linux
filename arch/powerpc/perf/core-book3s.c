@@ -53,7 +53,7 @@ struct cpu_hw_events {
 	u64				bhrb_filter;	/* BHRB HW branch filter */
 	unsigned int			bhrb_users;
 	void				*bhrb_context;
-	struct	perf_branch_stack	bhrb_stack;
+	struct perf_branch_stack_hdr	bhrb_stack;
 	struct	perf_branch_entry	bhrb_entries[BHRB_MAX_ENTRIES];
 	u64				ic_init;
 
@@ -2312,7 +2312,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
 			struct cpu_hw_events *cpuhw;
 			cpuhw = this_cpu_ptr(&cpu_hw_events);
 			power_pmu_bhrb_read(event, cpuhw);
-			perf_sample_save_brstack(&data, event, &cpuhw->bhrb_stack, NULL);
+			perf_sample_save_brstack(&data, event, (struct perf_branch_stack *)&cpuhw->bhrb_stack, NULL);
 		}
 
 		if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&

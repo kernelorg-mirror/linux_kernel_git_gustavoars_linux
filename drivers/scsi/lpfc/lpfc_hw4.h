@@ -4925,7 +4925,7 @@ struct send_frame_wqe {
 
 #define ELS_RDF_REG_TAG_CNT		4
 struct lpfc_els_rdf_reg_desc {
-	struct fc_df_desc_fpin_reg	reg_desc;	/* descriptor header */
+	struct fc_df_desc_fpin_reg_hdr	reg_desc;	/* descriptor header */
 	__be32				desc_tags[ELS_RDF_REG_TAG_CNT];
 							/* tags in reg_desc */
 };

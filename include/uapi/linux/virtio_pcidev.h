@@ -54,11 +54,13 @@ enum virtio_pcidev_ops {
  * @data values will often be in little endian (see the ops above.)
  */
 struct virtio_pcidev_msg {
-	__u8 op;
-	__u8 bar;
-	__u16 reserved;
-	__u32 size;
-	__u64 addr;
+	__struct_group(virtio_pcidev_msg_hdr, hdr, /* no attrs */,
+			    __u8 op;
+			    __u8 bar;
+			    __u16 reserved;
+			    __u32 size;
+			    __u64 addr;
+	);
 	__u8 data[];
 };
 

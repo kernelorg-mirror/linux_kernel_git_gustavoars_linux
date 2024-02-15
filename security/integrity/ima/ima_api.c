@@ -285,9 +285,9 @@ int ima_collect_measurement(struct integrity_iint_cache *iint,
 			result = -ENODATA;
 		}
 	} else if (buf) {
-		result = ima_calc_buffer_hash(buf, size, &hash.hdr);
+		result = ima_calc_buffer_hash(buf, size, (struct ima_digest_data *)&hash.hdr);
 	} else {
-		result = ima_calc_file_hash(file, &hash.hdr);
+		result = ima_calc_file_hash(file, (struct ima_digest_data *)&hash.hdr);
 	}
 
 	if (result && result != -EBADF && result != -EINVAL)

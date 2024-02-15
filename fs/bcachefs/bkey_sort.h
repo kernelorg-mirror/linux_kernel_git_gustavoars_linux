@@ -3,10 +3,12 @@
 #define _BCACHEFS_BKEY_SORT_H
 
 struct sort_iter {
-	struct btree		*b;
-	unsigned		used;
-	unsigned		size;
+	struct_group_tagged(sort_iter_hdr, hdr,
+		            struct btree		*b;
+		            unsigned		used;
+		            unsigned		size;
 
+	);
 	struct sort_iter_set {
 		struct bkey_packed *k, *end;
 	} data[];
@@ -20,13 +22,13 @@ static inline void sort_iter_init(struct sort_iter *iter, struct btree *b, unsig
 }
 
 struct sort_iter_stack {
-	struct sort_iter	iter;
+	struct sort_iter_hdr	iter;
 	struct sort_iter_set	sets[MAX_BSETS + 1];
 };
 
 static inline void sort_iter_stack_init(struct sort_iter_stack *iter, struct btree *b)
 {
-	sort_iter_init(&iter->iter, b, ARRAY_SIZE(iter->sets));
+	sort_iter_init((struct sort_iter *)&iter->iter, b, ARRAY_SIZE(iter->sets));
 }
 
 static inline void sort_iter_add(struct sort_iter *iter,

@@ -1109,13 +1109,15 @@ struct fc_els_fpin {
 
 /* Diagnostic Function Descriptor - FPIN Registration */
 struct fc_df_desc_fpin_reg {
-	__be32		desc_tag;	/* FPIN Registration (0x00030001) */
-	__be32		desc_len;	/* Length of Descriptor (in bytes).
+	__struct_group(fc_df_desc_fpin_reg_hdr, hdr, /* no attrs */,
+			    __be32		desc_tag;	/* FPIN Registration (0x00030001) */
+			    __be32		desc_len;	/* Length of Descriptor (in bytes).
 					 * Size of descriptor excluding
 					 * desc_tag and desc_len fields.
 					 */
-	__be32		count;		/* Number of desc_tags elements */
-	__be32		desc_tags[];	/* Array of Descriptor Tags.
+			    __be32		count;		/* Number of desc_tags elements */
+	);
+	__be32 desc_tags[];	/* Array of Descriptor Tags.
 					 * Each tag indicates a function
 					 * supported by the N_Port (request)
 					 * or by the  N_Port and Fabric

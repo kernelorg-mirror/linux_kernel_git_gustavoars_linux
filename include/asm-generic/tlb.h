@@ -243,10 +243,12 @@ static inline void tlb_remove_table_sync_one(void) { }
 #define MMU_GATHER_BUNDLE	8
 
 struct mmu_gather_batch {
-	struct mmu_gather_batch	*next;
-	unsigned int		nr;
-	unsigned int		max;
-	struct encoded_page	*encoded_pages[];
+	struct_group_tagged(mmu_gather_batch_hdr, hdr,
+			    struct mmu_gather_batch	*next;
+			    unsigned int		nr;
+			    unsigned int		max;
+	);
+	struct encoded_page *encoded_pages[];
 };
 
 #define MAX_GATHER_BATCH	\
@@ -341,7 +343,7 @@ struct mmu_gather {
 
 #ifndef CONFIG_MMU_GATHER_NO_GATHER
 	struct mmu_gather_batch *active;
-	struct mmu_gather_batch	local;
+	struct mmu_gather_batch_hdr	local;
 	struct page		*__pages[MMU_GATHER_BUNDLE];
 
 #ifdef CONFIG_MMU_GATHER_PAGE_SIZE

@@ -717,6 +717,7 @@ enum vmbus_channel_state {
  * variable-size data structure depending on the msg type itself
  */
 struct vmbus_channel_msginfo {
+	struct_group_tagged(vmbus_channel_msginfo_hdr, hdr,
 	/* Bookkeeping stuff */
 	struct list_head msglistentry;
 
@@ -736,6 +737,7 @@ struct vmbus_channel_msginfo {
 	} response;
 
 	u32 msgsize;
+	);
 	/*
 	 * The channel message that goes out on the "wire".
 	 * It will contain at minimum the VMBUS_CHANNEL_MESSAGE_HEADER header
@@ -744,7 +746,7 @@ struct vmbus_channel_msginfo {
 };
 
 struct vmbus_close_msg {
-	struct vmbus_channel_msginfo info;
+	struct vmbus_channel_msginfo_hdr info;
 	struct vmbus_channel_close_channel msg;
 };
 

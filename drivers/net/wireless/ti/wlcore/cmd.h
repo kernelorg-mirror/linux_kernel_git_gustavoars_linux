@@ -206,16 +206,18 @@ enum cmd_templ {
 #define WL1271_EVENT_TIMEOUT       5000
 
 struct wl1271_cmd_header {
-	__le16 id;
-	__le16 status;
-	/* payload */
+	struct_group_tagged(wl1271_cmd_header_hdr, hdr,
+			    __le16 id;
+			    __le16 status;
+			    /* payload */
+	);
 	u8 data[];
 } __packed;
 
 #define WL1271_CMD_MAX_PARAMS 572
 
 struct wl1271_command {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 	u8  parameters[WL1271_CMD_MAX_PARAMS];
 } __packed;
 
@@ -580,7 +582,7 @@ enum wl1271_psd_type {
 };
 
 struct wl12xx_cmd_add_peer {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 addr[ETH_ALEN];
 	u8 hlid;

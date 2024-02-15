@@ -454,23 +454,25 @@ enum wmi_scan_type {
 
 /* WMI_START_SCAN_CMDID */
 struct wmi_start_scan_cmd {
-	u8 direct_scan_mac_addr[WMI_MAC_LEN];
-	/* run scan with discovery beacon. Relevant for ACTIVE scan only. */
-	u8 discovery_mode;
-	u8 reserved;
-	/* Max duration in the home channel(ms) */
-	__le32 dwell_time;
-	/* Time interval between scans (ms) */
-	__le32 force_scan_interval;
-	/* enum wmi_scan_type */
-	u8 scan_type;
-	/* how many channels follow */
-	u8 num_channels;
-	/* channels ID's:
+	struct_group_tagged(wmi_start_scan_cmd_hdr, hdr,
+			    u8 direct_scan_mac_addr[WMI_MAC_LEN];
+			    /* run scan with discovery beacon. Relevant for ACTIVE scan only. */
+			    u8 discovery_mode;
+			    u8 reserved;
+			    /* Max duration in the home channel(ms) */
+			    __le32 dwell_time;
+			    /* Time interval between scans (ms) */
+			    __le32 force_scan_interval;
+			    /* enum wmi_scan_type */
+			    u8 scan_type;
+			    /* how many channels follow */
+			    u8 num_channels;
+			    /* channels ID's:
 	 * 0 - 58320 MHz
 	 * 1 - 60480 MHz
 	 * 2 - 62640 MHz
 	 */
+	);
 	struct {
 		u8 channel;
 		u8 reserved;

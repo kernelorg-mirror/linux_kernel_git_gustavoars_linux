@@ -668,11 +668,12 @@ static inline int hv_guest_state_size(unsigned int version)
  * H_GET_PERF_COUNTER_INFO argument
  */
 struct hv_get_perf_counter_info_params {
-	__be32 counter_request; /* I */
-	__be32 starting_index;  /* IO */
-	__be16 secondary_index; /* IO */
-	__be16 returned_values; /* O */
-	__be32 detail_rc; /* O, only needed when called via *_norets() */
+	struct_group_tagged(hv_get_perf_counter_info_params_hdr, hdr,
+			    __be32 counter_request; /* I */
+			    __be32 starting_index;  /* IO */
+			    __be16 secondary_index; /* IO */
+			    __be16 returned_values; /* O */
+			    __be32 detail_rc; /* O, only needed when called via *_norets() */
 
 	/*
 	 * O, size each of counter_value element in bytes, only set for version
@@ -686,6 +687,7 @@ struct hv_get_perf_counter_info_params {
 	/* O, 0 (zero) if version < 0x3. Must be set to 0 when making hcall */
 	__u8 counter_info_version_out;
 	__u8 reserved[0xC];
+	);
 	__u8 counter_value[];
 } __packed;
 
@@ -694,7 +696,7 @@ struct hv_get_perf_counter_info_params {
 	(HGPCI_REQ_BUFFER_SIZE - sizeof(struct hv_get_perf_counter_info_params))
 
 struct hv_gpci_request_buffer {
-	struct hv_get_perf_counter_info_params params;
+	struct hv_get_perf_counter_info_params_hdr params;
 	uint8_t bytes[HGPCI_MAX_DATA_BYTES];
 } __packed;
 

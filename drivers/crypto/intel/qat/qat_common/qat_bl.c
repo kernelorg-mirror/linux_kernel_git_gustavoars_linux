@@ -81,7 +81,7 @@ static int __qat_bl_sgl_to_bufl(struct adf_accel_dev *accel_dev,
 		if (unlikely(!bufl))
 			return -ENOMEM;
 	} else {
-		bufl = &buf->sgl_src.sgl_hdr;
+		bufl = (struct qat_alg_buf_list *)&buf->sgl_src.sgl_hdr;
 		memset(bufl, 0, sizeof(struct qat_alg_buf_list));
 		buf->sgl_src_valid = true;
 	}
@@ -139,7 +139,7 @@ static int __qat_bl_sgl_to_bufl(struct adf_accel_dev *accel_dev,
 			if (unlikely(!buflout))
 				goto err_in;
 		} else {
-			buflout = &buf->sgl_dst.sgl_hdr;
+			buflout = (struct qat_alg_buf_list *)&buf->sgl_dst.sgl_hdr;
 			memset(buflout, 0, sizeof(struct qat_alg_buf_list));
 			buf->sgl_dst_valid = true;
 		}

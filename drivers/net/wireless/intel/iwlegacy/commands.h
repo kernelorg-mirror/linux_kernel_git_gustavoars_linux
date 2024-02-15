@@ -1438,7 +1438,8 @@ struct il_dram_scratch {
 } __packed;
 
 struct il_tx_cmd {
-	/*
+	struct_group_tagged(il_tx_cmd_hdr, _hdr,
+			    /*
 	 * MPDU byte count:
 	 * MAC header (24/26/30/32 bytes) + 2 bytes pad if 26/30 header size,
 	 * + 8 byte IV for CCM or TKIP (not used for WEP)
@@ -1448,7 +1449,7 @@ struct il_tx_cmd {
 	 *        MIC (CCM) 8 bytes, ICV (WEP/TKIP/CKIP) 4 bytes, CRC 4 bytes.i
 	 * Range: 14-2342 bytes.
 	 */
-	__le16 len;
+			    __le16 len;
 
 	/*
 	 * MPDU or MSDU byte count for next frame.
@@ -1513,6 +1514,7 @@ struct il_tx_cmd {
 	 * length is 26 or 30 bytes, followed by payload data
 	 */
 	u8 payload[0];
+	);
 	struct ieee80211_hdr hdr[];
 } __packed;
 
@@ -2546,7 +2548,7 @@ struct il_scan_cmd {
 
 	/* For active scans (set to all-0s for passive scans).
 	 * Does not include payload.  Must specify Tx rate; no rate scaling. */
-	struct il_tx_cmd tx_cmd;
+	struct il_tx_cmd_hdr tx_cmd;
 
 	/* For directed active scans (set to all-0s otherwise) */
 	struct il_ssid_ie direct_scan[PROBE_OPTION_MAX];

@@ -358,7 +358,7 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
 	if ((const char *)event_data->filename == boot_aggregate_name) {
 		if (ima_tpm_chip) {
 			hash.hdr.algo = HASH_ALGO_SHA1;
-			result = ima_calc_boot_aggregate(&hash.hdr);
+			result = ima_calc_boot_aggregate((struct ima_digest_data *)&hash.hdr);
 
 			/* algo can change depending on available PCR banks */
 			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
@@ -368,7 +368,7 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
 				memset(&hash, 0, sizeof(hash));
 		}
 
-		cur_digest = hash.hdr.digest;
+		cur_digest = ((struct ima_digest_data *)&hash.hdr)->digest;
 		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
 		goto out;
 	}
@@ -379,14 +379,14 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
 	inode = file_inode(event_data->file);
 	hash.hdr.algo = ima_template_hash_algo_allowed(ima_hash_algo) ?
 	    ima_hash_algo : HASH_ALGO_SHA1;
-	result = ima_calc_file_hash(event_data->file, &hash.hdr);
+	result = ima_calc_file_hash(event_data->file, (struct ima_digest_data *)&hash.hdr);
 	if (result) {
 		integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
 				    event_data->filename, "collect_data",
 				    "failed", result, 0);
 		return result;
 	}
-	cur_digest = hash.hdr.digest;
+	cur_digest = ((struct ima_digest_data *)&hash.hdr)->digest;
 	cur_digestsize = hash.hdr.length;
 out:
 	return ima_eventdigest_init_common(cur_digest, cur_digestsize,

@@ -100,19 +100,19 @@ static u64 mega_div64_32(uint64_t dividend, uint32_t divisor)
 
 struct MR_LD_RAID *MR_LdRaidGet(u32 ld, struct MR_DRV_RAID_MAP_ALL *map)
 {
-	return &map->raidMap.ldSpanMap[ld].ldRaid;
+	return &((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].ldRaid;
 }
 
 static struct MR_SPAN_BLOCK_INFO *MR_LdSpanInfoGet(u32 ld,
 						   struct MR_DRV_RAID_MAP_ALL
 						   *map)
 {
-	return &map->raidMap.ldSpanMap[ld].spanBlock[0];
+	return &((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[0];
 }
 
 static u8 MR_LdDataArmGet(u32 ld, u32 armIdx, struct MR_DRV_RAID_MAP_ALL *map)
 {
-	return map->raidMap.ldSpanMap[ld].dataArmMap[armIdx];
+	return ((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].dataArmMap[armIdx];
 }
 
 u16 MR_ArPdGet(u32 ar, u32 arm, struct MR_DRV_RAID_MAP_ALL *map)
@@ -122,7 +122,7 @@ u16 MR_ArPdGet(u32 ar, u32 arm, struct MR_DRV_RAID_MAP_ALL *map)
 
 u16 MR_LdSpanArrayGet(u32 ld, u32 span, struct MR_DRV_RAID_MAP_ALL *map)
 {
-	return le16_to_cpu(map->raidMap.ldSpanMap[ld].spanBlock[span].span.arrayRef);
+	return le16_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].span.arrayRef);
 }
 
 __le16 MR_PdDevHandleGet(u32 pd, struct MR_DRV_RAID_MAP_ALL *map)
@@ -137,7 +137,7 @@ static u8 MR_PdInterfaceTypeGet(u32 pd, struct MR_DRV_RAID_MAP_ALL *map)
 
 u16 MR_GetLDTgtId(u32 ld, struct MR_DRV_RAID_MAP_ALL *map)
 {
-	return le16_to_cpu(map->raidMap.ldSpanMap[ld].ldRaid.targetId);
+	return le16_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].ldRaid.targetId);
 }
 
 u16 MR_TargetIdToLdGet(u32 ldTgtId, struct MR_DRV_RAID_MAP_ALL *map)
@@ -148,7 +148,7 @@ u16 MR_TargetIdToLdGet(u32 ldTgtId, struct MR_DRV_RAID_MAP_ALL *map)
 static struct MR_LD_SPAN *MR_LdSpanPtrGet(u32 ld, u32 span,
 					  struct MR_DRV_RAID_MAP_ALL *map)
 {
-	return &map->raidMap.ldSpanMap[ld].spanBlock[span].span;
+	return &((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].span;
 }
 
 /*
@@ -168,7 +168,7 @@ static int MR_PopulateDrvRaidMap(struct megasas_instance *instance, u64 map_id)
 
 	struct MR_DRV_RAID_MAP_ALL *drv_map =
 			fusion->ld_drv_map[(map_id & 1)];
-	struct MR_DRV_RAID_MAP *pDrvRaidMap = &drv_map->raidMap;
+	struct MR_DRV_RAID_MAP *pDrvRaidMap = (struct MR_DRV_RAID_MAP *)&drv_map->raidMap;
 	void *raid_map_data = NULL;
 
 	memset(drv_map, 0, fusion->drv_map_sz);
@@ -269,7 +269,7 @@ static int MR_PopulateDrvRaidMap(struct megasas_instance *instance, u64 map_id)
 	} else {
 		fw_map_old = (struct MR_FW_RAID_MAP_ALL *)
 				fusion->ld_map[(map_id & 1)];
-		pFwRaidMap = &fw_map_old->raidMap;
+		pFwRaidMap = (struct MR_FW_RAID_MAP *)&fw_map_old->raidMap;
 		ld_count = (u16)le32_to_cpu(pFwRaidMap->ldCount);
 		if (ld_count > MAX_LOGICAL_DRIVES) {
 			dev_dbg(&instance->pdev->dev,
@@ -316,7 +316,7 @@ u8 MR_ValidateMapInfo(struct megasas_instance *instance, u64 map_id)
 
 	fusion = instance->ctrl_context;
 	drv_map = fusion->ld_drv_map[(map_id & 1)];
-	pDrvRaidMap = &drv_map->raidMap;
+	pDrvRaidMap = (struct MR_DRV_RAID_MAP *)&drv_map->raidMap;
 
 	lbInfo = fusion->load_balance_info;
 	ldSpanInfo = fusion->log_to_span;
@@ -440,9 +440,9 @@ static u32 mr_spanset_get_span_block(struct megasas_instance *instance,
 			continue;
 
 		for (span = 0; span < raid->spanDepth; span++)
-			if (le32_to_cpu(map->raidMap.ldSpanMap[ld].spanBlock[span].
+			if (le32_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].
 				block_span_info.noElements) >= info+1) {
-				quad = &map->raidMap.ldSpanMap[ld].
+				quad = &((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].
 					spanBlock[span].
 					block_span_info.quad[info];
 				if (le32_to_cpu(quad->diff) == 0)
@@ -507,7 +507,7 @@ static u64  get_row_from_strip(struct megasas_instance *instance,
 		span_set_Row = mega_div64_32(span_set_Strip,
 				span_set->span_row_data_width) * span_set->diff;
 		for (span = 0, span_offset = 0; span < raid->spanDepth; span++)
-			if (le32_to_cpu(map->raidMap.ldSpanMap[ld].spanBlock[span].
+			if (le32_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].
 				block_span_info.noElements) >= info+1) {
 				if (strip_offset >=
 					span_set->strip_offset[span])
@@ -560,9 +560,9 @@ static u64 get_strip_from_row(struct megasas_instance *instance,
 			continue;
 
 		for (span = 0; span < raid->spanDepth; span++)
-			if (le32_to_cpu(map->raidMap.ldSpanMap[ld].spanBlock[span].
+			if (le32_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].
 				block_span_info.noElements) >= info+1) {
-				quad = &map->raidMap.ldSpanMap[ld].
+				quad = &((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].
 					spanBlock[span].block_span_info.quad[info];
 				if (le64_to_cpu(quad->logStart) <= row  &&
 					row <= le64_to_cpu(quad->logEnd)  &&
@@ -623,7 +623,7 @@ static u32 get_arm_from_strip(struct megasas_instance *instance,
 				span_set->span_row_data_width);
 
 		for (span = 0, span_offset = 0; span < raid->spanDepth; span++)
-			if (le32_to_cpu(map->raidMap.ldSpanMap[ld].spanBlock[span].
+			if (le32_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].
 				block_span_info.noElements) >= info+1) {
 				if (strip_offset >=
 					span_set->strip_offset[span])
@@ -1237,12 +1237,12 @@ void mr_update_span_set(struct MR_DRV_RAID_MAP_ALL *map,
 		raid = MR_LdRaidGet(ld, map);
 		for (element = 0; element < MAX_QUAD_DEPTH; element++) {
 			for (span = 0; span < raid->spanDepth; span++) {
-				if (le32_to_cpu(map->raidMap.ldSpanMap[ld].spanBlock[span].
+				if (le32_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].spanBlock[span].
 					block_span_info.noElements) <
 					element + 1)
 					continue;
 				span_set = &(ldSpanInfo[ld].span_set[element]);
-				quad = &map->raidMap.ldSpanMap[ld].
+				quad = &((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].
 					spanBlock[span].block_span_info.
 					quad[element];
 
@@ -1250,7 +1250,7 @@ void mr_update_span_set(struct MR_DRV_RAID_MAP_ALL *map,
 
 				for (count = 0, span_row_width = 0;
 					count < raid->spanDepth; count++) {
-					if (le32_to_cpu(map->raidMap.ldSpanMap[ld].
+					if (le32_to_cpu(((struct MR_DRV_RAID_MAP *)(&map->raidMap))->ldSpanMap[ld].
 						spanBlock[count].
 						block_span_info.
 						noElements) >= element + 1) {

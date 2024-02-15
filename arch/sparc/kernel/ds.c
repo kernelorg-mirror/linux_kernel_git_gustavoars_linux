@@ -83,11 +83,13 @@ struct ds_ver_nack {
 };
 
 struct ds_reg_req {
-	struct ds_msg_tag	tag;
-	__u64			handle;
-	__u16			major;
-	__u16			minor;
-	char			svc_id[];
+	struct_group_tagged(ds_reg_req_hdr, hdr,
+			    struct ds_msg_tag	tag;
+			    __u64			handle;
+			    __u16			major;
+			    __u16			minor;
+	);
+	char svc_id[];
 };
 
 struct ds_reg_ack {
@@ -888,7 +890,7 @@ static int register_services(struct ds_info *dp)
 
 	for (i = 0; i < dp->num_ds_states; i++) {
 		struct {
-			struct ds_reg_req req;
+			struct ds_reg_req_hdr req;
 			u8 id_buf[256];
 		} pbuf;
 		struct ds_cap_state *cp = &dp->ds_states[i];

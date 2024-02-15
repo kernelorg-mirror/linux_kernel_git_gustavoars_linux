@@ -20,7 +20,7 @@ static bool tlb_next_batch(struct mmu_gather *tlb)
 	struct mmu_gather_batch *batch;
 
 	/* Limit batching if we have delayed rmaps pending */
-	if (tlb->delayed_rmap && tlb->active != &tlb->local)
+	if (tlb->delayed_rmap && tlb->active != (struct mmu_gather_batch *)&tlb->local)
 		return false;
 
 	batch = tlb->active;
@@ -75,8 +75,8 @@ void tlb_flush_rmaps(struct mmu_gather *tlb, struct vm_area_struct *vma)
 	if (!tlb->delayed_rmap)
 		return;
 
-	tlb_flush_rmap_batch(&tlb->local, vma);
-	if (tlb->active != &tlb->local)
+	tlb_flush_rmap_batch((struct mmu_gather_batch *)&tlb->local, vma);
+	if (tlb->active != (struct mmu_gather_batch *)&tlb->local)
 		tlb_flush_rmap_batch(tlb->active, vma);
 	tlb->delayed_rmap = 0;
 }
@@ -86,7 +86,7 @@ static void tlb_batch_pages_flush(struct mmu_gather *tlb)
 {
 	struct mmu_gather_batch *batch;
 
-	for (batch = &tlb->local; batch && batch->nr; batch = batch->next) {
+	for (batch = (struct mmu_gather_batch *)&tlb->local; batch && batch->nr; batch = batch->next) {
 		struct encoded_page **pages = batch->encoded_pages;
 
 		do {
@@ -102,7 +102,7 @@ static void tlb_batch_pages_flush(struct mmu_gather *tlb)
 			cond_resched();
 		} while (batch->nr);
 	}
-	tlb->active = &tlb->local;
+	tlb->active = (struct mmu_gather_batch *)&tlb->local;
 }
 
 static void tlb_batch_list_free(struct mmu_gather *tlb)
@@ -311,7 +311,7 @@ static void __tlb_gather_mmu(struct mmu_gather *tlb, struct mm_struct *mm,
 	tlb->local.next = NULL;
 	tlb->local.nr   = 0;
 	tlb->local.max  = ARRAY_SIZE(tlb->__pages);
-	tlb->active     = &tlb->local;
+	tlb->active     = (struct mmu_gather_batch *)&tlb->local;
 	tlb->batch_count = 0;
 #endif
 	tlb->delayed_rmap = 0;

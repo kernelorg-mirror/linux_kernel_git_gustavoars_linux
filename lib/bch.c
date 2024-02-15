@@ -102,7 +102,9 @@
  * represent a polynomial over GF(2^m)
  */
 struct gf_poly {
-	unsigned int deg;    /* polynomial degree */
+	struct_group_tagged(gf_poly_hdr, hdr,
+			    unsigned int deg;    /* polynomial degree */
+	);
 	unsigned int c[];   /* polynomial terms */
 };
 
@@ -111,7 +113,7 @@ struct gf_poly {
 
 /* polynomial of degree 1 */
 struct gf_poly_deg1 {
-	struct gf_poly poly;
+	struct gf_poly_hdr poly;
 	unsigned int   c[2];
 };
 
@@ -893,7 +895,7 @@ static void factor_polynomial(struct bch_control *bch, int k, struct gf_poly *f,
 			/* compute h=f/gcd(f,tk); this will modify f and q */
 			gf_poly_div(bch, f, gcd, q);
 			/* store g and h in-place (clobbering f) */
-			*h = &((struct gf_poly_deg1 *)f)[gcd->deg].poly;
+			*h = (struct gf_poly *)&((struct gf_poly_deg1 *)f)[gcd->deg].poly;
 			gf_poly_copy(*g, gcd);
 			gf_poly_copy(*h, q);
 		}

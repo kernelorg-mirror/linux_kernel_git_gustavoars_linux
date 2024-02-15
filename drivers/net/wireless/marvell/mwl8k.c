@@ -587,12 +587,14 @@ static int mwl8k_request_firmware(struct mwl8k_priv *priv, char *fw_image,
 }
 
 struct mwl8k_cmd_pkt {
-	__le16	code;
-	__le16	length;
-	__u8	seq_num;
-	__u8	macid;
-	__le16	result;
-	char	payload[];
+	struct_group_tagged(mwl8k_cmd_pkt_hdr, hdr,
+			    __le16	code;
+			    __le16	length;
+			    __u8	seq_num;
+			    __u8	macid;
+			    __le16	result;
+	);
+	char payload[];
 } __packed;
 
 /*
@@ -2729,7 +2731,7 @@ __mwl8k_cmd_mac_multicast_adr(struct ieee80211_hw *hw, int allmulti,
  * CMD_GET_STAT.
  */
 struct mwl8k_cmd_get_stat {
-	struct mwl8k_cmd_pkt header;
+	struct mwl8k_cmd_pkt_hdr header;
 	__le32 stats[64];
 } __packed;
 
@@ -2751,7 +2753,7 @@ static int mwl8k_cmd_get_stat(struct ieee80211_hw *hw,
 	cmd->header.code = cpu_to_le16(MWL8K_CMD_GET_STAT);
 	cmd->header.length = cpu_to_le16(sizeof(*cmd));
 
-	rc = mwl8k_post_cmd(hw, &cmd->header);
+	rc = mwl8k_post_cmd(hw, (struct mwl8k_cmd_pkt *)&cmd->header);
 	if (!rc) {
 		stats->dot11ACKFailureCount =
 			le32_to_cpu(cmd->stats[MWL8K_STAT_ACK_FAILURE]);
@@ -3283,7 +3285,7 @@ mwl8k_cmd_set_aid(struct ieee80211_hw *hw,
  * CMD_SET_RATE.
  */
 struct mwl8k_cmd_set_rate {
-	struct	mwl8k_cmd_pkt header;
+	struct mwl8k_cmd_pkt_hdr header;
 	__u8	legacy_rates[14];
 
 	/* Bitmap for supported MCS codes.  */
@@ -3307,7 +3309,7 @@ mwl8k_cmd_set_rate(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	legacy_rate_mask_to_array(cmd->legacy_rates, legacy_rate_mask);
 	memcpy(cmd->mcs_set, mcs_rates, 16);
 
-	rc = mwl8k_post_cmd(hw, &cmd->header);
+	rc = mwl8k_post_cmd(hw, (struct mwl8k_cmd_pkt *)&cmd->header);
 	kfree(cmd);
 
 	return rc;

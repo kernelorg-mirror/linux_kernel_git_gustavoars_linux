@@ -65,7 +65,7 @@ struct wl1271_cmd_scan {
 } __packed;
 
 struct wl1271_cmd_sched_scan_config {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	__le32 intervals[SCAN_MAX_CYCLE_INTERVALS];
 

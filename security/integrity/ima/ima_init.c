@@ -53,7 +53,7 @@ static int __init ima_add_boot_aggregate(void)
 
 	memset(iint, 0, sizeof(*iint));
 	memset(&hash, 0, sizeof(hash));
-	iint->ima_hash = &hash.hdr;
+	iint->ima_hash = (struct ima_digest_data *)&hash.hdr;
 	iint->ima_hash->algo = ima_hash_algo;
 	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
 
@@ -70,7 +70,7 @@ static int __init ima_add_boot_aggregate(void)
 	 * is not found.
 	 */
 	if (ima_tpm_chip) {
-		result = ima_calc_boot_aggregate(&hash.hdr);
+		result = ima_calc_boot_aggregate((struct ima_digest_data *)&hash.hdr);
 		if (result < 0) {
 			audit_cause = "hashing_error";
 			goto err_out;
