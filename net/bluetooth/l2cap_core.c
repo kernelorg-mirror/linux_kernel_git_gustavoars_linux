@@ -3755,9 +3755,9 @@ static void l2cap_ecred_rsp_defer(struct l2cap_chan *chan, void *data)
 
 	/* Include all channels pending with the same ident */
 	if (!rsp->pdu.rsp.result)
-		rsp->pdu.rsp.dcid[rsp->count++] = cpu_to_le16(chan->scid);
-	else
-		l2cap_chan_del(chan, ECONNRESET);
+		container_of(&rsp->pdu.rsp, struct l2cap_ecred_conn_rsp, hdr)->dcid[rsp->count++] = cpu_to_le16(chan->scid);
+		else
+			l2cap_chan_del(chan, ECONNRESET);
 }
 
 void __l2cap_ecred_conn_rsp_defer(struct l2cap_chan *chan)
@@ -4996,7 +4996,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
 {
 	struct l2cap_ecred_conn_req *req = (void *) data;
 	struct {
-		struct l2cap_ecred_conn_rsp rsp;
+		struct l2cap_ecred_conn_rsp_hdr rsp;
 		__le16 dcid[L2CAP_ECRED_MAX_CID];
 	} __packed pdu;
 	struct l2cap_chan *chan, *pchan;

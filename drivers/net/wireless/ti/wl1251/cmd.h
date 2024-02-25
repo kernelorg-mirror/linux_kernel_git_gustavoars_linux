@@ -87,14 +87,16 @@ enum wl1251_commands {
 #define MAX_CMD_PARAMS 572
 
 struct wl1251_cmd_header {
-	u16 id;
-	u16 status;
-	/* payload */
+	struct_group_tagged(wl1251_cmd_header_hdr, hdr,
+			    u16 id;
+			    u16 status;
+			    /* payload */
+	);
 	u8 data[];
 } __packed;
 
 struct  wl1251_command {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 	u8  parameters[MAX_CMD_PARAMS];
 } __packed;
 
@@ -375,7 +377,7 @@ enum wl1251_cmd_key_type {
  */
 
 struct wl1251_cmd_set_keys {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	/* Ignored for default WEP key */
 	u8 addr[ETH_ALEN];

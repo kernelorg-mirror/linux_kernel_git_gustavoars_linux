@@ -813,7 +813,7 @@ struct compat_xt_standard_target {
 };
 
 struct compat_xt_error_target {
-	struct compat_xt_entry_target t;
+	struct compat_xt_entry_target_hdr t;
 	char errorname[XT_FUNCTION_MAXNAMELEN];
 };
 

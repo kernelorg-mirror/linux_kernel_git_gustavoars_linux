@@ -1126,7 +1126,7 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
 	u32 control;
 	int count;
 	struct {
-		struct fw_iso_packet packet;
+		struct fw_iso_packet_hdr packet;
 		u8 header[256];
 	} u;
 
@@ -1200,7 +1200,7 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
 		if (payload + u.packet.payload_length > buffer_end)
 			return -EINVAL;
 
-		if (fw_iso_context_queue(ctx, &u.packet,
+		if (fw_iso_context_queue(ctx, container_of(&u.packet, struct fw_iso_packet, hdr),
 					 &client->buffer, payload))
 			break;
 

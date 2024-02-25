@@ -345,12 +345,14 @@ struct libipw_hdr_2addr {
 } __packed;
 
 struct libipw_hdr_3addr {
-	__le16 frame_ctl;
-	__le16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	__le16 seq_ctl;
+	struct_group_tagged(libipw_hdr_3addr_hdr, hdr,
+			    __le16 frame_ctl;
+			    __le16 duration_id;
+			    u8 addr1[ETH_ALEN];
+			    u8 addr2[ETH_ALEN];
+			    u8 addr3[ETH_ALEN];
+			    __le16 seq_ctl;
+	);
 	u8 payload[];
 } __packed;
 
@@ -377,8 +379,10 @@ struct libipw_hdr_3addrqos {
 } __packed;
 
 struct libipw_info_element {
-	u8 id;
-	u8 len;
+	struct_group_tagged(libipw_info_element_hdr, hdr,
+			    u8 id;
+			    u8 len;
+	);
 	u8 data[];
 } __packed;
 
@@ -444,7 +448,7 @@ struct libipw_probe_request {
 } __packed;
 
 struct libipw_probe_response {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le32 time_stamp[2];
 	__le16 beacon_interval;
 	__le16 capability;
@@ -589,7 +593,7 @@ struct libipw_channel_map {
 } __packed;
 
 struct libipw_ibss_dfs {
-	struct libipw_info_element ie;
+	struct libipw_info_element_hdr ie;
 	u8 owner[ETH_ALEN];
 	u8 recovery_interval;
 	struct libipw_channel_map channel_map[];

@@ -30,9 +30,11 @@
 #define RPM_GLINK_CID_MAX	65536
 
 struct glink_msg {
-	__le16 cmd;
-	__le16 param1;
-	__le32 param2;
+	struct_group_tagged(glink_msg_hdr, hdr,
+			    __le16 cmd;
+			    __le16 param1;
+			    __le32 param2;
+	);
 	u8 data[];
 } __packed;
 
@@ -456,7 +458,7 @@ static int qcom_glink_send_open_req(struct qcom_glink *glink,
 				    struct glink_channel *channel)
 {
 	struct {
-		struct glink_msg msg;
+		struct glink_msg_hdr msg;
 		u8 name[GLINK_NAME_SIZE];
 	} __packed req;
 	int name_len = strlen(channel->name) + 1;
@@ -826,7 +828,9 @@ static int qcom_glink_rx_defer(struct qcom_glink *glink, size_t extra)
 
 	INIT_LIST_HEAD(&dcmd->node);
 
-	qcom_glink_rx_peek(glink, &dcmd->msg, 0, sizeof(dcmd->msg) + extra);
+	qcom_glink_rx_peek(glink,
+			   container_of(&dcmd->msg, struct glink_msg, hdr), 0,
+			   sizeof(dcmd->msg) + extra);
 
 	spin_lock(&glink->rx_lock);
 	list_add_tail(&dcmd->node, &glink->rx_queue);
@@ -1685,7 +1689,7 @@ static void qcom_glink_work(struct work_struct *work)
 		list_del(&dcmd->node);
 		spin_unlock_irqrestore(&glink->rx_lock, flags);
 
-		msg = &dcmd->msg;
+		msg = container_of(&dcmd->msg, struct glink_msg, hdr);
 		cmd = le16_to_cpu(msg->cmd);
 		param1 = le16_to_cpu(msg->param1);
 		param2 = le32_to_cpu(msg->param2);

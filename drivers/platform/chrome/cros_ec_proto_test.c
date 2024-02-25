@@ -1544,7 +1544,7 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
 	struct ec_xfer_mock *mock;
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		u8 data[0x100];
 	} __packed buf;
 
@@ -1572,7 +1572,8 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
 		data[3] = 0x33;
 	}
 
-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
+	ret = cros_ec_cmd_xfer(ec_dev,
+			       container_of(&buf.msg, struct cros_ec_command, hdr));
 	KUNIT_EXPECT_EQ(test, ret, 4);
 
 	{
@@ -1604,7 +1605,7 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_insize(struct kunit *test)
 	struct ec_xfer_mock *mock;
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		u8 data[0x100];
 	} __packed buf;
 
@@ -1622,7 +1623,8 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_insize(struct kunit *test)
 		KUNIT_ASSERT_PTR_NE(test, mock, NULL);
 	}
 
-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
+	ret = cros_ec_cmd_xfer(ec_dev,
+			       container_of(&buf.msg, struct cros_ec_command, hdr));
 	KUNIT_EXPECT_EQ(test, ret, 0xcc);
 
 	{
@@ -1642,7 +1644,7 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_without_passthru(stru
 	struct cros_ec_device *ec_dev = &priv->ec_dev;
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		u8 data[0x100];
 	} __packed buf;
 
@@ -1655,7 +1657,8 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_without_passthru(stru
 	buf.msg.insize = 4;
 	buf.msg.outsize = 0xff + 1;
 
-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
+	ret = cros_ec_cmd_xfer(ec_dev,
+			       container_of(&buf.msg, struct cros_ec_command, hdr));
 	KUNIT_EXPECT_EQ(test, ret, -EMSGSIZE);
 }
 
@@ -1665,7 +1668,7 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_with_passthru(struct 
 	struct cros_ec_device *ec_dev = &priv->ec_dev;
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		u8 data[0x100];
 	} __packed buf;
 
@@ -1678,7 +1681,8 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_with_passthru(struct 
 	buf.msg.insize = 4;
 	buf.msg.outsize = 0xdd + 1;
 
-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
+	ret = cros_ec_cmd_xfer(ec_dev,
+			       container_of(&buf.msg, struct cros_ec_command, hdr));
 	KUNIT_EXPECT_EQ(test, ret, -EMSGSIZE);
 }
 

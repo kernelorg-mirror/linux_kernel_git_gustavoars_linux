@@ -380,8 +380,10 @@ struct btree_trans_commit_hook {
 #define BTREE_TRANS_MAX_LOCK_HOLD_TIME_NS	10000
 
 struct btree_trans_paths {
-	unsigned long		nr_paths;
-	struct btree_path	paths[];
+	struct_group_tagged(btree_trans_paths_hdr, hdr,
+			    unsigned long		nr_paths;
+	);
+	struct btree_path paths[];
 };
 
 struct btree_trans {
@@ -449,7 +451,7 @@ struct btree_trans {
 	struct closure		ref;
 
 	unsigned long		_paths_allocated[BITS_TO_LONGS(BTREE_ITER_INITIAL)];
-	struct btree_trans_paths trans_paths;
+	struct btree_trans_paths_hdr trans_paths;
 	struct btree_path	_paths[BTREE_ITER_INITIAL];
 	btree_path_idx_t	_sorted[BTREE_ITER_INITIAL + 4];
 	struct btree_insert_entry _updates[BTREE_ITER_INITIAL];
