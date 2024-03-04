@@ -44,6 +44,7 @@ struct evm_xattr {
 #define IMA_MAX_DIGEST_SIZE	HASH_MAX_DIGESTSIZE
 
 struct ima_digest_data {
+	struct_group_tagged(ima_digest_data_hdr, hdr,
 	u8 algo;
 	u8 length;
 	union {
@@ -57,6 +58,7 @@ struct ima_digest_data {
 		} ng;
 		u8 data[2];
 	} xattr;
+	);
 	u8 digest[];
 } __packed;
 
@@ -65,7 +67,7 @@ struct ima_digest_data {
  * with the maximum hash size, define ima_max_digest_data struct.
  */
 struct ima_max_digest_data {
-	struct ima_digest_data hdr;
+	struct ima_digest_data_hdr hdr;
 	u8 digest[HASH_MAX_DIGESTSIZE];
 } __packed;
 
