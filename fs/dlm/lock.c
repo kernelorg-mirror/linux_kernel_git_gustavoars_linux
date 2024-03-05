@@ -3485,7 +3485,9 @@ static int send_convert(struct dlm_rsb *r, struct dlm_lkb *lkb)
 		remove_from_waiters(lkb, DLM_MSG_CONVERT_REPLY);
 		r->res_ls->ls_local_ms.m_type = cpu_to_le32(DLM_MSG_CONVERT_REPLY);
 		r->res_ls->ls_local_ms.m_result = 0;
-		__receive_convert_reply(r, lkb, &r->res_ls->ls_local_ms, true);
+		__receive_convert_reply(r, lkb,
+					container_of(&r->res_ls->ls_local_ms, struct dlm_message, hdr),
+					true);
 	}
 
 	return error;

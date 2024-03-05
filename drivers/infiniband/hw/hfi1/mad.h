@@ -43,14 +43,15 @@
 #define OPA_NOTICE_TRAP_NODE_DESC_CHG   0x01
 
 struct opa_mad_notice_attr {
-	u8 generic_type;
-	u8 prod_type_msb;
-	__be16 prod_type_lsb;
-	__be16 trap_num;
-	__be16 toggle_count;
-	__be32 issuer_lid;
-	__be32 reserved1;
-	union ib_gid issuer_gid;
+	struct_group_tagged(opa_mad_notice_attr_hdr, hdr,
+			    u8 generic_type;
+			    u8 prod_type_msb;
+			    __be16 prod_type_lsb;
+			    __be16 trap_num;
+			    __be16 toggle_count;
+			    __be32 issuer_lid;
+			    __be32 reserved1;
+			    union ib_gid issuer_gid;
 
 	union {
 		struct {
@@ -124,7 +125,8 @@ struct opa_mad_notice_attr {
 		} __packed ntc_2048;
 
 	};
-	u8	class_data[];
+	);
+	u8 class_data[];
 };
 
 #define IB_VLARB_LOWPRI_0_31    1

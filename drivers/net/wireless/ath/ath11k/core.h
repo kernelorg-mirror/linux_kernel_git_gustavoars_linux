@@ -403,7 +403,7 @@ struct ath11k_vif {
 	bool wpaie_present;
 	bool bcca_zero_sent;
 	bool do_not_send_tmpl;
-	struct ieee80211_chanctx_conf chanctx;
+	struct ieee80211_chanctx_conf_hdr chanctx;
 	struct ath11k_arp_ns_offload arp_ns_offload;
 	struct ath11k_rekey_data rekey_data;
 

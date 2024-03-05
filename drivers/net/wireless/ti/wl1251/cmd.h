@@ -87,14 +87,16 @@ enum wl1251_commands {
 #define MAX_CMD_PARAMS 572
 
 struct wl1251_cmd_header {
-	u16 id;
-	u16 status;
-	/* payload */
+	struct_group_tagged(wl1251_cmd_header_hdr, hdr,
+			    u16 id;
+			    u16 status;
+			    /* payload */
+	);
 	u8 data[];
 } __packed;
 
 struct  wl1251_command {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 	u8  parameters[MAX_CMD_PARAMS];
 } __packed;
 
@@ -136,7 +138,7 @@ enum {
 #define MAX_READ_SIZE 256
 
 struct cmd_read_write_memory {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	/* The address of the memory to read from or write to.*/
 	u32 addr;
@@ -214,7 +216,7 @@ struct wl1251_scan_ch_parameters {
 #define SCAN_MAX_NUM_OF_CHANNELS 16
 
 struct wl1251_cmd_scan {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	struct wl1251_scan_parameters params;
 	struct wl1251_scan_ch_parameters channels[SCAN_MAX_NUM_OF_CHANNELS];
@@ -232,7 +234,7 @@ enum {
 
 
 struct cmd_join {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	u32 bssid_lsb;
 	u16 bssid_msb;
@@ -269,7 +271,7 @@ struct cmd_join {
 } __packed;
 
 struct cmd_enabledisable_path {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	u8 channel;
 	u8 padding[3];
@@ -278,7 +280,7 @@ struct cmd_enabledisable_path {
 #define WL1251_MAX_TEMPLATE_SIZE 300
 
 struct wl1251_cmd_packet_template {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	__le16 size;
 	u8 data[];
@@ -298,7 +300,7 @@ struct wl1251_tim {
 
 /* Virtual Bit Map update */
 struct wl1251_cmd_vbm_update {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 	__le16 len;
 	u8  padding[2];
 	struct wl1251_tim tim;
@@ -310,7 +312,7 @@ enum wl1251_cmd_ps_mode {
 };
 
 struct wl1251_cmd_ps_params {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	u8 ps_mode; /* STATION_* */
 	u8 send_null_data; /* Do we have to send NULL data packet ? */
@@ -326,7 +328,7 @@ struct wl1251_cmd_ps_params {
 } __packed;
 
 struct wl1251_cmd_trigger_scan_to {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	u32 timeout;
 } __packed;
@@ -375,7 +377,7 @@ enum wl1251_cmd_key_type {
  */
 
 struct wl1251_cmd_set_keys {
-	struct wl1251_cmd_header header;
+	struct wl1251_cmd_header_hdr header;
 
 	/* Ignored for default WEP key */
 	u8 addr[ETH_ALEN];

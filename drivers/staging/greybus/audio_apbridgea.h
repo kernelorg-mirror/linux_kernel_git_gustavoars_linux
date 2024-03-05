@@ -63,32 +63,34 @@
 /* The CPort is passed in the 'value' parameter of the USB request */
 
 struct audio_apbridgea_hdr {
-	__u8	type;
-	__le16	i2s_port;
-	__u8	data[];
+	struct_group_tagged(audio_apbridgea_hdr_hdr, hdr,
+			    __u8	type;
+			    __le16	i2s_port;
+	);
+	__u8 data[];
 } __packed;
 
 struct audio_apbridgea_set_config_request {
-	struct audio_apbridgea_hdr	hdr;
+	struct audio_apbridgea_hdr_hdr	hdr;
 	__le32				format;	/* AUDIO_APBRIDGEA_PCM_FMT_* */
 	__le32				rate;	/* AUDIO_APBRIDGEA_PCM_RATE_* */
 	__le32				mclk_freq; /* XXX Remove? */
 } __packed;
 
 struct audio_apbridgea_register_cport_request {
-	struct audio_apbridgea_hdr	hdr;
+	struct audio_apbridgea_hdr_hdr	hdr;
 	__le16				cport;
 	__u8				direction;
 } __packed;
 
 struct audio_apbridgea_unregister_cport_request {
-	struct audio_apbridgea_hdr	hdr;
+	struct audio_apbridgea_hdr_hdr	hdr;
 	__le16				cport;
 	__u8				direction;
 } __packed;
 
 struct audio_apbridgea_set_tx_data_size_request {
-	struct audio_apbridgea_hdr	hdr;
+	struct audio_apbridgea_hdr_hdr	hdr;
 	__le16				size;
 } __packed;
 
@@ -97,7 +99,7 @@ struct audio_apbridgea_prepare_tx_request {
 } __packed;
 
 struct audio_apbridgea_start_tx_request {
-	struct audio_apbridgea_hdr	hdr;
+	struct audio_apbridgea_hdr_hdr	hdr;
 	__le64				timestamp;
 } __packed;
 
@@ -110,7 +112,7 @@ struct audio_apbridgea_shutdown_tx_request {
 } __packed;
 
 struct audio_apbridgea_set_rx_data_size_request {
-	struct audio_apbridgea_hdr	hdr;
+	struct audio_apbridgea_hdr_hdr	hdr;
 	__le16				size;
 } __packed;
 

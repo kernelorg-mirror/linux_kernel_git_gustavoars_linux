@@ -3317,9 +3317,11 @@ struct wmi_link_maintain_cfg_read_cmd {
 
 /* WMI_SET_LINK_MONITOR_CMDID */
 struct wmi_set_link_monitor_cmd {
-	u8 rssi_hyst;
-	u8 reserved[12];
-	u8 rssi_thresholds_list_size;
+	struct_group_tagged(wmi_set_link_monitor_cmd_hdr, hdr,
+			    u8 rssi_hyst;
+			    u8 reserved[12];
+			    u8 rssi_thresholds_list_size;
+	);
 	s8 rssi_thresholds_list[];
 } __packed;
 

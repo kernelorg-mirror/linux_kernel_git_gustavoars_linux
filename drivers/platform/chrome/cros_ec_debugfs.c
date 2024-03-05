@@ -249,7 +249,7 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
 static bool cros_ec_uptime_is_supported(struct cros_ec_device *ec_dev)
 {
 	struct {
-		struct cros_ec_command cmd;
+		struct cros_ec_command_hdr cmd;
 		struct ec_response_uptime_info resp;
 	} __packed msg = {};
 	int ret;
@@ -257,7 +257,8 @@ static bool cros_ec_uptime_is_supported(struct cros_ec_device *ec_dev)
 	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
 	msg.cmd.insize = sizeof(msg.resp);
 
-	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
+	ret = cros_ec_cmd_xfer_status(ec_dev,
+				      container_of(&msg.cmd, struct cros_ec_command, hdr));
 	if (ret == -EPROTO && msg.cmd.result == EC_RES_INVALID_COMMAND)
 		return false;
 
@@ -271,7 +272,7 @@ static ssize_t cros_ec_uptime_read(struct file *file, char __user *user_buf,
 	struct cros_ec_debugfs *debug_info = file->private_data;
 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
 	struct {
-		struct cros_ec_command cmd;
+		struct cros_ec_command_hdr cmd;
 		struct ec_response_uptime_info resp;
 	} __packed msg = {};
 	struct ec_response_uptime_info *resp;
@@ -283,7 +284,8 @@ static ssize_t cros_ec_uptime_read(struct file *file, char __user *user_buf,
 	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
 	msg.cmd.insize = sizeof(*resp);
 
-	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
+	ret = cros_ec_cmd_xfer_status(ec_dev,
+				      container_of(&msg.cmd, struct cros_ec_command, hdr));
 	if (ret < 0)
 		return ret;
 

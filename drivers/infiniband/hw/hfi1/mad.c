@@ -20,7 +20,7 @@
 
 struct trap_node {
 	struct list_head list;
-	struct opa_mad_notice_attr data;
+	struct opa_mad_notice_attr_hdr data;
 	__be64 tid;
 	int len;
 	u32 retry;

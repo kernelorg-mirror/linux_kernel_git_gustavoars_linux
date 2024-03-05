@@ -1358,7 +1358,9 @@ struct ath12k_htt_ppdu_stats_msg {
 } __packed;
 
 struct htt_tlv {
-	__le32 header;
+	struct_group_tagged(htt_tlv_hdr, hdr,
+			    __le32 header;
+	);
 	u8 value[];
 } __packed;
 
@@ -1493,7 +1495,7 @@ struct htt_ppdu_stats_user_rate {
 			u32_get_bits(_flags, HTT_PPDU_STATS_TX_INFO_FLAGS_PEERID_M)
 
 struct htt_tx_ppdu_stats_info {
-	struct htt_tlv tlv_hdr;
+	struct htt_tlv_hdr tlv_hdr;
 	__le32 tx_success_bytes;
 	__le32 tx_retry_bytes;
 	__le32 tx_failed_bytes;

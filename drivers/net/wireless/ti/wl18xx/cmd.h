@@ -12,7 +12,7 @@
 #include "../wlcore/acx.h"
 
 struct wl18xx_cmd_channel_switch {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 
@@ -32,13 +32,13 @@ struct wl18xx_cmd_channel_switch {
 } __packed;
 
 struct wl18xx_cmd_smart_config_start {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	__le32 group_id_bitmask;
 } __packed;
 
 struct wl18xx_cmd_smart_config_set_group_key {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	__le32 group_id;
 
@@ -46,14 +46,14 @@ struct wl18xx_cmd_smart_config_set_group_key {
 } __packed;
 
 struct wl18xx_cmd_dfs_radar_debug {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 channel;
 	u8 padding[3];
 } __packed;
 
 struct wl18xx_cmd_dfs_master_restart {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 padding[3];
@@ -61,7 +61,7 @@ struct wl18xx_cmd_dfs_master_restart {
 
 /* cac_start and cac_stop share the same params */
 struct wlcore_cmd_cac_start {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 channel;

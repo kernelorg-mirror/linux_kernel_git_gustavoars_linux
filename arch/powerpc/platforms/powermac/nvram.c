@@ -51,15 +51,17 @@
 
 /* CHRP NVRAM header */
 struct chrp_header {
-  u8		signature;
-  u8		cksum;
-  u16		len;
-  char          name[12];
-  u8		data[];
+  struct_group_tagged(chrp_header_hdr, hdr,
+                      u8		signature;
+                      u8		cksum;
+                      u16		len;
+                      char          name[12];
+  );
+  u8 data[];
 };
 
 struct core99_header {
-  struct chrp_header	hdr;
+  struct chrp_header_hdr	hdr;
   u32			adler;
   u32			generation;
   u32			reserved[2];
@@ -266,7 +268,7 @@ static u32 __init core99_check(u8 *datas)
 		DBG("Invalid signature\n");
 		return 0;
 	}
-	if (hdr99->hdr.cksum != chrp_checksum(&hdr99->hdr)) {
+	if (hdr99->hdr.cksum != chrp_checksum(container_of(&hdr99->hdr, struct chrp_header, hdr))) {
 		DBG("Invalid checksum\n");
 		return 0;
 	}
@@ -486,7 +488,7 @@ static void core99_nvram_sync(void)
 	hdr99 = (struct core99_header*)nvram_image;
 	hdr99->generation++;
 	hdr99->hdr.signature = CORE99_SIGNATURE;
-	hdr99->hdr.cksum = chrp_checksum(&hdr99->hdr);
+	hdr99->hdr.cksum = chrp_checksum(container_of(&hdr99->hdr, struct chrp_header, hdr));
 	hdr99->adler = core99_calc_adler(nvram_image);
 	core99_bank = core99_bank ? 0 : 1;
 	if (core99_erase_bank)

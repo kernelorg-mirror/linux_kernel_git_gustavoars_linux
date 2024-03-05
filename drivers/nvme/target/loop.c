@@ -16,14 +16,16 @@
 #define NVME_LOOP_MAX_SEGMENTS		256
 
 struct nvme_loop_iod {
-	struct nvme_request	nvme_req;
-	struct nvme_command	cmd;
-	struct nvme_completion	cqe;
-	struct nvmet_req	req;
-	struct nvme_loop_queue	*queue;
-	struct work_struct	work;
-	struct sg_table		sg_table;
-	struct scatterlist	first_sgl[];
+	struct_group_tagged(nvme_loop_iod_hdr, hdr,
+			    struct nvme_request	nvme_req;
+			    struct nvme_command	cmd;
+			    struct nvme_completion	cqe;
+			    struct nvmet_req	req;
+			    struct nvme_loop_queue	*queue;
+			    struct work_struct	work;
+			    struct sg_table		sg_table;
+	);
+	struct scatterlist first_sgl[];
 };
 
 struct nvme_loop_ctrl {
@@ -33,7 +35,7 @@ struct nvme_loop_ctrl {
 
 	struct list_head	list;
 	struct blk_mq_tag_set	tag_set;
-	struct nvme_loop_iod	async_event_iod;
+	struct nvme_loop_iod_hdr	async_event_iod;
 	struct nvme_ctrl	ctrl;
 
 	struct nvmet_port	*port;
@@ -174,7 +176,8 @@ static void nvme_loop_submit_async_event(struct nvme_ctrl *arg)
 {
 	struct nvme_loop_ctrl *ctrl = to_loop_ctrl(arg);
 	struct nvme_loop_queue *queue = &ctrl->queues[0];
-	struct nvme_loop_iod *iod = &ctrl->async_event_iod;
+	struct nvme_loop_iod *iod = container_of(&ctrl->async_event_iod,
+						 struct nvme_loop_iod, hdr);
 
 	memset(&iod->cmd, 0, sizeof(iod->cmd));
 	iod->cmd.common.opcode = nvme_admin_async_event;
@@ -587,7 +590,9 @@ static struct nvme_ctrl *nvme_loop_create_ctrl(struct device *dev,
 			goto out_remove_admin_queue;
 	}
 
-	nvme_loop_init_iod(ctrl, &ctrl->async_event_iod, 0);
+	nvme_loop_init_iod(ctrl,
+			   container_of(&ctrl->async_event_iod, struct nvme_loop_iod, hdr),
+			   0);
 
 	dev_info(ctrl->ctrl.device,
 		 "new ctrl: \"%s\"\n", ctrl->ctrl.opts->subsysnqn);

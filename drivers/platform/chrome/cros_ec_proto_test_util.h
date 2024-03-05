@@ -13,7 +13,7 @@ struct ec_xfer_mock {
 	struct kunit *test;
 
 	/* input */
-	struct cros_ec_command msg;
+	struct cros_ec_command_hdr msg;
 	void *i_data;
 
 	/* output */

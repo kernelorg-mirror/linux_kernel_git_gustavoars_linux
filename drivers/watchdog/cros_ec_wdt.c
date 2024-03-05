@@ -26,7 +26,7 @@ static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
 {
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		union cros_ec_wdt_data data;
 	} __packed buf = {
 		.msg = {
@@ -40,7 +40,8 @@ static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
 		.data.req = arg->req
 	};
 
-	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
+	ret = cros_ec_cmd_xfer_status(cros_ec,
+				      container_of(&buf.msg, struct cros_ec_command, hdr));
 	if (ret < 0)
 		return ret;
 

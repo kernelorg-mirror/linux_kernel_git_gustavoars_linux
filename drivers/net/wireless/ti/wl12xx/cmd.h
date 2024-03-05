@@ -15,7 +15,7 @@
 #define TEST_CMD_INI_FILE_GENERAL_PARAM     0x1E
 
 struct wl1271_general_parms_cmd {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct wl1271_cmd_test_header test;
 
@@ -30,7 +30,7 @@ struct wl1271_general_parms_cmd {
 } __packed;
 
 struct wl128x_general_parms_cmd {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct wl1271_cmd_test_header test;
 
@@ -45,7 +45,7 @@ struct wl128x_general_parms_cmd {
 } __packed;
 
 struct wl1271_radio_parms_cmd {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct wl1271_cmd_test_header test;
 
@@ -61,7 +61,7 @@ struct wl1271_radio_parms_cmd {
 } __packed;
 
 struct wl128x_radio_parms_cmd {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct wl1271_cmd_test_header test;
 
@@ -80,7 +80,7 @@ struct wl128x_radio_parms_cmd {
 #define TEST_CMD_INI_FILE_RF_EXTENDED_PARAM 0x26
 
 struct wl1271_ext_radio_parms_cmd {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct wl1271_cmd_test_header test;
 
@@ -90,7 +90,7 @@ struct wl1271_ext_radio_parms_cmd {
 } __packed;
 
 struct wl12xx_cmd_channel_switch {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 

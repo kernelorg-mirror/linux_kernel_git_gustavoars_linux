@@ -307,7 +307,7 @@ static void btree_node_sort(struct bch_fs *c, struct btree *b,
 	     t < b->set + end_idx;
 	     t++) {
 		u64s += le16_to_cpu(bset(b, t)->u64s);
-		sort_iter_add(&sort_iter.iter,
+		sort_iter_add(container_of(&sort_iter.iter, struct sort_iter, hdr),
 			      btree_bkey_first(b, t),
 			      btree_bkey_last(b, t));
 	}
@@ -320,7 +320,9 @@ static void btree_node_sort(struct bch_fs *c, struct btree *b,
 
 	start_time = local_clock();
 
-	u64s = bch2_sort_keys(out->keys.start, &sort_iter.iter, filter_whiteouts);
+	u64s = bch2_sort_keys(out->keys.start,
+			      container_of(&sort_iter.iter, struct sort_iter, hdr),
+			      filter_whiteouts);
 
 	out->keys.u64s = cpu_to_le16(u64s);
 
@@ -2043,7 +2045,7 @@ do_write:
 			continue;
 
 		bytes += le16_to_cpu(i->u64s) * sizeof(u64);
-		sort_iter_add(&sort_iter.iter,
+		sort_iter_add(container_of(&sort_iter.iter, struct sort_iter, hdr),
 			      btree_bkey_first(b, t),
 			      btree_bkey_last(b, t));
 		seq = max(seq, le64_to_cpu(i->journal_seq));
@@ -2072,14 +2074,16 @@ do_write:
 	i->journal_seq	= cpu_to_le64(seq);
 	i->u64s		= 0;
 
-	sort_iter_add(&sort_iter.iter,
+	sort_iter_add(container_of(&sort_iter.iter, struct sort_iter, hdr),
 		      unwritten_whiteouts_start(b),
 		      unwritten_whiteouts_end(b));
 	SET_BSET_SEPARATE_WHITEOUTS(i, false);
 
 	b->whiteout_u64s = 0;
 
-	u64s = bch2_sort_keys(i->start, &sort_iter.iter, false);
+	u64s = bch2_sort_keys(i->start,
+			      container_of(&sort_iter.iter, struct sort_iter, hdr),
+			      false);
 	le16_add_cpu(&i->u64s, u64s);
 
 	BUG_ON(!b->written && i->u64s != b->data->keys.u64s);

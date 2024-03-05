@@ -2386,11 +2386,13 @@ struct mlx5_ifc_resource_dump_info_segment_bits {
 };
 
 struct mlx5_ifc_resource_dump_menu_segment_bits {
-	struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
+	struct_group_tagged(mlx5_ifc_resource_dump_menu_segment_bits_hdr, hdr,
+			    struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
 
 	u8         reserved_at_20[0x10];
 	u8         num_of_records[0x10];
 
+	);
 	struct mlx5_ifc_resource_dump_menu_record_bits record[];
 };
 
@@ -2413,7 +2415,7 @@ struct mlx5_ifc_resource_dump_terminate_segment_bits {
 struct mlx5_ifc_menu_resource_dump_response_bits {
 	struct mlx5_ifc_resource_dump_info_segment_bits info;
 	struct mlx5_ifc_resource_dump_command_segment_bits cmd;
-	struct mlx5_ifc_resource_dump_menu_segment_bits menu;
+	struct mlx5_ifc_resource_dump_menu_segment_bits_hdr menu;
 	struct mlx5_ifc_resource_dump_terminate_segment_bits terminate;
 };
 

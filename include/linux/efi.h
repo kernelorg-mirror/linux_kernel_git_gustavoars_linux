@@ -999,9 +999,11 @@ struct efi_pci_dev_path {
 } __packed;
 
 struct efi_vendor_dev_path {
-	struct efi_generic_dev_path	header;
-	efi_guid_t			vendorguid;
-	u8				vendordata[];
+	struct_group_tagged(efi_vendor_dev_path_hdr, hdr,
+			    struct efi_generic_dev_path	header;
+			    efi_guid_t			vendorguid;
+	);
+	u8 vendordata[];
 } __packed;
 
 struct efi_rel_offset_dev_path {

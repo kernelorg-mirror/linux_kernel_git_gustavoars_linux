@@ -99,7 +99,7 @@ static void hv_uio_channel_cb(void *context)
 	chan->inbound.ring_buffer->interrupt_mask = 1;
 	virt_mb();
 
-	uio_event_notify(&pdata->info);
+	uio_event_notify(container_of(&pdata->info, struct vmbus_channel_msginfo, hdr));
 }
 
 /*
@@ -117,7 +117,7 @@ static void hv_uio_rescind(struct vmbus_channel *channel)
 	pdata->info.irq = 0;
 
 	/* Wake up reader */
-	uio_event_notify(&pdata->info);
+	uio_event_notify(container_of(&pdata->info, struct vmbus_channel_msginfo, hdr));
 }
 
 /* Sysfs API to allow mmap of the ring buffers
@@ -332,7 +332,8 @@ hv_uio_probe(struct hv_device *dev,
 	pdata->info.priv = pdata;
 	pdata->device = dev;
 
-	ret = uio_register_device(&dev->device, &pdata->info);
+	ret = uio_register_device(&dev->device,
+				  container_of(&pdata->info, struct vmbus_channel_msginfo, hdr));
 	if (ret) {
 		dev_err(&dev->device, "hv_uio register failed\n");
 		goto fail_close;
@@ -364,7 +365,7 @@ hv_uio_remove(struct hv_device *dev)
 		return;
 
 	sysfs_remove_bin_file(&dev->channel->kobj, &ring_buffer_bin_attr);
-	uio_unregister_device(&pdata->info);
+	uio_unregister_device(container_of(&pdata->info, struct vmbus_channel_msginfo, hdr));
 	hv_uio_cleanup(dev, pdata);
 
 	vmbus_free_ring(dev->channel);

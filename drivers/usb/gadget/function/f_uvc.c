@@ -612,7 +612,8 @@ uvc_copy_descriptors(struct uvc_device *uvc, enum usb_device_speed speed)
 		(const struct usb_descriptor_header **)uvc_control_desc);
 
 	list_for_each_entry(xu, uvc->desc.extension_units, list)
-		UVC_COPY_XU_DESCRIPTOR(mem, dst, &xu->desc);
+		UVC_COPY_XU_DESCRIPTOR(mem, dst,
+				       container_of(&xu->desc, struct uvc_input_header_descriptor, hdr));
 
 	uvc_control_header->wTotalLength = cpu_to_le16(control_size);
 	uvc_control_header->bInCollection = 1;

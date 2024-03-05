@@ -52,7 +52,7 @@
 
 /* Target's information element */
 struct acx_header {
-	struct wl1271_cmd_header cmd;
+	struct wl1271_cmd_header_hdr cmd;
 
 	/* acx (or information element) header */
 	__le16 id;

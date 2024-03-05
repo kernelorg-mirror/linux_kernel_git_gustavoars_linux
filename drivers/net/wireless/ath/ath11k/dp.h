@@ -1184,7 +1184,9 @@ struct ath11k_htt_ppdu_stats_msg {
 } __packed;
 
 struct htt_tlv {
-	u32 header;
+	struct_group_tagged(htt_tlv_hdr, hdr,
+			    u32 header;
+	);
 	u8 value[];
 } __packed;
 
@@ -1306,7 +1308,7 @@ struct htt_ppdu_stats_user_rate {
 			FIELD_GET(HTT_PPDU_STATS_TX_INFO_FLAGS_PEERID_M, _flags)
 
 struct htt_tx_ppdu_stats_info {
-	struct htt_tlv tlv_hdr;
+	struct htt_tlv_hdr tlv_hdr;
 	u32 tx_success_bytes;
 	u32 tx_retry_bytes;
 	u32 tx_failed_bytes;
@@ -1365,7 +1367,7 @@ struct htt_ppdu_stats_usr_cmpltn_ack_ba_status {
 } __packed;
 
 struct htt_ppdu_stats_usr_cmn_array {
-	struct htt_tlv tlv_hdr;
+	struct htt_tlv_hdr tlv_hdr;
 	u32 num_ppdu_stats;
 	/* tx_ppdu_stats_info is filled by multiple struct htt_tx_ppdu_stats_info
 	 * elements.

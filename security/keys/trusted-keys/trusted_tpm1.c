@@ -28,7 +28,7 @@ static struct tpm_chip *chip;
 static struct tpm_digest *digests;
 
 struct sdesc {
-	struct shash_desc shash;
+	struct shash_desc_hdr shash;
 	char ctx[];
 };
 
@@ -60,7 +60,8 @@ static int TSS_sha1(const unsigned char *data, unsigned int datalen,
 		return PTR_ERR(sdesc);
 	}
 
-	ret = crypto_shash_digest(&sdesc->shash, data, datalen, digest);
+	ret = crypto_shash_digest(container_of(&sdesc->shash, struct shash_desc, hdr),
+				  data, datalen, digest);
 	kfree_sensitive(sdesc);
 	return ret;
 }
@@ -83,7 +84,7 @@ static int TSS_rawhmac(unsigned char *digest, const unsigned char *key,
 	ret = crypto_shash_setkey(hmacalg, key, keylen);
 	if (ret < 0)
 		goto out;
-	ret = crypto_shash_init(&sdesc->shash);
+	ret = crypto_shash_init(container_of(&sdesc->shash, struct shash_desc, hdr));
 	if (ret < 0)
 		goto out;
 
@@ -97,13 +98,15 @@ static int TSS_rawhmac(unsigned char *digest, const unsigned char *key,
 			ret = -EINVAL;
 			break;
 		}
-		ret = crypto_shash_update(&sdesc->shash, data, dlen);
+		ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+					  data, dlen);
 		if (ret < 0)
 			break;
 	}
 	va_end(argp);
 	if (!ret)
-		ret = crypto_shash_final(&sdesc->shash, digest);
+		ret = crypto_shash_final(container_of(&sdesc->shash, struct shash_desc, hdr),
+					 digest);
 out:
 	kfree_sensitive(sdesc);
 	return ret;
@@ -134,7 +137,7 @@ int TSS_authhmac(unsigned char *digest, const unsigned char *key,
 	}
 
 	c = !!h3;
-	ret = crypto_shash_init(&sdesc->shash);
+	ret = crypto_shash_init(container_of(&sdesc->shash, struct shash_desc, hdr));
 	if (ret < 0)
 		goto out;
 	va_start(argp, h3);
@@ -147,13 +150,15 @@ int TSS_authhmac(unsigned char *digest, const unsigned char *key,
 			ret = -EINVAL;
 			break;
 		}
-		ret = crypto_shash_update(&sdesc->shash, data, dlen);
+		ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+					  data, dlen);
 		if (ret < 0)
 			break;
 	}
 	va_end(argp);
 	if (!ret)
-		ret = crypto_shash_final(&sdesc->shash, paramdigest);
+		ret = crypto_shash_final(container_of(&sdesc->shash, struct shash_desc, hdr),
+					 paramdigest);
 	if (!ret)
 		ret = TSS_rawhmac(digest, key, keylen, SHA1_DIGEST_SIZE,
 				  paramdigest, TPM_NONCE_SIZE, h1,
@@ -208,14 +213,16 @@ int TSS_checkhmac1(unsigned char *buffer,
 		pr_info("can't alloc %s\n", hash_alg);
 		return PTR_ERR(sdesc);
 	}
-	ret = crypto_shash_init(&sdesc->shash);
+	ret = crypto_shash_init(container_of(&sdesc->shash, struct shash_desc, hdr));
 	if (ret < 0)
 		goto out;
-	ret = crypto_shash_update(&sdesc->shash, (const u8 *)&result,
+	ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+				  (const u8 *)&result,
 				  sizeof result);
 	if (ret < 0)
 		goto out;
-	ret = crypto_shash_update(&sdesc->shash, (const u8 *)&ordinal,
+	ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+				  (const u8 *)&ordinal,
 				  sizeof ordinal);
 	if (ret < 0)
 		goto out;
@@ -225,13 +232,15 @@ int TSS_checkhmac1(unsigned char *buffer,
 		if (dlen == 0)
 			break;
 		dpos = va_arg(argp, unsigned int);
-		ret = crypto_shash_update(&sdesc->shash, buffer + dpos, dlen);
+		ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+					  buffer + dpos, dlen);
 		if (ret < 0)
 			break;
 	}
 	va_end(argp);
 	if (!ret)
-		ret = crypto_shash_final(&sdesc->shash, paramdigest);
+		ret = crypto_shash_final(container_of(&sdesc->shash, struct shash_desc, hdr),
+					 paramdigest);
 	if (ret < 0)
 		goto out;
 
@@ -301,14 +310,16 @@ static int TSS_checkhmac2(unsigned char *buffer,
 		pr_info("can't alloc %s\n", hash_alg);
 		return PTR_ERR(sdesc);
 	}
-	ret = crypto_shash_init(&sdesc->shash);
+	ret = crypto_shash_init(container_of(&sdesc->shash, struct shash_desc, hdr));
 	if (ret < 0)
 		goto out;
-	ret = crypto_shash_update(&sdesc->shash, (const u8 *)&result,
+	ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+				  (const u8 *)&result,
 				  sizeof result);
 	if (ret < 0)
 		goto out;
-	ret = crypto_shash_update(&sdesc->shash, (const u8 *)&ordinal,
+	ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+				  (const u8 *)&ordinal,
 				  sizeof ordinal);
 	if (ret < 0)
 		goto out;
@@ -319,13 +330,15 @@ static int TSS_checkhmac2(unsigned char *buffer,
 		if (dlen == 0)
 			break;
 		dpos = va_arg(argp, unsigned int);
-		ret = crypto_shash_update(&sdesc->shash, buffer + dpos, dlen);
+		ret = crypto_shash_update(container_of(&sdesc->shash, struct shash_desc, hdr),
+					  buffer + dpos, dlen);
 		if (ret < 0)
 			break;
 	}
 	va_end(argp);
 	if (!ret)
-		ret = crypto_shash_final(&sdesc->shash, paramdigest);
+		ret = crypto_shash_final(container_of(&sdesc->shash, struct shash_desc, hdr),
+					 paramdigest);
 	if (ret < 0)
 		goto out;
 

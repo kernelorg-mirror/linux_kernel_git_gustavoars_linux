@@ -32,7 +32,7 @@ enum
 #define WL18XX_MAX_CHANNELS_5GHZ 32
 
 struct wl18xx_cmd_scan_params {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 scan_type;
@@ -95,7 +95,7 @@ struct wl18xx_cmd_scan_params {
 } __packed;
 
 struct wl18xx_cmd_scan_stop {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 scan_type;

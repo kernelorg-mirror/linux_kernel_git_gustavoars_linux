@@ -57,7 +57,7 @@ static struct notifier_block crc64_rocksoft_nb = {
 u64 crc64_rocksoft_update(u64 crc, const unsigned char *buffer, size_t len)
 {
 	struct {
-		struct shash_desc shash;
+		struct shash_desc_hdr shash;
 		u64 crc;
 	} desc;
 	int err;
@@ -68,7 +68,8 @@ u64 crc64_rocksoft_update(u64 crc, const unsigned char *buffer, size_t len)
 	rcu_read_lock();
 	desc.shash.tfm = rcu_dereference(crc64_rocksoft_tfm);
 	desc.crc = crc;
-	err = crypto_shash_update(&desc.shash, buffer, len);
+	err = crypto_shash_update(container_of(&desc.shash, struct shash_desc, hdr),
+				  buffer, len);
 	rcu_read_unlock();
 
 	BUG_ON(err);

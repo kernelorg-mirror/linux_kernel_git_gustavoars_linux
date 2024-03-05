@@ -4717,7 +4717,7 @@ struct kstatmount {
 	struct vfsmount *mnt;
 	u64 mask;
 	struct path root;
-	struct statmount sm;
+	struct statmount_hdr sm;
 	struct seq_file seq;
 };
 
@@ -4848,7 +4848,7 @@ static int statmount_string(struct kstatmount *s, u64 flag)
 	int ret;
 	size_t kbufsize;
 	struct seq_file *seq = &s->seq;
-	struct statmount *sm = &s->sm;
+	struct statmount *sm = container_of(&s->sm, struct statmount, hdr);
 
 	switch (flag) {
 	case STATMOUNT_FS_TYPE:
@@ -4887,7 +4887,7 @@ static int statmount_string(struct kstatmount *s, u64 flag)
 
 static int copy_statmount_to_user(struct kstatmount *s)
 {
-	struct statmount *sm = &s->sm;
+	struct statmount *sm = container_of(&s->sm, struct statmount, hdr);
 	struct seq_file *seq = &s->seq;
 	char __user *str = ((char __user *)s->buf) + sizeof(*sm);
 	size_t copysize = min_t(size_t, s->bufsize, sizeof(*sm));

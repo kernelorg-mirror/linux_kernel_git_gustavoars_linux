@@ -182,7 +182,8 @@ static void usb_ep1_command_reply_dispatch (struct urb* urb)
 	}
 
 	cdev->ep1_in_urb.actual_length = 0;
-	ret = usb_submit_urb(&cdev->ep1_in_urb, GFP_ATOMIC);
+	ret = usb_submit_urb(container_of(&cdev->ep1_in_urb, struct urb, hdr),
+		             GFP_ATOMIC);
 	if (ret < 0)
 		dev_err(dev, "unable to submit urb. OOM!?\n");
 }
@@ -422,22 +423,24 @@ static int init_card(struct snd_usb_caiaqdev *cdev)
 		return -EIO;
 	}
 
-	usb_init_urb(&cdev->ep1_in_urb);
-	usb_init_urb(&cdev->midi_out_urb);
+	usb_init_urb(container_of(&cdev->ep1_in_urb, struct urb, hdr));
+	usb_init_urb(container_of(&cdev->midi_out_urb, struct urb, hdr));
 
-	usb_fill_bulk_urb(&cdev->ep1_in_urb, usb_dev,
+	usb_fill_bulk_urb(container_of(&cdev->ep1_in_urb, struct urb, hdr),
+			  usb_dev,
 			  usb_rcvbulkpipe(usb_dev, 0x1),
 			  cdev->ep1_in_buf, EP1_BUFSIZE,
 			  usb_ep1_command_reply_dispatch, cdev);
 
-	usb_fill_bulk_urb(&cdev->midi_out_urb, usb_dev,
+	usb_fill_bulk_urb(container_of(&cdev->midi_out_urb, struct urb, hdr),
+			  usb_dev,
 			  usb_sndbulkpipe(usb_dev, 0x1),
 			  cdev->midi_out_buf, EP1_BUFSIZE,
 			  snd_usb_caiaq_midi_output_done, cdev);
 
 	/* sanity checks of EPs before actually submitting */
-	if (usb_urb_ep_type_check(&cdev->ep1_in_urb) ||
-	    usb_urb_ep_type_check(&cdev->midi_out_urb)) {
+	if (usb_urb_ep_type_check(container_of(&cdev->ep1_in_urb, struct urb, hdr)) ||
+	    usb_urb_ep_type_check(container_of(&cdev->midi_out_urb, struct urb, hdr))) {
 		dev_err(dev, "invalid EPs\n");
 		return -EINVAL;
 	}
@@ -445,7 +448,7 @@ static int init_card(struct snd_usb_caiaqdev *cdev)
 	init_waitqueue_head(&cdev->ep1_wait_queue);
 	init_waitqueue_head(&cdev->prepare_wait_queue);
 
-	if (usb_submit_urb(&cdev->ep1_in_urb, GFP_KERNEL) != 0)
+	if (usb_submit_urb(container_of(&cdev->ep1_in_urb, struct urb, hdr), GFP_KERNEL) != 0)
 		return -EIO;
 
 	err = snd_usb_caiaq_send_command(cdev, EP1_CMD_GET_DEVICE_INFO, NULL, 0);
@@ -492,7 +495,7 @@ static int init_card(struct snd_usb_caiaqdev *cdev)
 	return 0;
 
  err_kill_urb:
-	usb_kill_urb(&cdev->ep1_in_urb);
+	usb_kill_urb(container_of(&cdev->ep1_in_urb, struct urb, hdr));
 	return err;
 }
 
@@ -538,8 +541,8 @@ static void snd_disconnect(struct usb_interface *intf)
 #endif
 	snd_usb_caiaq_audio_free(cdev);
 
-	usb_kill_urb(&cdev->ep1_in_urb);
-	usb_kill_urb(&cdev->midi_out_urb);
+	usb_kill_urb(container_of(&cdev->ep1_in_urb, struct urb, hdr));
+	usb_kill_urb(container_of(&cdev->midi_out_urb, struct urb, hdr));
 
 	snd_card_free(card);
 	usb_reset_device(interface_to_usbdev(intf));

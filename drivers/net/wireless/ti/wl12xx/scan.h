@@ -54,7 +54,7 @@ struct basic_scan_channel_params {
 } __packed;
 
 struct wl1271_cmd_scan {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct basic_scan_params params;
 	struct basic_scan_channel_params channels[WL1271_SCAN_MAX_CHANNELS];
@@ -65,7 +65,7 @@ struct wl1271_cmd_scan {
 } __packed;
 
 struct wl1271_cmd_sched_scan_config {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	__le32 intervals[SCAN_MAX_CYCLE_INTERVALS];
 
@@ -100,7 +100,7 @@ struct wl1271_cmd_sched_scan_config {
 } __packed;
 
 struct wl1271_cmd_sched_scan_start {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 tag;
 	u8 role_id;
@@ -108,7 +108,7 @@ struct wl1271_cmd_sched_scan_start {
 } __packed;
 
 struct wl1271_cmd_sched_scan_stop {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 tag;
 	u8 role_id;

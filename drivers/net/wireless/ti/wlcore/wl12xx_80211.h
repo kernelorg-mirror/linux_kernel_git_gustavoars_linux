@@ -60,12 +60,14 @@
 
 /* Headers */
 struct ieee80211_header {
-	__le16 frame_ctl;
-	__le16 duration_id;
-	u8 da[ETH_ALEN];
-	u8 sa[ETH_ALEN];
-	u8 bssid[ETH_ALEN];
-	__le16 seq_ctl;
+	struct_group_tagged(ieee80211_header_hdr, hdr,
+			    __le16 frame_ctl;
+			    __le16 duration_id;
+			    u8 da[ETH_ALEN];
+			    u8 sa[ETH_ALEN];
+			    u8 bssid[ETH_ALEN];
+			    __le16 seq_ctl;
+	);
 	u8 payload[];
 } __packed;
 
@@ -131,7 +133,7 @@ struct wl12xx_arp_rsp_template {
 } __packed;
 
 struct wl12xx_disconn_template {
-	struct ieee80211_header header;
+	struct ieee80211_header_hdr header;
 	__le16 disconn_reason;
 } __packed;
 

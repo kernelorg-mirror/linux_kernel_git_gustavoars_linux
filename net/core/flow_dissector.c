@@ -1335,7 +1335,7 @@ proto_again:
 			break;
 		}
 
-		if (!is_pppoe_ses_hdr_valid(&hdr->hdr)) {
+		if (!is_pppoe_ses_hdr_valid(container_of(&hdr->hdr, struct bpf_prog_array, hdr))) {
 			fdret = FLOW_DISSECT_RET_OUT_BAD;
 			break;
 		}

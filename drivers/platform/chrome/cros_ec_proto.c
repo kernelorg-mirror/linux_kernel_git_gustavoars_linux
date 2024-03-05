@@ -137,10 +137,12 @@ static int cros_ec_xfer_command(struct cros_ec_device *ec_dev, struct cros_ec_co
 static int cros_ec_wait_until_complete(struct cros_ec_device *ec_dev, uint32_t *result)
 {
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_response_get_comms_status status;
 	} __packed buf;
-	struct cros_ec_command *msg = &buf.msg;
+	struct cros_ec_command *msg = container_of(&buf.msg,
+						   struct cros_ec_command,
+						   hdr);
 	struct ec_response_get_comms_status *status = &buf.status;
 	int ret = 0, i;
 
@@ -708,10 +710,12 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
 static int get_next_event(struct cros_ec_device *ec_dev)
 {
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_response_get_next_event_v1 event;
 	} __packed buf;
-	struct cros_ec_command *msg = &buf.msg;
+	struct cros_ec_command *msg = container_of(&buf.msg,
+						   struct cros_ec_command,
+						   hdr);
 	struct ec_response_get_next_event_v1 *event = &buf.event;
 	const int cmd_version = ec_dev->mkbp_event_supported - 1;
 

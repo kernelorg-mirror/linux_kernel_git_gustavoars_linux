@@ -126,11 +126,13 @@ keyboard_led_set_brightness_ec_pwm(struct led_classdev *cdev,
 				   enum led_brightness brightness)
 {
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_params_pwm_set_keyboard_backlight params;
 	} __packed buf;
 	struct ec_params_pwm_set_keyboard_backlight *params = &buf.params;
-	struct cros_ec_command *msg = &buf.msg;
+	struct cros_ec_command *msg = container_of(&buf.msg,
+						   struct cros_ec_command,
+						   hdr);
 	struct keyboard_led *keyboard_led = container_of(cdev, struct keyboard_led, cdev);
 
 	memset(&buf, 0, sizeof(buf));
@@ -147,11 +149,13 @@ static enum led_brightness
 keyboard_led_get_brightness_ec_pwm(struct led_classdev *cdev)
 {
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_response_pwm_get_keyboard_backlight resp;
 	} __packed buf;
 	struct ec_response_pwm_get_keyboard_backlight *resp = &buf.resp;
-	struct cros_ec_command *msg = &buf.msg;
+	struct cros_ec_command *msg = container_of(&buf.msg,
+						   struct cros_ec_command,
+						   hdr);
 	struct keyboard_led *keyboard_led = container_of(cdev, struct keyboard_led, cdev);
 	int ret;
 

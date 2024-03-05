@@ -86,8 +86,10 @@ enum sdtx_device_mode {
  * See &enum sdtx_event_code for currently valid event codes.
  */
 struct sdtx_event {
-	__u16 length;
-	__u16 code;
+	struct_group_tagged(sdtx_event_hdr, hdr,
+			    __u16 length;
+			    __u16 code;
+	);
 	__u8 data[];
 } __attribute__((__packed__));
 

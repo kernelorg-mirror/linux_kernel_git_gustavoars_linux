@@ -242,7 +242,9 @@ static void bcm_vk_log_notf(struct bcm_vk *vk,
 static void bcm_vk_dump_peer_log(struct bcm_vk *vk)
 {
 	struct bcm_vk_peer_log log;
-	struct bcm_vk_peer_log *log_info = &vk->peerlog_info;
+	struct bcm_vk_peer_log *log_info = container_of(&vk->peerlog_info,
+							struct bcm_vk_peer_log,
+							hdr);
 	char loc_buf[BCM_VK_PEER_LOG_LINE_MAX];
 	int cnt;
 	struct device *dev = &vk->pdev->dev;
@@ -407,7 +409,8 @@ static void bcm_vk_get_card_info(struct bcm_vk *vk)
 	 * before dump, in case the BAR2 memory has been corrupted.
 	 */
 	vk->peerlog_off = offset;
-	memcpy_fromio(&vk->peerlog_info, vk->bar[BAR_2] + vk->peerlog_off,
+	memcpy_fromio(container_of(&vk->peerlog_info, struct bcm_vk_peer_log, hdr),
+		      vk->bar[BAR_2] + vk->peerlog_off,
 		      sizeof(vk->peerlog_info));
 
 	/*

@@ -36,7 +36,7 @@ static int cros_ec_rtc_get(struct cros_ec_device *cros_ec, u32 command,
 {
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_response_rtc data;
 	} __packed msg;
 
@@ -44,7 +44,8 @@ static int cros_ec_rtc_get(struct cros_ec_device *cros_ec, u32 command,
 	msg.msg.command = command;
 	msg.msg.insize = sizeof(msg.data);
 
-	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+	ret = cros_ec_cmd_xfer_status(cros_ec,
+				      container_of(&msg.msg, struct cros_ec_command, hdr));
 	if (ret < 0)
 		return ret;
 
@@ -58,7 +59,7 @@ static int cros_ec_rtc_set(struct cros_ec_device *cros_ec, u32 command,
 {
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_response_rtc data;
 	} __packed msg;
 
@@ -67,7 +68,8 @@ static int cros_ec_rtc_set(struct cros_ec_device *cros_ec, u32 command,
 	msg.msg.outsize = sizeof(msg.data);
 	msg.data.time = param;
 
-	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+	ret = cros_ec_cmd_xfer_status(cros_ec,
+				      container_of(&msg.msg, struct cros_ec_command, hdr));
 	if (ret < 0)
 		return ret;
 	return 0;

@@ -466,7 +466,7 @@ void *get_efi_config_table(efi_guid_t guid)
  * via EFI protocols.
  */
 static const struct {
-	struct efi_vendor_dev_path	vendor;
+	struct efi_vendor_dev_path_hdr	vendor;
 	struct efi_generic_dev_path	end;
 } __packed initrd_dev_path = {
 	{

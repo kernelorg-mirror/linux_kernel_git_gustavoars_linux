@@ -60,11 +60,13 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm, u8 index,
 {
 	struct cros_ec_device *ec = ec_pwm->ec;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		struct ec_params_pwm_set_duty params;
 	} __packed buf;
 	struct ec_params_pwm_set_duty *params = &buf.params;
-	struct cros_ec_command *msg = &buf.msg;
+	struct cros_ec_command *msg = container_of(&buf.msg,
+						   struct cros_ec_command,
+						   hdr);
 	int ret;
 
 	memset(&buf, 0, sizeof(buf));
@@ -102,7 +104,9 @@ static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, bool use_pwm_type, u8
 	} __packed buf;
 	struct ec_params_pwm_get_duty *params = &buf.params;
 	struct ec_response_pwm_get_duty *resp = &buf.resp;
-	struct cros_ec_command *msg = &buf.msg;
+	struct cros_ec_command *msg = container_of(&buf.msg,
+						   struct cros_ec_command,
+						   hdr);
 	int ret;
 
 	memset(&buf, 0, sizeof(buf));

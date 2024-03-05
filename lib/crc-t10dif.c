@@ -63,7 +63,7 @@ static struct notifier_block crc_t10dif_nb = {
 __u16 crc_t10dif_update(__u16 crc, const unsigned char *buffer, size_t len)
 {
 	struct {
-		struct shash_desc shash;
+		struct shash_desc_hdr shash;
 		__u16 crc;
 	} desc;
 	int err;
@@ -74,7 +74,8 @@ __u16 crc_t10dif_update(__u16 crc, const unsigned char *buffer, size_t len)
 	rcu_read_lock();
 	desc.shash.tfm = rcu_dereference(crct10dif_tfm);
 	desc.crc = crc;
-	err = crypto_shash_update(&desc.shash, buffer, len);
+	err = crypto_shash_update(container_of(&desc.shash, struct shash_desc, hdr),
+				  buffer, len);
 	rcu_read_unlock();
 
 	BUG_ON(err);

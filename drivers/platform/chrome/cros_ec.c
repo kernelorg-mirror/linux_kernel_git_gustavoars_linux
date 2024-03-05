@@ -103,7 +103,7 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
 {
 	int ret;
 	struct {
-		struct cros_ec_command msg;
+		struct cros_ec_command_hdr msg;
 		union {
 			struct ec_params_host_sleep_event req0;
 			struct ec_params_host_sleep_event_v1 req1;
@@ -132,7 +132,8 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
 
 	buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
 
-	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+	ret = cros_ec_cmd_xfer_status(ec_dev,
+				      container_of(&buf.msg, struct cros_ec_command, hdr));
 	/* Report failure to transition to system wide suspend with a warning. */
 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
 	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME ||

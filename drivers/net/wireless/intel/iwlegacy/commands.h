@@ -176,9 +176,10 @@ enum {
  * driver, and each response/notification received from uCode.
  */
 struct il_cmd_header {
-	u8 cmd;			/* Command ID:  C_RXON, etc. */
-	u8 flags;		/* 0:5 reserved, 6 abort, 7 internal */
-	/*
+	struct_group_tagged(il_cmd_header_hdr, hdr,
+			    u8 cmd;			/* Command ID:  C_RXON, etc. */
+			    u8 flags;		/* 0:5 reserved, 6 abort, 7 internal */
+			    /*
 	 * The driver sets up the sequence number to values of its choosing.
 	 * uCode does not use this value, but passes it back to the driver
 	 * when sending the response to each driver-originated command, so
@@ -200,9 +201,10 @@ struct il_cmd_header {
 	 *              'huge' storage at the end of the command buffers
 	 *  15          unsolicited RX or uCode-originated notification
 	 */
-	__le16 sequence;
+			    __le16 sequence;
 
 	/* command or response/notification data follows immediately */
+	);
 	u8 data[];
 } __packed;
 
@@ -1160,21 +1162,25 @@ struct il_wep_cmd {
 #define RX_MPDU_RES_STATUS_DEC_DONE_MSK	(0x800)
 
 struct il3945_rx_frame_stats {
-	u8 phy_count;
-	u8 id;
-	u8 rssi;
-	u8 agc;
-	__le16 sig_avg;
-	__le16 noise_diff;
+	struct_group_tagged(il3945_rx_frame_stats_hdr, hdr,
+			    u8 phy_count;
+			    u8 id;
+			    u8 rssi;
+			    u8 agc;
+			    __le16 sig_avg;
+			    __le16 noise_diff;
+	);
 	u8 payload[];
 } __packed;
 
 struct il3945_rx_frame_hdr {
-	__le16 channel;
-	__le16 phy_flags;
-	u8 reserved1;
-	u8 rate;
-	__le16 len;
+	struct_group_tagged(il3945_rx_frame_hdr_hdr, hdr,
+			    __le16 channel;
+			    __le16 phy_flags;
+			    u8 reserved1;
+			    u8 rate;
+			    __le16 len;
+	);
 	u8 payload[];
 } __packed;
 
@@ -1193,8 +1199,8 @@ struct il3945_rx_frame_end {
  * stats.phy_count
  */
 struct il3945_rx_frame {
-	struct il3945_rx_frame_stats stats;
-	struct il3945_rx_frame_hdr hdr;
+	struct il3945_rx_frame_stats_hdr stats;
+	struct il3945_rx_frame_hdr_hdr hdr;
 	struct il3945_rx_frame_end end;
 } __packed;
 
@@ -1438,7 +1444,8 @@ struct il_dram_scratch {
 } __packed;
 
 struct il_tx_cmd {
-	/*
+	struct_group_tagged(il_tx_cmd_hdr, hdr,
+			    /*
 	 * MPDU byte count:
 	 * MAC header (24/26/30/32 bytes) + 2 bytes pad if 26/30 header size,
 	 * + 8 byte IV for CCM or TKIP (not used for WEP)
@@ -1448,7 +1455,7 @@ struct il_tx_cmd {
 	 *        MIC (CCM) 8 bytes, ICV (WEP/TKIP/CKIP) 4 bytes, CRC 4 bytes.i
 	 * Range: 14-2342 bytes.
 	 */
-	__le16 len;
+			    __le16 len;
 
 	/*
 	 * MPDU or MSDU byte count for next frame.
@@ -1513,6 +1520,7 @@ struct il_tx_cmd {
 	 * length is 26 or 30 bytes, followed by payload data
 	 */
 	u8 payload[0];
+	);
 	struct ieee80211_hdr hdr[];
 } __packed;
 
@@ -2546,7 +2554,7 @@ struct il_scan_cmd {
 
 	/* For active scans (set to all-0s for passive scans).
 	 * Does not include payload.  Must specify Tx rate; no rate scaling. */
-	struct il_tx_cmd tx_cmd;
+	struct il_tx_cmd_hdr tx_cmd;
 
 	/* For directed active scans (set to all-0s otherwise) */
 	struct il_ssid_ie direct_scan[PROBE_OPTION_MAX];
@@ -2670,7 +2678,7 @@ struct il3945_tx_beacon_cmd {
 } __packed;
 
 struct il_tx_beacon_cmd {
-	struct il_tx_cmd tx;
+	struct il_tx_cmd_hdr tx;
 	__le16 tim_idx;
 	u8 tim_size;
 	u8 reserved1;
@@ -3346,7 +3354,7 @@ struct il_rx_pkt {
 	 * 13-00: RX frame size
 	 */
 	__le32 len_n_flags;
-	struct il_cmd_header hdr;
+	struct il_cmd_header_hdr hdr;
 	union {
 		struct il3945_rx_frame rx_frame;
 		struct il3945_tx_resp tx_resp;

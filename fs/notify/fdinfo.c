@@ -42,7 +42,7 @@ static void show_fdinfo(struct seq_file *m, struct file *f,
 static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
 {
 	struct {
-		struct file_handle handle;
+		struct file_handle_hdr handle;
 		u8 pad[MAX_HANDLE_SZ];
 	} f;
 	int size, ret, i;
@@ -63,7 +63,8 @@ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
 		   f.handle.handle_bytes, f.handle.handle_type);
 
 	for (i = 0; i < f.handle.handle_bytes; i++)
-		seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
+		seq_printf(m, "%02x",
+		           (int) container_of(&f.handle, struct file_handle, hdr)->f_handle[i]);
 }
 #else
 static void show_mark_fhandle(struct seq_file *m, struct inode *inode)

@@ -2477,7 +2477,8 @@ static int otx2_do_set_vf_vlan(struct otx2_nic *pf, int vf, u16 vlan, u8 qos,
 		goto out;
 
 	vtag_rsp = (struct nix_vtag_config_rsp *)otx2_mbox_get_rsp
-			(&pf->mbox.mbox, 0, &vtag_req->hdr);
+			(&pf->mbox.mbox, 0,
+			 container_of(&vtag_req->hdr, struct bpf_prog_array, hdr));
 	if (IS_ERR(vtag_rsp)) {
 		err = PTR_ERR(vtag_rsp);
 		goto out;

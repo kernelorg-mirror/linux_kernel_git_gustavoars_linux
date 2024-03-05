@@ -1591,12 +1591,13 @@ typedef void (*usb_complete_t)(struct urb *);
  * usb_submit_urb() till the entry into the completion routine.
  */
 struct urb {
-	/* private: usb core and host controller only fields in the urb */
-	struct kref kref;		/* reference count of the URB */
-	int unlinked;			/* unlink error code */
-	void *hcpriv;			/* private data for host controller */
-	atomic_t use_count;		/* concurrent submissions counter */
-	atomic_t reject;		/* submissions will fail */
+	struct_group_tagged(urb_hdr, hdr,
+			    /* private: usb core and host controller only fields in the urb */
+			    struct kref kref;		/* reference count of the URB */
+			    int unlinked;			/* unlink error code */
+			    void *hcpriv;			/* private data for host controller */
+			    atomic_t use_count;		/* concurrent submissions counter */
+			    atomic_t reject;		/* submissions will fail */
 
 	/* public: documented fields in the urb that can be used by drivers */
 	struct list_head urb_list;	/* list head for use by the urb's
@@ -1625,6 +1626,7 @@ struct urb {
 	int error_count;		/* (return) number of ISO errors */
 	void *context;			/* (in) context for completion */
 	usb_complete_t complete;	/* (in) completion routine */
+	);
 	struct usb_iso_packet_descriptor iso_frame_desc[];
 					/* (in) ISO ONLY */
 };

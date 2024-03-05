@@ -540,8 +540,10 @@ struct nci_rf_nfcee_action_ntf {
 
 #define NCI_OP_NFCEE_DISCOVER_NTF nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
 struct nci_nfcee_supported_protocol {
-	__u8	num_protocol;
-	__u8	supported_protocol[];
+	struct_group_tagged(nci_nfcee_supported_protocol_hdr, hdr,
+			    __u8	num_protocol;
+	);
+	__u8 supported_protocol[];
 } __packed;
 
 struct nci_nfcee_information_tlv {
@@ -552,7 +554,7 @@ struct nci_nfcee_information_tlv {
 struct nci_nfcee_discover_ntf {
 	__u8	nfcee_id;
 	__u8	nfcee_status;
-	struct nci_nfcee_supported_protocol supported_protocols;
+	struct nci_nfcee_supported_protocol_hdr supported_protocols;
 	struct nci_nfcee_information_tlv	information_tlv;
 } __packed;
 

@@ -4015,7 +4015,7 @@ int wmi_set_cqm_rssi_config(struct wil6210_priv *wil,
 	struct wil6210_vif *vif = ndev_to_vif(ndev);
 	int rc;
 	struct {
-		struct wmi_set_link_monitor_cmd cmd;
+		struct wmi_set_link_monitor_cmd_hdr cmd;
 		s8 rssi_thold;
 	} __packed cmd = {
 		.cmd = {

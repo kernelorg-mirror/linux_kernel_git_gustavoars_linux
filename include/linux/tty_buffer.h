@@ -8,7 +8,8 @@
 #include <linux/workqueue.h>
 
 struct tty_buffer {
-	union {
+	struct_group_tagged(tty_buffer_hdr, hdr,
+			    union {
 		struct tty_buffer *next;
 		struct llist_node free;
 	};
@@ -19,7 +20,8 @@ struct tty_buffer {
 	unsigned int read;
 	bool flags;
 	/* Data points here */
-	u8 data[] __aligned(sizeof(unsigned long));
+	__aligned(sizeof(unsigned long)));
+	u8 data[];
 };
 
 static inline u8 *char_buf_ptr(struct tty_buffer *b, unsigned int ofs)
@@ -37,7 +39,7 @@ struct tty_bufhead {
 	struct work_struct work;
 	struct mutex	   lock;
 	atomic_t	   priority;
-	struct tty_buffer sentinel;
+	struct tty_buffer_hdr sentinel;
 	struct llist_head free;		/* Free queue head */
 	atomic_t	   mem_used;    /* In-use buffers excluding free list */
 	int		   mem_limit;
