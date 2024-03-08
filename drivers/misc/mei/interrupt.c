@@ -169,7 +169,9 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
 	}
 
 	if (gsc_f2h) {
-		u32 ext_hdr_len = mei_ext_hdr_len(&gsc_f2h->hdr);
+		u32 ext_hdr_len =
+			mei_ext_hdr_len(container_of(&gsc_f2h->hdr,
+						     struct mei_ext_hdr, hdr));
 
 		if (!dev->hbm_f_gsc_supported) {
 			cl_err(dev, cl, "gsc extended header is not supported\n");
