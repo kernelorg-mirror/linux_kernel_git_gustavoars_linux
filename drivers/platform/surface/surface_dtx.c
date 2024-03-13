@@ -576,12 +576,12 @@ static const struct file_operations surface_dtx_fops = {
 #define SDTX_DEVICE_MODE_DELAY_RECHECK	msecs_to_jiffies(100)
 
 struct sdtx_status_event {
-	struct sdtx_event e;
+	struct sdtx_event_hdr e;
 	__u16 v;
 } __packed;
 
 struct sdtx_base_info_event {
-	struct sdtx_event e;
+	struct sdtx_event_hdr e;
 	struct sdtx_base_info v;
 } __packed;
 
@@ -775,7 +775,7 @@ static void sdtx_device_mode_workfn(struct work_struct *work)
 	event.e.code = SDTX_EVENT_DEVICE_MODE;
 	event.v = mode;
 
-	sdtx_push_event(ddev, &event.e);
+	sdtx_push_event(ddev, container_of(&event.e, struct sdtx_event, hdr));
 
 	/* Send SW_TABLET_MODE event. */
 	tablet = mode != SDTX_DEVICE_MODE_LAPTOP;
@@ -810,7 +810,7 @@ static void __sdtx_device_state_update_base(struct sdtx_device *ddev,
 	event.v.state = sdtx_translate_base_state(ddev, info.state);
 	event.v.base_id = SDTX_BASE_TYPE_SSH(info.base_id);
 
-	sdtx_push_event(ddev, &event.e);
+	sdtx_push_event(ddev, container_of(&event.e, struct sdtx_event, hdr));
 }
 
 /* Must be executed with ddev->write_lock held. */
@@ -844,7 +844,7 @@ static void __sdtx_device_state_update_mode(struct sdtx_device *ddev, u8 mode)
 	event.e.code = SDTX_EVENT_DEVICE_MODE;
 	event.v = mode;
 
-	sdtx_push_event(ddev, &event.e);
+	sdtx_push_event(ddev, container_of(&event.e, struct sdtx_event, hdr));
 
 	/* Send SW_TABLET_MODE event. */
 	tablet = mode != SDTX_DEVICE_MODE_LAPTOP;
@@ -869,7 +869,7 @@ static void __sdtx_device_state_update_latch(struct sdtx_device *ddev, u8 status
 	event.e.code = SDTX_EVENT_BASE_CONNECTION;
 	event.v = sdtx_translate_latch_status(ddev, status);
 
-	sdtx_push_event(ddev, &event.e);
+	sdtx_push_event(ddev, container_of(&event.e, struct sdtx_event, hdr));
 }
 
 static void sdtx_device_state_workfn(struct work_struct *work)

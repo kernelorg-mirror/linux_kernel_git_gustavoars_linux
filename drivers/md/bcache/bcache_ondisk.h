@@ -21,9 +21,11 @@ static inline void SET_##name(type *k, __u64 v)			\
 /* Btree keys - all units are in sectors */
 
 struct bkey {
-	__u64	high;
-	__u64	low;
-	__u64	ptr[];
+	struct_group_tagged(bkey_hdr, hdr,
+			    __u64	high;
+			    __u64	low;
+	);
+	__u64 ptr[];
 };
 
 #define KEY_FIELD(name, field, offset, size)				\

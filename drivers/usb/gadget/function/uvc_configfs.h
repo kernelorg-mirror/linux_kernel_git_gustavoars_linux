@@ -73,7 +73,7 @@ static inline struct uvcg_format *to_uvcg_format(struct config_item *item)
 
 struct uvcg_streaming_header {
 	struct config_item				item;
-	struct uvc_input_header_descriptor		desc;
+	struct uvc_input_header_descriptor_hdr		desc;
 	unsigned					linked;
 	struct list_head				formats;
 	unsigned					num_fmt;

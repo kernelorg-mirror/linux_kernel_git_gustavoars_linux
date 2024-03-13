@@ -14,7 +14,7 @@
 
 /* Target's information element */
 struct acx_header {
-	struct wl1251_cmd_header cmd;
+	struct wl1251_cmd_header_hdr cmd;
 
 	/* acx (or information element) header */
 	u16 id;

@@ -250,8 +250,10 @@ enum mei_ext_hdr_type {
  * @data: the extended header payload
  */
 struct mei_ext_hdr {
-	u8 type;
-	u8 length;
+	struct_group_tagged(mei_ext_hdr_hdr, hdr,
+			    u8 type;
+			    u8 length;
+	);
 	u8 data[];
 } __packed;
 
@@ -277,7 +279,7 @@ struct mei_ext_meta_hdr {
  * @reserved: reserved
  */
 struct mei_ext_hdr_vtag {
-	struct mei_ext_hdr hdr;
+	struct mei_ext_hdr_hdr hdr;
 	u8 vtag;
 	u8 reserved;
 } __packed;
@@ -338,7 +340,7 @@ struct mei_gsc_sgl {
  * @sgl: sg list
  */
 struct mei_ext_hdr_gsc_h2f {
-	struct mei_ext_hdr hdr;
+	struct mei_ext_hdr_hdr hdr;
 	u8                 client_id;
 	u8                 addr_type;
 	u32                fence_id;
@@ -358,7 +360,7 @@ struct mei_ext_hdr_gsc_h2f {
  * @written: number of bytes written to firmware
  */
 struct mei_ext_hdr_gsc_f2h {
-	struct mei_ext_hdr hdr;
+	struct mei_ext_hdr_hdr hdr;
 	u8                 client_id;
 	u8                 reserved;
 	u32                fence_id;

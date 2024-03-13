@@ -1038,15 +1038,16 @@ static inline void nft_set_elem_update_expr(const struct nft_set_ext *ext,
 #define NFT_CHAIN_POLICY_UNSET		U8_MAX
 
 struct nft_rule_dp {
-	u64				is_last:1,
-					dlen:12,
-					handle:42;	/* for tracing */
-	unsigned char			data[]
-		__attribute__((aligned(__alignof__(struct nft_expr))));
+	struct_group_tagged(nft_rule_dp_hdr, hdr,
+		            u64				is_last:1,
+		            dlen:12,
+		            handle:42;	/* for tracing */
+		            __attribute__((aligned(__alignof__(struct nft_expr)))));
+		unsigned char data[];
 };
 
 struct nft_rule_dp_last {
-	struct nft_rule_dp end;		/* end of nft_rule_blob marker */
+	struct nft_rule_dp_hdr end;		/* end of nft_rule_blob marker */
 	struct rcu_head h;		/* call_rcu head */
 	struct nft_rule_blob *blob;	/* ptr to free via call_rcu */
 	const struct nft_chain *chain;	/* for nftables tracing */

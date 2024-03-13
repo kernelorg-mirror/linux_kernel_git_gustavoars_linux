@@ -206,16 +206,18 @@ enum cmd_templ {
 #define WL1271_EVENT_TIMEOUT       5000
 
 struct wl1271_cmd_header {
-	__le16 id;
-	__le16 status;
-	/* payload */
+	struct_group_tagged(wl1271_cmd_header_hdr, hdr,
+			    __le16 id;
+			    __le16 status;
+			    /* payload */
+	);
 	u8 data[];
 } __packed;
 
 #define WL1271_CMD_MAX_PARAMS 572
 
 struct wl1271_command {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 	u8  parameters[WL1271_CMD_MAX_PARAMS];
 } __packed;
 
@@ -255,7 +257,7 @@ enum {
 #define WL1271_JOIN_CMD_BSS_TYPE_5GHZ 0x10
 
 struct wl12xx_cmd_role_enable {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 role_type;
@@ -263,7 +265,7 @@ struct wl12xx_cmd_role_enable {
 } __packed;
 
 struct wl12xx_cmd_role_disable {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 padding[3];
@@ -286,7 +288,7 @@ enum wlcore_channel_type {
 };
 
 struct wl12xx_cmd_role_start {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 band;
@@ -376,7 +378,7 @@ struct wl12xx_cmd_role_start {
 } __packed;
 
 struct wl12xx_cmd_role_stop {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 disc_type; /* only STA and P2P_CLI */
@@ -384,7 +386,7 @@ struct wl12xx_cmd_role_stop {
 } __packed;
 
 struct cmd_enabledisable_path {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 channel;
 	u8 padding[3];
@@ -393,7 +395,7 @@ struct cmd_enabledisable_path {
 #define WL1271_RATE_AUTOMATIC  0
 
 struct wl1271_cmd_template_set {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 template_type;
@@ -429,7 +431,7 @@ enum wl1271_cmd_ps_mode {
 };
 
 struct wl1271_cmd_ps_params {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 ps_mode; /* STATION_* */
@@ -461,7 +463,7 @@ enum wl1271_cmd_key_type {
 };
 
 struct wl1271_cmd_set_keys {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	/*
 	 * Indicates whether the HLID is a unicast key set
@@ -536,7 +538,7 @@ enum wl1271_disconnect_type {
 #define WL1271_CMD_STA_STATE_CONNECTED  1
 
 struct wl12xx_cmd_set_peer_state {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 hlid;
 	u8 state;
@@ -551,7 +553,7 @@ struct wl12xx_cmd_set_peer_state {
 } __packed;
 
 struct wl12xx_cmd_roc {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 channel;
@@ -560,7 +562,7 @@ struct wl12xx_cmd_roc {
 };
 
 struct wl12xx_cmd_croc {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 padding[3];
@@ -580,7 +582,7 @@ enum wl1271_psd_type {
 };
 
 struct wl12xx_cmd_add_peer {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 addr[ETH_ALEN];
 	u8 hlid;
@@ -596,7 +598,7 @@ struct wl12xx_cmd_add_peer {
 } __packed;
 
 struct wl12xx_cmd_remove_peer {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 hlid;
 	u8 reason_opcode;
@@ -631,7 +633,7 @@ enum wl12xx_fwlogger_output {
 };
 
 struct wl12xx_cmd_regdomain_dfs_config {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	__le32 ch_bit_map1;
 	__le32 ch_bit_map2;
@@ -644,7 +646,7 @@ enum wlcore_generic_cfg_feature {
 };
 
 struct wlcore_cmd_generic_cfg {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 feature;
@@ -653,7 +655,7 @@ struct wlcore_cmd_generic_cfg {
 } __packed;
 
 struct wl12xx_cmd_config_fwlog {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	/* See enum wl12xx_fwlogger_log_mode */
 	u8 logger_mode;
@@ -682,7 +684,7 @@ struct wl12xx_cmd_stop_fwlog {
 } __packed;
 
 struct wl12xx_cmd_stop_channel_switch {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 role_id;
 	u8 padding[3];
@@ -693,7 +695,7 @@ struct wl12xx_cmd_stop_channel_switch {
 #define TEST_CMD_P2G_CAL	2	/* TX BiP */
 
 struct wl1271_cmd_cal_p2g {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	struct wl1271_cmd_test_header test;
 

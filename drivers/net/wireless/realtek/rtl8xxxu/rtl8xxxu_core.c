@@ -5201,7 +5201,7 @@ static void rtl8xxxu_free_tx_resources(struct rtl8xxxu_priv *priv)
 	list_for_each_entry_safe(tx_urb, tmp, &priv->tx_urb_free_list, list) {
 		list_del(&tx_urb->list);
 		priv->tx_urb_free_count--;
-		usb_free_urb(&tx_urb->urb);
+		usb_free_urb(container_of(&tx_urb->urb, struct urb, hdr));
 	}
 	spin_unlock_irqrestore(&priv->tx_urb_lock, flags);
 }
@@ -5257,7 +5257,7 @@ static void rtl8xxxu_tx_complete(struct urb *urb)
 	struct ieee80211_hw *hw;
 	struct rtl8xxxu_priv *priv;
 	struct rtl8xxxu_tx_urb *tx_urb =
-		container_of(urb, struct rtl8xxxu_tx_urb, urb);
+		container_of(&urb->hdr, struct rtl8xxxu_tx_urb, urb);
 
 	tx_info = IEEE80211_SKB_CB(skb);
 	hw = tx_info->rate_driver_data[0];
@@ -5677,13 +5677,16 @@ static void rtl8xxxu_tx(struct ieee80211_hw *hw,
 	if (priv->rtl_chip == RTL8710B || priv->rtl_chip == RTL8192F)
 		tx_desc->csum = ~tx_desc->csum;
 
-	usb_fill_bulk_urb(&tx_urb->urb, priv->udev, priv->pipe_out[queue],
+	usb_fill_bulk_urb(container_of(&tx_urb->urb, struct urb, hdr),
+			  priv->udev, priv->pipe_out[queue],
 			  skb->data, skb->len, rtl8xxxu_tx_complete, skb);
 
-	usb_anchor_urb(&tx_urb->urb, &priv->tx_anchor);
-	ret = usb_submit_urb(&tx_urb->urb, GFP_ATOMIC);
+	usb_anchor_urb(container_of(&tx_urb->urb, struct urb, hdr),
+		       &priv->tx_anchor);
+	ret = usb_submit_urb(container_of(&tx_urb->urb, struct urb, hdr),
+			     GFP_ATOMIC);
 	if (ret) {
-		usb_unanchor_urb(&tx_urb->urb);
+		usb_unanchor_urb(container_of(&tx_urb->urb, struct urb, hdr));
 		rtl8xxxu_free_tx_urb(priv, tx_urb);
 		goto error;
 	}
@@ -5901,7 +5904,7 @@ static void rtl8xxxu_free_rx_resources(struct rtl8xxxu_priv *priv)
 				 &priv->rx_urb_pending_list, list) {
 		list_del(&rx_urb->list);
 		priv->rx_urb_pending_count--;
-		usb_free_urb(&rx_urb->urb);
+		usb_free_urb(container_of(&rx_urb->urb, struct urb, hdr));
 	}
 
 	spin_unlock_irqrestore(&priv->rx_urb_lock, flags);
@@ -5923,7 +5926,7 @@ static void rtl8xxxu_queue_rx_urb(struct rtl8xxxu_priv *priv,
 	} else {
 		skb = (struct sk_buff *)rx_urb->urb.context;
 		dev_kfree_skb_irq(skb);
-		usb_free_urb(&rx_urb->urb);
+		usb_free_urb(container_of(&rx_urb->urb, struct urb, hdr));
 	}
 
 	spin_unlock_irqrestore(&priv->rx_urb_lock, flags);
@@ -5971,7 +5974,7 @@ static void rtl8xxxu_rx_urb_work(struct work_struct *work)
 				 "failed to requeue urb with error %i\n", ret);
 			skb = (struct sk_buff *)rx_urb->urb.context;
 			dev_kfree_skb(skb);
-			usb_free_urb(&rx_urb->urb);
+			usb_free_urb(container_of(&rx_urb->urb, struct urb, hdr));
 		}
 	}
 }
@@ -6612,7 +6615,7 @@ int rtl8xxxu_parse_rxdesc24(struct rtl8xxxu_priv *priv, struct sk_buff *skb)
 static void rtl8xxxu_rx_complete(struct urb *urb)
 {
 	struct rtl8xxxu_rx_urb *rx_urb =
-		container_of(urb, struct rtl8xxxu_rx_urb, urb);
+		container_of(&urb->hdr, struct rtl8xxxu_rx_urb, urb);
 	struct ieee80211_hw *hw = rx_urb->hw;
 	struct rtl8xxxu_priv *priv = hw->priv;
 	struct sk_buff *skb = (struct sk_buff *)urb->context;
@@ -6659,12 +6662,15 @@ static int rtl8xxxu_submit_rx_urb(struct rtl8xxxu_priv *priv,
 		return -ENOMEM;
 
 	memset(skb->data, 0, rx_desc_sz);
-	usb_fill_bulk_urb(&rx_urb->urb, priv->udev, priv->pipe_in, skb->data,
+	usb_fill_bulk_urb(container_of(&rx_urb->urb, struct urb, hdr),
+			  priv->udev, priv->pipe_in, skb->data,
 			  skb_size, rtl8xxxu_rx_complete, skb);
-	usb_anchor_urb(&rx_urb->urb, &priv->rx_anchor);
-	ret = usb_submit_urb(&rx_urb->urb, GFP_ATOMIC);
+	usb_anchor_urb(container_of(&rx_urb->urb, struct urb, hdr),
+		       &priv->rx_anchor);
+	ret = usb_submit_urb(container_of(&rx_urb->urb, struct urb, hdr),
+			     GFP_ATOMIC);
 	if (ret)
-		usb_unanchor_urb(&rx_urb->urb);
+		usb_unanchor_urb(container_of(&rx_urb->urb, struct urb, hdr));
 	return ret;
 }
 
@@ -7505,7 +7511,7 @@ static int rtl8xxxu_start(struct ieee80211_hw *hw)
 
 			goto error_out;
 		}
-		usb_init_urb(&tx_urb->urb);
+		usb_init_urb(container_of(&tx_urb->urb, struct urb, hdr));
 		INIT_LIST_HEAD(&tx_urb->list);
 		tx_urb->hw = hw;
 		list_add(&tx_urb->list, &priv->tx_urb_free_list);
@@ -7526,7 +7532,7 @@ static int rtl8xxxu_start(struct ieee80211_hw *hw)
 
 			goto error_out;
 		}
-		usb_init_urb(&rx_urb->urb);
+		usb_init_urb(container_of(&rx_urb->urb, struct urb, hdr));
 		INIT_LIST_HEAD(&rx_urb->list);
 		rx_urb->hw = hw;
 

@@ -40,7 +40,7 @@ struct smsusb_urb_t {
 	struct smscore_buffer_t *cb;
 	struct smsusb_device_t *dev;
 
-	struct urb urb;
+	struct urb_hdr urb;
 
 	/* For the bottom half */
 	struct work_struct wq;
@@ -159,18 +159,18 @@ static int smsusb_submit_urb(struct smsusb_device_t *dev,
 		}
 	}
 
-	usb_fill_bulk_urb(
-		&surb->urb,
-		dev->udev,
-		usb_rcvbulkpipe(dev->udev, dev->in_ep),
-		surb->cb->p,
-		dev->buffer_size,
-		smsusb_onresponse,
-		surb
+	usb_fill_bulk_urb(container_of(&surb->urb, struct urb, hdr),
+			  dev->udev,
+			  usb_rcvbulkpipe(dev->udev, dev->in_ep),
+			  surb->cb->p,
+			  dev->buffer_size,
+			  smsusb_onresponse,
+			  surb
 	);
 	surb->urb.transfer_flags |= URB_FREE_BUFFER;
 
-	return usb_submit_urb(&surb->urb, GFP_ATOMIC);
+	return usb_submit_urb(container_of(&surb->urb, struct urb, hdr),
+			      GFP_ATOMIC);
 }
 
 static void smsusb_stop_streaming(struct smsusb_device_t *dev)
@@ -178,7 +178,7 @@ static void smsusb_stop_streaming(struct smsusb_device_t *dev)
 	int i;
 
 	for (i = 0; i < MAX_URBS; i++) {
-		usb_kill_urb(&dev->surbs[i].urb);
+		usb_kill_urb(container_of(&dev->surbs[i].urb, struct urb, hdr));
 		if (dev->surbs[i].wq.func)
 			cancel_work_sync(&dev->surbs[i].wq);
 
@@ -463,7 +463,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
 	/* initialize urbs */
 	for (i = 0; i < MAX_URBS; i++) {
 		dev->surbs[i].dev = dev;
-		usb_init_urb(&dev->surbs[i].urb);
+		usb_init_urb(container_of(&dev->surbs[i].urb, struct urb, hdr));
 	}
 
 	pr_debug("smsusb_start_streaming(...).\n");

@@ -37,22 +37,24 @@
  * @ts_needaddr - Need to record addr of outgoing dev
  */
 struct ip_options {
-	__be32		faddr;
-	__be32		nexthop;
-	unsigned char	optlen;
-	unsigned char	srr;
-	unsigned char	rr;
-	unsigned char	ts;
-	unsigned char	is_strictroute:1,
-			srr_is_hit:1,
-			is_changed:1,
-			rr_needaddr:1,
-			ts_needtime:1,
-			ts_needaddr:1;
-	unsigned char	router_alert;
-	unsigned char	cipso;
-	unsigned char	__pad2;
-	unsigned char	__data[];
+	struct_group_tagged(ip_options_hdr, hdr,
+			    __be32		faddr;
+			    __be32		nexthop;
+			    unsigned char	optlen;
+			    unsigned char	srr;
+			    unsigned char	rr;
+			    unsigned char	ts;
+			    unsigned char	is_strictroute:1,
+			    srr_is_hit:1,
+			    is_changed:1,
+			    rr_needaddr:1,
+			    ts_needtime:1,
+			    ts_needaddr:1;
+			    unsigned char	router_alert;
+			    unsigned char	cipso;
+			    unsigned char	__pad2;
+	);
+	unsigned char __data[];
 };
 
 struct ip_options_rcu {

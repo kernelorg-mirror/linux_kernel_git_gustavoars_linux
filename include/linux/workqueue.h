@@ -307,7 +307,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
 
 #define __INIT_DELAYED_WORK(_work, _func, _tflags)			\
 	do {								\
-		INIT_WORK(&(_work)->work, (_func));			\
+		INIT_WORK(container_of(&(_work)->work, struct cm_work, hdr), (_func));			\
 		__init_timer(&(_work)->timer,				\
 			     delayed_work_timer_fn,			\
 			     (_tflags) | TIMER_IRQSAFE);		\
@@ -315,7 +315,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
 
 #define __INIT_DELAYED_WORK_ONSTACK(_work, _func, _tflags)		\
 	do {								\
-		INIT_WORK_ONSTACK(&(_work)->work, (_func));		\
+		INIT_WORK_ONSTACK(container_of(&(_work)->work, struct cm_work, hdr), (_func));		\
 		__init_timer_on_stack(&(_work)->timer,			\
 				      delayed_work_timer_fn,		\
 				      (_tflags) | TIMER_IRQSAFE);	\
@@ -334,10 +334,10 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
 	__INIT_DELAYED_WORK_ONSTACK(_work, _func, TIMER_DEFERRABLE)
 
 #define INIT_RCU_WORK(_work, _func)					\
-	INIT_WORK(&(_work)->work, (_func))
+	INIT_WORK(container_of(&(_work)->work, struct cm_work, hdr), (_func))
 
 #define INIT_RCU_WORK_ONSTACK(_work, _func)				\
-	INIT_WORK_ONSTACK(&(_work)->work, (_func))
+	INIT_WORK_ONSTACK(container_of(&(_work)->work, struct cm_work, hdr), (_func))
 
 /**
  * work_pending - Find out whether a work item is currently pending
@@ -352,7 +352,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
  * @w: The work item in question
  */
 #define delayed_work_pending(w) \
-	work_pending(&(w)->work)
+	work_pending(container_of(&(w)->work, struct cm_work, hdr))
 
 /*
  * Workqueue flags and constants.  For details, please refer to

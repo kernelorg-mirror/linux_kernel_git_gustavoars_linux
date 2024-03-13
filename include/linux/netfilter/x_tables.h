@@ -472,7 +472,8 @@ struct compat_xt_entry_match {
 };
 
 struct compat_xt_entry_target {
-	union {
+	struct_group_tagged(compat_xt_entry_target_hdr, hdr,
+			    union {
 		struct {
 			u_int16_t target_size;
 			char name[XT_FUNCTION_MAXNAMELEN - 1];
@@ -484,6 +485,7 @@ struct compat_xt_entry_target {
 		} kernel;
 		u_int16_t target_size;
 	} u;
+	);
 	unsigned char data[];
 };
 

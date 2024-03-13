@@ -51,7 +51,7 @@ enum {
 };
 
 struct wl1271_cmd_trigger_scan_to {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	__le32 timeout;
 } __packed;
@@ -123,7 +123,7 @@ struct wl1271_ssid {
 } __packed;
 
 struct wl1271_cmd_sched_scan_ssid_list {
-	struct wl1271_cmd_header header;
+	struct wl1271_cmd_header_hdr header;
 
 	u8 n_ssids;
 	struct wl1271_ssid ssids[SCHED_SCAN_MAX_SSIDS];

@@ -771,14 +771,16 @@ struct bch_sb_field_disk_groups {
  * the superblock:
  */
 struct jset_entry {
-	__le16			u64s;
-	__u8			btree_id;
-	__u8			level;
-	__u8			type; /* designates what this jset holds */
-	__u8			pad[3];
+	struct_group_tagged(jset_entry_hdr, hdr,
+			    __le16			u64s;
+			    __u8			btree_id;
+			    __u8			level;
+			    __u8			type; /* designates what this jset holds */
+			    __u8			pad[3];
 
 	struct bkey_i		start[0];
-	__u64			_data[];
+	);
+	__u64 _data[];
 };
 
 struct bch_sb_field_clean {
@@ -1344,12 +1346,12 @@ static inline bool jset_entry_is_key(struct jset_entry *e)
  * don't think there was a missing journal entry.
  */
 struct jset_entry_blacklist {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__le64			seq;
 };
 
 struct jset_entry_blacklist_v2 {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__le64			start;
 	__le64			end;
 };
@@ -1367,18 +1369,18 @@ enum {
 };
 
 struct jset_entry_usage {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__le64			v;
 } __packed;
 
 struct jset_entry_data_usage {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__le64			v;
 	struct bch_replicas_entry_v1 r;
 } __packed;
 
 struct jset_entry_clock {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__u8			rw;
 	__u8			pad[7];
 	__le64			time;
@@ -1391,7 +1393,7 @@ struct jset_entry_dev_usage_type {
 } __packed;
 
 struct jset_entry_dev_usage {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__le32			dev;
 	__u32			pad;
 
@@ -1403,17 +1405,17 @@ struct jset_entry_dev_usage {
 
 static inline unsigned jset_entry_dev_usage_nr_types(struct jset_entry_dev_usage *u)
 {
-	return (vstruct_bytes(&u->entry) - sizeof(struct jset_entry_dev_usage)) /
+	return (vstruct_bytes(container_of(&u->entry, struct jset_entry, hdr)) - sizeof(struct jset_entry_dev_usage)) /
 		sizeof(struct jset_entry_dev_usage_type);
 }
 
 struct jset_entry_log {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	u8			d[];
 } __packed __aligned(8);
 
 struct jset_entry_datetime {
-	struct jset_entry	entry;
+	struct jset_entry_hdr	entry;
 	__le64			seconds;
 } __packed __aligned(8);
 

@@ -260,15 +260,17 @@ struct ieee80211_chan_req {
  *	sizeof(void *), size is determined in hw information.
  */
 struct ieee80211_chanctx_conf {
-	struct cfg80211_chan_def def;
-	struct cfg80211_chan_def min_def;
-	struct cfg80211_chan_def ap;
+	struct_group_tagged(ieee80211_chanctx_conf_hdr, hdr,
+			    struct cfg80211_chan_def def;
+			    struct cfg80211_chan_def min_def;
+			    struct cfg80211_chan_def ap;
 
 	u8 rx_chains_static, rx_chains_dynamic;
 
 	bool radar_enabled;
 
-	u8 drv_priv[] __aligned(sizeof(void *));
+	__aligned(sizeof(void *)));
+	u8 drv_priv[];
 };
 
 /**

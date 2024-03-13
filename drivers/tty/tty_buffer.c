@@ -135,9 +135,10 @@ void tty_buffer_free_all(struct tty_port *port)
 	llist_for_each_entry_safe(p, next, llist, free)
 		kfree(p);
 
-	tty_buffer_reset(&buf->sentinel, 0);
-	buf->head = &buf->sentinel;
-	buf->tail = &buf->sentinel;
+	tty_buffer_reset(container_of(&buf->sentinel, struct tty_buffer, hdr),
+			 0);
+	buf->head = container_of(&buf->sentinel, struct tty_buffer, hdr);
+	buf->tail = container_of(&buf->sentinel, struct tty_buffer, hdr);
 
 	still_used = atomic_xchg(&buf->mem_used, 0);
 	WARN(still_used != freed, "we still have not freed %d bytes!",
@@ -578,9 +579,10 @@ void tty_buffer_init(struct tty_port *port)
 	struct tty_bufhead *buf = &port->buf;
 
 	mutex_init(&buf->lock);
-	tty_buffer_reset(&buf->sentinel, 0);
-	buf->head = &buf->sentinel;
-	buf->tail = &buf->sentinel;
+	tty_buffer_reset(container_of(&buf->sentinel, struct tty_buffer, hdr),
+			 0);
+	buf->head = container_of(&buf->sentinel, struct tty_buffer, hdr);
+	buf->tail = container_of(&buf->sentinel, struct tty_buffer, hdr);
 	init_llist_head(&buf->free);
 	atomic_set(&buf->mem_used, 0);
 	atomic_set(&buf->priority, 0);

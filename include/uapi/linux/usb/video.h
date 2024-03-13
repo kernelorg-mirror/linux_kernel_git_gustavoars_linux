@@ -384,19 +384,21 @@ struct uvc_control_endpoint_descriptor {
 
 /* 3.9.2.1. Input Header Descriptor */
 struct uvc_input_header_descriptor {
-	__u8   bLength;
-	__u8   bDescriptorType;
-	__u8   bDescriptorSubType;
-	__u8   bNumFormats;
-	__le16 wTotalLength;
-	__u8   bEndpointAddress;
-	__u8   bmInfo;
-	__u8   bTerminalLink;
-	__u8   bStillCaptureMethod;
-	__u8   bTriggerSupport;
-	__u8   bTriggerUsage;
-	__u8   bControlSize;
-	__u8   bmaControls[];
+	struct_group_tagged(uvc_input_header_descriptor_hdr, hdr,
+			    __u8   bLength;
+			    __u8   bDescriptorType;
+			    __u8   bDescriptorSubType;
+			    __u8   bNumFormats;
+			    __le16 wTotalLength;
+			    __u8   bEndpointAddress;
+			    __u8   bmInfo;
+			    __u8   bTerminalLink;
+			    __u8   bStillCaptureMethod;
+			    __u8   bTriggerSupport;
+			    __u8   bTriggerUsage;
+			    __u8   bControlSize;
+	);
+	__u8 bmaControls[];
 } __attribute__((__packed__));
 
 #define UVC_DT_INPUT_HEADER_SIZE(n, p)			(13+(n*p))

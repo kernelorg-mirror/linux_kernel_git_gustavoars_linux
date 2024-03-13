@@ -1024,10 +1024,10 @@ struct prism2sta_accesslist {
 struct hfa384x {
 	/* USB support data */
 	struct usb_device *usb;
-	struct urb rx_urb;
+	struct urb_hdr rx_urb;
 	struct sk_buff *rx_urb_skb;
-	struct urb tx_urb;
-	struct urb ctlx_urb;
+	struct urb_hdr tx_urb;
+	struct urb_hdr ctlx_urb;
 	union hfa384x_usbout txbuff;
 	struct hfa384x_usbctlxq ctlxq;
 	struct timer_list reqtimer;

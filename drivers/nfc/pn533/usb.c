@@ -244,16 +244,18 @@ static void pn533_usb_abort_cmd(struct pn533 *dev, gfp_t flags)
 
 
 struct pn533_acr122_ccid_hdr {
-	u8 type;
-	u32 datalen;
-	u8 slot;
-	u8 seq;
+	struct_group_tagged(pn533_acr122_ccid_hdr_hdr, hdr,
+			    u8 type;
+			    u32 datalen;
+			    u8 slot;
+			    u8 seq;
 
 	/*
 	 * 3 msg specific bytes or status, error and 1 specific
 	 * byte for reposnse msg
 	 */
 	u8 params[3];
+	);
 	u8 data[]; /* payload */
 } __packed;
 
@@ -265,14 +267,14 @@ struct pn533_acr122_apdu_hdr {
 } __packed;
 
 struct pn533_acr122_tx_frame {
-	struct pn533_acr122_ccid_hdr ccid;
+	struct pn533_acr122_ccid_hdr_hdr ccid;
 	struct pn533_acr122_apdu_hdr apdu;
 	u8 datalen;
 	u8 data[]; /* pn533 frame: TFI ... */
 } __packed;
 
 struct pn533_acr122_rx_frame {
-	struct pn533_acr122_ccid_hdr ccid;
+	struct pn533_acr122_ccid_hdr_hdr ccid;
 	u8 data[]; /* pn533 frame : TFI ... */
 } __packed;
 

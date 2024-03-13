@@ -24,10 +24,11 @@
  * struct ieee80211_radiotap_header - base radiotap header
  */
 struct ieee80211_radiotap_header {
-	/**
+	struct_group_tagged(ieee80211_radiotap_header_hdr, hdr,
+			    /**
 	 * @it_version: radiotap version, always 0
 	 */
-	uint8_t it_version;
+			    uint8_t it_version;
 
 	/**
 	 * @it_pad: padding (or alignment)
@@ -47,6 +48,7 @@ struct ieee80211_radiotap_header {
 	/**
 	 * @it_optional: all remaining presence bitmaps
 	 */
+	);
 	__le32 it_optional[];
 } __packed;
 

@@ -86,7 +86,7 @@ struct zynqmp_disp_format {
  */
 struct zynqmp_disp_layer_dma {
 	struct dma_chan *chan;
-	struct dma_interleaved_template xt;
+	struct dma_interleaved_template_hdr xt;
 	struct data_chunk sgl;
 };
 
@@ -1011,7 +1011,8 @@ int zynqmp_disp_layer_update(struct zynqmp_disp_layer *layer,
 		dma->xt.src_sgl = true;
 		dma->xt.dst_sgl = false;
 
-		desc = dmaengine_prep_interleaved_dma(dma->chan, &dma->xt,
+		desc = dmaengine_prep_interleaved_dma(dma->chan,
+						      container_of(&dma->xt, struct dma_interleaved_template, hdr),
 						      DMA_CTRL_ACK |
 						      DMA_PREP_REPEAT |
 						      DMA_PREP_LOAD_EOT);

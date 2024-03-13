@@ -808,12 +808,12 @@ EXPORT_SYMBOL_GPL(xt_compat_match_to_user);
 
 /* non-compat version may have padding after verdict */
 struct compat_xt_standard_target {
-	struct compat_xt_entry_target t;
+	struct compat_xt_entry_target_hdr t;
 	compat_uint_t verdict;
 };
 
 struct compat_xt_error_target {
-	struct compat_xt_entry_target t;
+	struct compat_xt_entry_target_hdr t;
 	char errorname[XT_FUNCTION_MAXNAMELEN];
 };
 

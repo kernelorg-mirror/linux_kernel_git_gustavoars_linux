@@ -153,26 +153,28 @@ struct mount_attr {
  * size is returned in @size.
  */
 struct statmount {
-	__u32 size;		/* Total size, including strings */
-	__u32 __spare1;
-	__u64 mask;		/* What results were written */
-	__u32 sb_dev_major;	/* Device ID */
-	__u32 sb_dev_minor;
-	__u64 sb_magic;		/* ..._SUPER_MAGIC */
-	__u32 sb_flags;		/* SB_{RDONLY,SYNCHRONOUS,DIRSYNC,LAZYTIME} */
-	__u32 fs_type;		/* [str] Filesystem type */
-	__u64 mnt_id;		/* Unique ID of mount */
-	__u64 mnt_parent_id;	/* Unique ID of parent (for root == mnt_id) */
-	__u32 mnt_id_old;	/* Reused IDs used in proc/.../mountinfo */
-	__u32 mnt_parent_id_old;
-	__u64 mnt_attr;		/* MOUNT_ATTR_... */
-	__u64 mnt_propagation;	/* MS_{SHARED,SLAVE,PRIVATE,UNBINDABLE} */
-	__u64 mnt_peer_group;	/* ID of shared peer group */
-	__u64 mnt_master;	/* Mount receives propagation from this ID */
-	__u64 propagate_from;	/* Propagation from in current namespace */
-	__u32 mnt_root;		/* [str] Root of mount relative to root of fs */
-	__u32 mnt_point;	/* [str] Mountpoint relative to current root */
-	__u64 __spare2[50];
+	struct_group_tagged(statmount_hdr, hdr,
+			    __u32 size;		/* Total size, including strings */
+			    __u32 __spare1;
+			    __u64 mask;		/* What results were written */
+			    __u32 sb_dev_major;	/* Device ID */
+			    __u32 sb_dev_minor;
+			    __u64 sb_magic;		/* ..._SUPER_MAGIC */
+			    __u32 sb_flags;		/* SB_{RDONLY,SYNCHRONOUS,DIRSYNC,LAZYTIME} */
+			    __u32 fs_type;		/* [str] Filesystem type */
+			    __u64 mnt_id;		/* Unique ID of mount */
+			    __u64 mnt_parent_id;	/* Unique ID of parent (for root == mnt_id) */
+			    __u32 mnt_id_old;	/* Reused IDs used in proc/.../mountinfo */
+			    __u32 mnt_parent_id_old;
+			    __u64 mnt_attr;		/* MOUNT_ATTR_... */
+			    __u64 mnt_propagation;	/* MS_{SHARED,SLAVE,PRIVATE,UNBINDABLE} */
+			    __u64 mnt_peer_group;	/* ID of shared peer group */
+			    __u64 mnt_master;	/* Mount receives propagation from this ID */
+			    __u64 propagate_from;	/* Propagation from in current namespace */
+			    __u32 mnt_root;		/* [str] Root of mount relative to root of fs */
+			    __u32 mnt_point;	/* [str] Mountpoint relative to current root */
+			    __u64 __spare2[50];
+	);
 	char str[];		/* Variable size part containing strings */
 };
 

@@ -75,11 +75,13 @@ enum {
  * @data: Where to put the incoming data from EC and outgoing data to EC.
  */
 struct cros_ec_command {
-	uint32_t version;
-	uint32_t command;
-	uint32_t outsize;
-	uint32_t insize;
-	uint32_t result;
+	struct_group_tagged(cros_ec_command_hdr, hdr,
+			    uint32_t version;
+			    uint32_t command;
+			    uint32_t outsize;
+			    uint32_t insize;
+			    uint32_t result;
+	);
 	uint8_t data[];
 };
 

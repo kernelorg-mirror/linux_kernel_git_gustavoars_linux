@@ -148,15 +148,17 @@ struct data_chunk {
  * @sgl: Array of {chunk,icg} pairs that make up a frame.
  */
 struct dma_interleaved_template {
-	dma_addr_t src_start;
-	dma_addr_t dst_start;
-	enum dma_transfer_direction dir;
-	bool src_inc;
-	bool dst_inc;
-	bool src_sgl;
-	bool dst_sgl;
-	size_t numf;
-	size_t frame_size;
+	struct_group_tagged(dma_interleaved_template_hdr, hdr,
+			    dma_addr_t src_start;
+			    dma_addr_t dst_start;
+			    enum dma_transfer_direction dir;
+			    bool src_inc;
+			    bool dst_inc;
+			    bool src_sgl;
+			    bool dst_sgl;
+			    size_t numf;
+			    size_t frame_size;
+	);
 	struct data_chunk sgl[];
 };
 

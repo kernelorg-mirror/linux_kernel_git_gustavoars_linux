@@ -45,7 +45,7 @@ struct sock;
 
 struct inet_skb_parm {
 	int			iif;
-	struct ip_options	opt;		/* Compiled IP options		*/
+	struct ip_options_hdr	opt;		/* Compiled IP options		*/
 	u16			flags;
 
 #define IPSKB_FORWARDED		BIT(0)
@@ -749,7 +749,8 @@ int __ip_options_echo(struct net *net, struct ip_options *dopt,
 static inline int ip_options_echo(struct net *net, struct ip_options *dopt,
 				  struct sk_buff *skb)
 {
-	return __ip_options_echo(net, dopt, skb, &IPCB(skb)->opt);
+	return __ip_options_echo(net, dopt, skb,
+				 container_of(&IPCB(skb)->opt, struct ip_options, hdr));
 }
 
 void ip_options_fragment(struct sk_buff *skb);

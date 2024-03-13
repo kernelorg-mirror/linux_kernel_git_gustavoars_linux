@@ -395,8 +395,9 @@ struct cgroup_freezer_state {
 };
 
 struct cgroup {
-	/* self css with NULL ->ss, points back to this cgroup */
-	struct cgroup_subsys_state self;
+	struct_group_tagged(cgroup_hdr, hdr,
+			    /* self css with NULL ->ss, points back to this cgroup */
+			    struct cgroup_subsys_state self;
 
 	unsigned long flags;		/* "unsigned long" so bitops work */
 
@@ -545,6 +546,7 @@ struct cgroup {
 #endif
 
 	/* All ancestors including self */
+	);
 	struct cgroup *ancestors[];
 };
 
@@ -571,7 +573,7 @@ struct cgroup_root {
 	 * release. cgrp->ancestors[0] will be used overflowing into the
 	 * following field. cgrp_ancestor_storage must immediately follow.
 	 */
-	struct cgroup cgrp;
+	struct cgroup_hdr cgrp;
 
 	/* must follow cgrp for cgrp->ancestors[0], see above */
 	struct cgroup *cgrp_ancestor_storage;

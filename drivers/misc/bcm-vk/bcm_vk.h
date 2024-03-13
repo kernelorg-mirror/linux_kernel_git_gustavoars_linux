@@ -307,10 +307,12 @@ struct bcm_vk_dauth_info {
  * buffer is for logmsg that comes from vk
  */
 struct bcm_vk_peer_log {
-	u32 rd_idx;
-	u32 wr_idx;
-	u32 buf_size;
-	u32 mask;
+	struct_group_tagged(bcm_vk_peer_log_hdr, hdr,
+			    u32 rd_idx;
+			    u32 wr_idx;
+			    u32 buf_size;
+			    u32 mask;
+	);
 	char data[];
 };
 
@@ -412,7 +414,7 @@ struct bcm_vk {
 
 	/* offset of the peer log control in BAR2 */
 	u32 peerlog_off;
-	struct bcm_vk_peer_log peerlog_info; /* record of peer log info */
+	struct bcm_vk_peer_log_hdr peerlog_info; /* record of peer log info */
 	/* offset of processing monitoring info in BAR2 */
 	u32 proc_mon_off;
 };

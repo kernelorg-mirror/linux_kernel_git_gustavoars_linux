@@ -182,18 +182,20 @@ struct cm_av {
 };
 
 struct cm_work {
-	struct delayed_work work;
-	struct list_head list;
-	struct cm_port *port;
-	struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
-	__be32 local_id;			/* Established / timewait */
-	__be32 remote_id;
-	struct ib_cm_event cm_event;
+	struct_group_tagged(cm_work_hdr, hdr,
+			    struct delayed_work work;
+			    struct list_head list;
+			    struct cm_port *port;
+			    struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
+			    __be32 local_id;			/* Established / timewait */
+			    __be32 remote_id;
+			    struct ib_cm_event cm_event;
+	);
 	struct sa_path_rec path[];
 };
 
 struct cm_timewait_info {
-	struct cm_work work;
+	struct cm_work_hdr work;
 	struct list_head list;
 	struct rb_node remote_qp_node;
 	struct rb_node remote_id_node;
@@ -965,7 +967,8 @@ static struct cm_timewait_info *cm_create_timewait_info(__be32 local_id)
 		return ERR_PTR(-ENOMEM);
 
 	timewait_info->work.local_id = local_id;
-	INIT_DELAYED_WORK(&timewait_info->work.work, cm_work_handler);
+	INIT_DELAYED_WORK(container_of(&timewait_info->work.work, struct cm_work, hdr),
+			  cm_work_handler);
 	timewait_info->work.cm_event.event = IB_CM_TIMEWAIT_EXIT;
 	return timewait_info;
 }
@@ -998,7 +1001,8 @@ static void cm_enter_timewait(struct cm_id_private *cm_id_priv)
 	/* Check if the device started its remove_one */
 	spin_lock_irqsave(&cm.lock, flags);
 	if (!cm_dev->going_down)
-		queue_delayed_work(cm.wq, &cm_id_priv->timewait_info->work.work,
+		queue_delayed_work(cm.wq,
+				   container_of(&cm_id_priv->timewait_info->work.work, struct cm_work, hdr),
 				   msecs_to_jiffies(wait_time));
 	spin_unlock_irqrestore(&cm.lock, flags);
 
@@ -3440,7 +3444,8 @@ static int cm_timewait_handler(struct cm_work *work)
 	struct cm_timewait_info *timewait_info;
 	struct cm_id_private *cm_id_priv;
 
-	timewait_info = container_of(work, struct cm_timewait_info, work);
+	timewait_info = container_of(&work->hdr, struct cm_timewait_info,
+				     work);
 	spin_lock_irq(&cm.lock);
 	list_del(&timewait_info->list);
 	spin_unlock_irq(&cm.lock);
@@ -3951,7 +3956,8 @@ static int cm_establish(struct ib_cm_id *cm_id)
 	 * we need to find the cm_id once we're in the context of the
 	 * worker thread, rather than holding a reference on it.
 	 */
-	INIT_DELAYED_WORK(&work->work, cm_work_handler);
+	INIT_DELAYED_WORK(container_of(&work->work, struct cm_work, hdr),
+			  cm_work_handler);
 	work->local_id = cm_id->local_id;
 	work->remote_id = cm_id->remote_id;
 	work->mad_recv_wc = NULL;
@@ -3960,7 +3966,9 @@ static int cm_establish(struct ib_cm_id *cm_id)
 	/* Check if the device started its remove_one */
 	spin_lock_irqsave(&cm.lock, flags);
 	if (!cm_dev->going_down) {
-		queue_delayed_work(cm.wq, &work->work, 0);
+		queue_delayed_work(cm.wq,
+				   container_of(&work->work, struct cm_work, hdr),
+				   0);
 	} else {
 		kfree(work);
 		ret = -ENODEV;
@@ -4073,7 +4081,8 @@ static void cm_recv_handler(struct ib_mad_agent *mad_agent,
 		return;
 	}
 
-	INIT_DELAYED_WORK(&work->work, cm_work_handler);
+	INIT_DELAYED_WORK(container_of(&work->work, struct cm_work, hdr),
+			  cm_work_handler);
 	work->cm_event.event = event;
 	work->mad_recv_wc = mad_recv_wc;
 	work->port = port;
@@ -4081,7 +4090,9 @@ static void cm_recv_handler(struct ib_mad_agent *mad_agent,
 	/* Check if the device started its remove_one */
 	spin_lock_irq(&cm.lock);
 	if (!port->cm_dev->going_down)
-		queue_delayed_work(cm.wq, &work->work, 0);
+		queue_delayed_work(cm.wq,
+				   container_of(&work->work, struct cm_work, hdr),
+				   0);
 	else
 		going_down = 1;
 	spin_unlock_irq(&cm.lock);
@@ -4537,7 +4548,7 @@ static void __exit ib_cm_cleanup(void)
 
 	spin_lock_irq(&cm.lock);
 	list_for_each_entry(timewait_info, &cm.timewait_list, list)
-		cancel_delayed_work(&timewait_info->work.work);
+		cancel_delayed_work(container_of(&timewait_info->work.work, struct cm_work, hdr));
 	spin_unlock_irq(&cm.lock);
 
 	ib_unregister_client(&cm_client);

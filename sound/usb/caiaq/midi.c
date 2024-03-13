@@ -43,7 +43,7 @@ static int snd_usb_caiaq_midi_output_close(struct snd_rawmidi_substream *substre
 {
 	struct snd_usb_caiaqdev *cdev = substream->rmidi->private_data;
 	if (cdev->midi_out_active) {
-		usb_kill_urb(&cdev->midi_out_urb);
+		usb_kill_urb(container_of(&cdev->midi_out_urb, struct urb, hdr));
 		cdev->midi_out_active = 0;
 	}
 	return 0;
@@ -66,7 +66,8 @@ static void snd_usb_caiaq_midi_send(struct snd_usb_caiaqdev *cdev,
 	cdev->midi_out_buf[2] = len;
 	cdev->midi_out_urb.transfer_buffer_length = len+3;
 
-	ret = usb_submit_urb(&cdev->midi_out_urb, GFP_ATOMIC);
+	ret = usb_submit_urb(container_of(&cdev->midi_out_urb, struct urb, hdr),
+		             GFP_ATOMIC);
 	if (ret < 0)
 		dev_err(dev,
 			"snd_usb_caiaq_midi_send(%p): usb_submit_urb() failed,"

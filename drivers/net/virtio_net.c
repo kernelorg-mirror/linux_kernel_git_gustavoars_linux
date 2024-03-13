@@ -1838,7 +1838,7 @@ static void receive_buf(struct virtnet_info *vi, struct receive_queue *rq,
 	if (hdr->hdr.flags & VIRTIO_NET_HDR_F_DATA_VALID)
 		skb->ip_summed = CHECKSUM_UNNECESSARY;
 
-	if (virtio_net_hdr_to_skb(skb, &hdr->hdr,
+	if (virtio_net_hdr_to_skb(skb, container_of(&hdr->hdr, struct bpf_prog_array, hdr),
 				  virtio_is_little_endian(vi->vdev))) {
 		net_warn_ratelimited("%s: bad gso: type: %u, size: %u\n",
 				     dev->name, hdr->hdr.gso_type,
@@ -2377,7 +2377,7 @@ static int xmit_skb(struct send_queue *sq, struct sk_buff *skb)
 	else
 		hdr = &skb_vnet_common_hdr(skb)->mrg_hdr;
 
-	if (virtio_net_hdr_from_skb(skb, &hdr->hdr,
+	if (virtio_net_hdr_from_skb(skb, container_of(&hdr->hdr, struct bpf_prog_array, hdr),
 				    virtio_is_little_endian(vi->vdev), false,
 				    0))
 		return -EPROTO;
@@ -2545,7 +2545,9 @@ static bool virtnet_send_command(struct virtnet_info *vi, u8 class, u8 cmd,
 	vi->ctrl->hdr.class = class;
 	vi->ctrl->hdr.cmd = cmd;
 	/* Add header */
-	sg_init_one(&hdr, &vi->ctrl->hdr, sizeof(vi->ctrl->hdr));
+	sg_init_one(&hdr,
+		    container_of(&vi->ctrl->hdr, struct bpf_prog_array, hdr),
+		    sizeof(vi->ctrl->hdr));
 	sgs[out_num++] = &hdr;
 
 	if (out)

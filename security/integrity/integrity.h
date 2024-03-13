@@ -31,22 +31,25 @@ enum evm_ima_xattr_type {
 };
 
 struct evm_ima_xattr_data {
-	u8 type;
+	struct_group_tagged(evm_ima_xattr_data_hdr, hdr,
+			    u8 type;
+	);
 	u8 data[];
 } __packed;
 
 /* Only used in the EVM HMAC code. */
 struct evm_xattr {
-	struct evm_ima_xattr_data data;
+	struct evm_ima_xattr_data_hdr data;
 	u8 digest[SHA1_DIGEST_SIZE];
 } __packed;
 
 #define IMA_MAX_DIGEST_SIZE	HASH_MAX_DIGESTSIZE
 
 struct ima_digest_data {
-	u8 algo;
-	u8 length;
-	union {
+	struct_group_tagged(ima_digest_data_hdr, hdr,
+			    u8 algo;
+			    u8 length;
+			    union {
 		struct {
 			u8 unused;
 			u8 type;
@@ -57,6 +60,7 @@ struct ima_digest_data {
 		} ng;
 		u8 data[2];
 	} xattr;
+	);
 	u8 digest[];
 } __packed;
 
@@ -65,7 +69,7 @@ struct ima_digest_data {
  * with the maximum hash size, define ima_max_digest_data struct.
  */
 struct ima_max_digest_data {
-	struct ima_digest_data hdr;
+	struct ima_digest_data_hdr hdr;
 	u8 digest[HASH_MAX_DIGESTSIZE];
 } __packed;
 

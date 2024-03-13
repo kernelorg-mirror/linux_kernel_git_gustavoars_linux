@@ -410,26 +410,28 @@ struct dlm_header {
 #define DLM_MSG_PURGE		14
 
 struct dlm_message {
-	struct dlm_header	m_header;
-	__le32			m_type;		/* DLM_MSG_ */
-	__le32			m_nodeid;
-	__le32			m_pid;
-	__le32			m_lkid;		/* lkid on sender */
-	__le32			m_remid;	/* lkid on receiver */
-	__le32			m_parent_lkid;
-	__le32			m_parent_remid;
-	__le32			m_exflags;
-	__le32			m_sbflags;
-	__le32			m_flags;
-	__le32			m_lvbseq;
-	__le32			m_hash;
-	__le32			m_status;
-	__le32			m_grmode;
-	__le32			m_rqmode;
-	__le32			m_bastmode;
-	__le32			m_asts;
-	__le32			m_result;	/* 0 or -EXXX */
-	char			m_extra[];	/* name or lvb */
+	struct_group_tagged(dlm_message_hdr, hdr,
+			    struct dlm_header	m_header;
+			    __le32			m_type;		/* DLM_MSG_ */
+			    __le32			m_nodeid;
+			    __le32			m_pid;
+			    __le32			m_lkid;		/* lkid on sender */
+			    __le32			m_remid;	/* lkid on receiver */
+			    __le32			m_parent_lkid;
+			    __le32			m_parent_remid;
+			    __le32			m_exflags;
+			    __le32			m_sbflags;
+			    __le32			m_flags;
+			    __le32			m_lvbseq;
+			    __le32			m_hash;
+			    __le32			m_status;
+			    __le32			m_grmode;
+			    __le32			m_rqmode;
+			    __le32			m_bastmode;
+			    __le32			m_asts;
+			    __le32			m_result;	/* 0 or -EXXX */
+	);
+	char m_extra[];	/* name or lvb */
 };
 
 
@@ -591,7 +593,7 @@ struct dlm_ls {
 
 	struct dlm_rsb		ls_local_rsb;	/* for returning errors */
 	struct dlm_lkb		ls_local_lkb;	/* for returning errors */
-	struct dlm_message	ls_local_ms;	/* for faking a reply */
+	struct dlm_message_hdr	ls_local_ms;	/* for faking a reply */
 
 	struct dentry		*ls_debug_rsb_dentry; /* debugfs */
 	struct dentry		*ls_debug_waiters_dentry; /* debugfs */

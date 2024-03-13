@@ -366,7 +366,8 @@ static int iwl_mei_send_check_shared_area(struct mei_cl_device *cldev)
 	if (mei->csa_throttled)
 		return 0;
 
-	trace_iwlmei_me_msg(&msg.hdr, true);
+	trace_iwlmei_me_msg(container_of(&msg.hdr, struct iwl_sap_hdr, hdr),
+			    true);
 	ret = mei_cldev_send(cldev, (void *)&msg, sizeof(msg));
 	if (ret != sizeof(msg)) {
 		dev_err(&cldev->dev,
@@ -763,15 +764,18 @@ static void iwl_mei_set_init_conf(struct iwl_mei *mei)
 
 	if (iwl_mei_cache.conn_info) {
 		link_msg.conn_info = *iwl_mei_cache.conn_info;
-		iwl_mei_send_sap_msg_payload(mei->cldev, &link_msg.hdr);
+		iwl_mei_send_sap_msg_payload(mei->cldev,
+					     container_of(&link_msg.hdr, struct iwl_sap_hdr, hdr));
 	}
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &mcc_msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&mcc_msg.hdr, struct iwl_sap_hdr, hdr));
 
 	if (iwl_mei_cache.power_limit) {
 		memcpy(sar_msg.sar_chain_info_table, iwl_mei_cache.power_limit,
 		       sizeof(sar_msg.sar_chain_info_table));
-		iwl_mei_send_sap_msg_payload(mei->cldev, &sar_msg.hdr);
+		iwl_mei_send_sap_msg_payload(mei->cldev,
+					     container_of(&sar_msg.hdr, struct iwl_sap_hdr, hdr));
 	}
 
 	if (is_valid_ether_addr(iwl_mei_cache.mac_address)) {
@@ -779,10 +783,12 @@ static void iwl_mei_set_init_conf(struct iwl_mei *mei)
 				iwl_mei_cache.mac_address);
 		ether_addr_copy(nic_info_msg.nvm_address,
 				iwl_mei_cache.nvm_address);
-		iwl_mei_send_sap_msg_payload(mei->cldev, &nic_info_msg.hdr);
+		iwl_mei_send_sap_msg_payload(mei->cldev,
+					     container_of(&nic_info_msg.hdr, struct iwl_sap_hdr, hdr));
 	}
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &rfkill_msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&rfkill_msg.hdr, struct iwl_sap_hdr, hdr));
 }
 
 static void iwl_mei_handle_amt_state(struct mei_cl_device *cldev,
@@ -1287,7 +1293,8 @@ static int iwl_mei_send_start(struct mei_cl_device *cldev)
 	};
 	int ret;
 
-	trace_iwlmei_me_msg(&msg.hdr, true);
+	trace_iwlmei_me_msg(container_of(&msg.hdr, struct iwl_sap_hdr, hdr),
+			    true);
 	ret = mei_cldev_send(cldev, (void *)&msg, sizeof(msg));
 	if (ret != sizeof(msg)) {
 		dev_err(&cldev->dev,
@@ -1399,7 +1406,8 @@ int iwl_mei_pldr_req(void)
 	}
 
 	for (i = 0; i < IWL_MEI_PLDR_NUM_RETRIES; i++) {
-		ret = iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+		ret = iwl_mei_send_sap_msg_payload(mei->cldev,
+						   container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 		mutex_unlock(&iwl_mei_mutex);
 		if (ret)
 			return ret;
@@ -1495,7 +1503,8 @@ void iwl_mei_alive_notif(bool success)
 
 	mei->pldr_active = false;
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 out:
 	mutex_unlock(&iwl_mei_mutex);
 }
@@ -1539,7 +1548,8 @@ void iwl_mei_host_associated(const struct iwl_mei_conn_info *conn_info,
 	if (!mei || !mei->amt_enabled)
 		goto out;
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 
 out:
 	kfree(iwl_mei_cache.conn_info);
@@ -1568,7 +1578,8 @@ void iwl_mei_host_disassociated(void)
 	if (!mei || !mei->amt_enabled)
 		goto out;
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 
 out:
 	kfree(iwl_mei_cache.conn_info);
@@ -1604,7 +1615,8 @@ void iwl_mei_set_rfkill_state(bool hw_rfkill, bool sw_rfkill)
 	if (!mei || !mei->amt_enabled)
 		goto out;
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 
 out:
 	iwl_mei_cache.rf_kill = rfkill_state;
@@ -1633,7 +1645,8 @@ void iwl_mei_set_nic_info(const u8 *mac_address, const u8 *nvm_address)
 	if (!mei || !mei->amt_enabled)
 		goto out;
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 
 out:
 	ether_addr_copy(iwl_mei_cache.mac_address, mac_address);
@@ -1661,7 +1674,8 @@ void iwl_mei_set_country_code(u16 mcc)
 	if (!mei || !mei->amt_enabled)
 		goto out;
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 
 out:
 	iwl_mei_cache.mcc = mcc;
@@ -1689,7 +1703,8 @@ void iwl_mei_set_power_limit(const __le16 *power_limit)
 
 	memcpy(msg.sar_chain_info_table, power_limit, sizeof(msg.sar_chain_info_table));
 
-	iwl_mei_send_sap_msg_payload(mei->cldev, &msg.hdr);
+	iwl_mei_send_sap_msg_payload(mei->cldev,
+				     container_of(&msg.hdr, struct iwl_sap_hdr, hdr));
 
 out:
 	kfree(iwl_mei_cache.power_limit);

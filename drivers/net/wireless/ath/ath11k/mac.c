@@ -7063,7 +7063,8 @@ ath11k_mac_vdev_start_restart(struct ath11k_vif *arvif,
 	 * channel changes, say CSA, it should be updated again.
 	 */
 	if (ath11k_mac_supports_station_tpc(ar, arvif, chandef)) {
-		ath11k_mac_fill_reg_tpc_info(ar, arvif->vif, &arvif->chanctx);
+		ath11k_mac_fill_reg_tpc_info(ar, arvif->vif,
+					     container_of(&arvif->chanctx, struct ieee80211_chanctx_conf, hdr));
 		ath11k_wmi_send_vdev_set_tpc_power(ar, arvif->vdev_id,
 						   &arvif->reg_tpc_info);
 	}
@@ -7355,7 +7356,8 @@ static int ath11k_mac_start_vdev_delay(struct ieee80211_hw *hw,
 	if (WARN_ON(arvif->is_started))
 		return -EBUSY;
 
-	ret = ath11k_mac_vdev_start(arvif, &arvif->chanctx);
+	ret = ath11k_mac_vdev_start(arvif,
+				    container_of(&arvif->chanctx, struct ieee80211_chanctx_conf, hdr));
 	if (ret) {
 		ath11k_warn(ab, "failed to start vdev %i addr %pM on freq %d: %d\n",
 			    arvif->vdev_id, vif->addr,

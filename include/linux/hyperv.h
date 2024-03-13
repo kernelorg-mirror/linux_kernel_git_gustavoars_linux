@@ -737,8 +737,9 @@ enum vmbus_channel_state {
  * variable-size data structure depending on the msg type itself
  */
 struct vmbus_channel_msginfo {
-	/* Bookkeeping stuff */
-	struct list_head msglistentry;
+	struct_group_tagged(vmbus_channel_msginfo_hdr, hdr,
+			    /* Bookkeeping stuff */
+			    struct list_head msglistentry;
 
 	/* So far, this is only used to handle gpadl body message */
 	struct list_head submsglist;
@@ -760,11 +761,12 @@ struct vmbus_channel_msginfo {
 	 * The channel message that goes out on the "wire".
 	 * It will contain at minimum the VMBUS_CHANNEL_MESSAGE_HEADER header
 	 */
+	);
 	unsigned char msg[];
 };
 
 struct vmbus_close_msg {
-	struct vmbus_channel_msginfo info;
+	struct vmbus_channel_msginfo_hdr info;
 	struct vmbus_channel_close_channel msg;
 };
 

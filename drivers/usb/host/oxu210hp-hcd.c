@@ -395,7 +395,7 @@ struct oxu_onchip_mem {
 #define	EHCI_MAX_ROOT_PORTS	15		/* see HCS_N_PORTS */
 
 struct oxu_murb {
-	struct urb		urb;
+	struct urb_hdr		urb;
 	struct urb		*main;
 	u8			last;
 };

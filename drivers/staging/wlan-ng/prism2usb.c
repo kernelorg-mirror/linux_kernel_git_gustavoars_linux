@@ -177,9 +177,9 @@ static void prism2sta_disconnect_usb(struct usb_interface *interface)
 		/* Unlink all the URBs. This "removes the wheels"
 		 * from the entire CTLX handling mechanism.
 		 */
-		usb_kill_urb(&hw->rx_urb);
-		usb_kill_urb(&hw->tx_urb);
-		usb_kill_urb(&hw->ctlx_urb);
+		usb_kill_urb(container_of(&hw->rx_urb, struct urb, hdr));
+		usb_kill_urb(container_of(&hw->tx_urb, struct urb, hdr));
+		usb_kill_urb(container_of(&hw->ctlx_urb, struct urb, hdr));
 
 		cancel_work_sync(&hw->completion_bh);
 		cancel_work_sync(&hw->reaper_bh);
@@ -239,9 +239,9 @@ static int prism2sta_suspend(struct usb_interface *interface,
 
 	prism2sta_ifstate(wlandev, P80211ENUM_ifstate_disable);
 
-	usb_kill_urb(&hw->rx_urb);
-	usb_kill_urb(&hw->tx_urb);
-	usb_kill_urb(&hw->ctlx_urb);
+	usb_kill_urb(container_of(&hw->rx_urb, struct urb, hdr));
+	usb_kill_urb(container_of(&hw->tx_urb, struct urb, hdr));
+	usb_kill_urb(container_of(&hw->ctlx_urb, struct urb, hdr));
 
 	return 0;
 }

@@ -311,7 +311,7 @@ static int submit_rx_urb(struct hfa384x *hw, gfp_t memflags)
 	}
 
 	/* Post the IN urb */
-	usb_fill_bulk_urb(&hw->rx_urb, hw->usb,
+	usb_fill_bulk_urb(container_of(&hw->rx_urb, struct urb, hdr), hw->usb,
 			  hw->endp_in,
 			  skb->data, sizeof(union hfa384x_usbin),
 			  hfa384x_usbin_callback, hw->wlandev);
@@ -321,7 +321,8 @@ static int submit_rx_urb(struct hfa384x *hw, gfp_t memflags)
 	result = -ENOLINK;
 	if (!hw->wlandev->hwremoved &&
 	    !test_bit(WORK_RX_HALT, &hw->usb_flags)) {
-		result = usb_submit_urb(&hw->rx_urb, memflags);
+		result = usb_submit_urb(container_of(&hw->rx_urb, struct urb, hdr),
+					memflags);
 
 		/* Check whether we need to reset the RX pipe */
 		if (result == -EPIPE) {
@@ -421,7 +422,7 @@ static void hfa384x_usb_defer(struct work_struct *data)
 	if (test_bit(WORK_RX_HALT, &hw->usb_flags)) {
 		int ret;
 
-		usb_kill_urb(&hw->rx_urb); /* Cannot be holding spinlock! */
+		usb_kill_urb(container_of(&hw->rx_urb, struct urb, hdr)); /* Cannot be holding spinlock! */
 
 		ret = usb_clear_halt(hw->usb, hw->endp_in);
 		if (ret != 0) {
@@ -454,7 +455,7 @@ static void hfa384x_usb_defer(struct work_struct *data)
 	if (test_bit(WORK_TX_HALT, &hw->usb_flags)) {
 		int ret;
 
-		usb_kill_urb(&hw->tx_urb);
+		usb_kill_urb(container_of(&hw->tx_urb, struct urb, hdr));
 		ret = usb_clear_halt(hw->usb, hw->endp_out);
 		if (ret != 0) {
 			netdev_err(hw->wlandev->netdev,
@@ -529,9 +530,9 @@ void hfa384x_create(struct hfa384x *hw, struct usb_device *usb)
 
 	timer_setup(&hw->reqtimer, hfa384x_usbctlx_reqtimerfn, 0);
 
-	usb_init_urb(&hw->rx_urb);
-	usb_init_urb(&hw->tx_urb);
-	usb_init_urb(&hw->ctlx_urb);
+	usb_init_urb(container_of(&hw->rx_urb, struct urb, hdr));
+	usb_init_urb(container_of(&hw->tx_urb, struct urb, hdr));
+	usb_init_urb(container_of(&hw->ctlx_urb, struct urb, hdr));
 
 	hw->link_status = HFA384x_LINK_NOTCONNECTED;
 	hw->state = HFA384x_STATE_INIT;
@@ -1099,7 +1100,7 @@ cleanup:
 			del_timer_sync(&hw->resptimer);
 			hw->req_timer_done = 1;
 			hw->resp_timer_done = 1;
-			usb_kill_urb(&hw->ctlx_urb);
+			usb_kill_urb(container_of(&hw->ctlx_urb, struct urb, hdr));
 
 			spin_lock_irqsave(&hw->ctlxq.lock, flags);
 
@@ -2328,7 +2329,7 @@ int hfa384x_drvr_start(struct hfa384x *hw)
 		netdev_err(hw->wlandev->netdev, "Failed to reset bulk out endpoint.\n");
 
 	/* Synchronous unlink, in case we're trying to restart the driver */
-	usb_kill_urb(&hw->rx_urb);
+	usb_kill_urb(container_of(&hw->rx_urb, struct urb, hdr));
 
 	/* Post the IN urb */
 	result = submit_rx_urb(hw, GFP_KERNEL);
@@ -2358,7 +2359,7 @@ int hfa384x_drvr_start(struct hfa384x *hw)
 			netdev_err(hw->wlandev->netdev,
 				   "cmd_initialize() failed on two attempts, results %d and %d\n",
 				   result1, result2);
-			usb_kill_urb(&hw->rx_urb);
+			usb_kill_urb(container_of(&hw->rx_urb, struct urb, hdr));
 			goto done;
 		} else {
 			pr_debug("First cmd_initialize() failed (result %d),\n",
@@ -2413,7 +2414,7 @@ int hfa384x_drvr_stop(struct hfa384x *hw)
 		hfa384x_cmd_initialize(hw);
 
 		/* Cancel the rxurb */
-		usb_kill_urb(&hw->rx_urb);
+		usb_kill_urb(container_of(&hw->rx_urb, struct urb, hdr));
 	}
 
 	hw->link_status = HFA384x_LINK_NOTCONNECTED;
@@ -2524,14 +2525,15 @@ int hfa384x_drvr_txframe(struct hfa384x *hw, struct sk_buff *skb,
 		memcpy(ptr, p80211_wep->icv, sizeof(p80211_wep->icv));
 
 	/* Send the USB packet */
-	usb_fill_bulk_urb(&hw->tx_urb, hw->usb,
+	usb_fill_bulk_urb(container_of(&hw->tx_urb, struct urb, hdr), hw->usb,
 			  hw->endp_out,
 			  &hw->txbuff, ROUNDUP64(usbpktlen),
 			  hfa384x_usbout_callback, hw->wlandev);
 	hw->tx_urb.transfer_flags |= USB_QUEUE_BULK;
 
 	result = 1;
-	ret = submit_tx_urb(hw, &hw->tx_urb, GFP_ATOMIC);
+	ret = submit_tx_urb(hw, container_of(&hw->tx_urb, struct urb, hdr),
+			    GFP_ATOMIC);
 	if (ret != 0) {
 		netdev_err(hw->wlandev->netdev,
 			   "submit_tx_urb() failed, error=%d\n", ret);
@@ -2697,7 +2699,7 @@ static int unlocked_usbctlx_cancel_async(struct hfa384x *hw,
 	 * called with a status of -ECONNRESET.
 	 */
 	hw->ctlx_urb.transfer_flags |= URB_ASYNC_UNLINK;
-	ret = usb_unlink_urb(&hw->ctlx_urb);
+	ret = usb_unlink_urb(container_of(&hw->ctlx_urb, struct urb, hdr));
 
 	if (ret != -EINPROGRESS) {
 		/*
@@ -2808,14 +2810,16 @@ static void hfa384x_usbctlxq_run(struct hfa384x *hw)
 		list_move_tail(&head->list, &hw->ctlxq.active);
 
 		/* Fill the out packet */
-		usb_fill_bulk_urb(&hw->ctlx_urb, hw->usb,
+		usb_fill_bulk_urb(container_of(&hw->ctlx_urb, struct urb, hdr),
+				  hw->usb,
 				  hw->endp_out,
 				  &head->outbuf, ROUNDUP64(head->outbufsize),
 				  hfa384x_ctlxout_callback, hw);
 		hw->ctlx_urb.transfer_flags |= USB_QUEUE_BULK;
 
 		/* Now submit the URB and update the CTLX's state */
-		result = usb_submit_urb(&hw->ctlx_urb, GFP_ATOMIC);
+		result = usb_submit_urb(container_of(&hw->ctlx_urb, struct urb, hdr),
+					GFP_ATOMIC);
 		if (result == 0) {
 			/* This CTLX is now running on the active queue */
 			head->state = CTLX_REQ_SUBMITTED;
@@ -3669,7 +3673,7 @@ static void hfa384x_usbctlx_reqtimerfn(struct timer_list *t)
 		 * the system, if it hasn't already expired.
 		 */
 		hw->ctlx_urb.transfer_flags |= URB_ASYNC_UNLINK;
-		if (usb_unlink_urb(&hw->ctlx_urb) == -EINPROGRESS) {
+		if (usb_unlink_urb(container_of(&hw->ctlx_urb, struct urb, hdr)) == -EINPROGRESS) {
 			struct hfa384x_usbctlx *ctlx = get_active_ctlx(hw);
 
 			ctlx->state = CTLX_REQ_FAILED;

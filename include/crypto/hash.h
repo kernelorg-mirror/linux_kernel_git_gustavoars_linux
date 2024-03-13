@@ -152,8 +152,10 @@ struct ahash_alg {
 };
 
 struct shash_desc {
-	struct crypto_shash *tfm;
-	void *__ctx[] __aligned(ARCH_SLAB_MINALIGN);
+	struct_group_tagged(shash_desc_hdr, hdr,
+			    struct crypto_shash *tfm;
+			    __aligned(ARCH_SLAB_MINALIGN));
+	void *__ctx[];
 };
 
 #define HASH_MAX_DIGESTSIZE	 64

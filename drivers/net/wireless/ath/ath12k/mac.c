@@ -6677,7 +6677,8 @@ static int ath12k_start_vdev_delay(struct ath12k *ar,
 	if (WARN_ON(arvif->is_started))
 		return -EBUSY;
 
-	ret = ath12k_mac_vdev_start(arvif, &arvif->chanctx);
+	ret = ath12k_mac_vdev_start(arvif,
+				    container_of(&arvif->chanctx, struct ieee80211_chanctx_conf, hdr));
 	if (ret) {
 		ath12k_warn(ab, "failed to start vdev %i addr %pM on freq %d: %d\n",
 			    arvif->vdev_id, vif->addr,

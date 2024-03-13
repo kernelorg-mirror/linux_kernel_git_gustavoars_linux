@@ -261,7 +261,7 @@ struct ath12k_vif {
 	int txpower;
 	bool rsnie_present;
 	bool wpaie_present;
-	struct ieee80211_chanctx_conf chanctx;
+	struct ieee80211_chanctx_conf_hdr chanctx;
 	u32 key_cipher;
 	u8 tx_encap_type;
 	u8 vdev_stats_id;

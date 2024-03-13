@@ -303,9 +303,11 @@ enum iwl_sap_msg {
  * @payload: The payload of the message.
  */
 struct iwl_sap_hdr {
-	__le16 type;
-	__le16 len;
-	__le32 seq_num;
+	struct_group_tagged(iwl_sap_hdr_hdr, hdr,
+			    __le16 type;
+			    __le16 len;
+			    __le32 seq_num;
+	);
 	u8 payload[];
 };
 
@@ -315,7 +317,7 @@ struct iwl_sap_hdr {
  * @val: The value of the DW.
  */
 struct iwl_sap_msg_dw {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 val;
 };
 
@@ -398,7 +400,7 @@ enum iwl_sap_scan_request {
  * @conn_info: Information about the connection.
  */
 struct iwl_sap_notif_conn_status {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 link_prot_state;
 	__le32 scan_request;
 	struct iwl_sap_notif_connection_info conn_info;
@@ -441,7 +443,7 @@ enum iwl_sap_notif_host_suspends_bitmap {
  * @diff_time: TBD
  */
 struct iwl_sap_notif_country_code {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le16 mcc;
 	u8 source_id;
 	u8 reserved;
@@ -459,7 +461,7 @@ struct iwl_sap_notif_country_code {
  * @reserved1: For alignment.
  */
 struct iwl_sap_notif_host_link_up {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	struct iwl_sap_notif_connection_info conn_info;
 	u8 colloc_channel;
 	u8 colloc_band;
@@ -489,7 +491,7 @@ enum iwl_sap_notif_link_down_type {
  * @reason: The reason of the disconnection.
  */
 struct iwl_sap_notif_host_link_down {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	u8 type;
 	u8 reserved[2];
 	u8 reason_valid;
@@ -503,7 +505,7 @@ struct iwl_sap_notif_host_link_down {
  * @nvm_address: The MAC address as configured in the NVM.
  */
 struct iwl_sap_notif_host_nic_info {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	u8 mac_address[6];
 	u8 nvm_address[6];
 } __packed;
@@ -514,7 +516,7 @@ struct iwl_sap_notif_host_nic_info {
  * @dw: The payload.
  */
 struct iwl_sap_notif_dw {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 dw;
 } __packed;
 
@@ -524,7 +526,7 @@ struct iwl_sap_notif_dw {
  * @sar_chain_info_table: Tx power limits.
  */
 struct iwl_sap_notif_sar_limits {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le16 sar_chain_info_table[2][5];
 } __packed;
 
@@ -550,7 +552,7 @@ enum iwl_sap_nvm_caps {
  * @channels: The data for each channel.
  */
 struct iwl_sap_nvm {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	u8 hw_addr[6];
 	u8 n_hw_addrs;
 	u8 reserved;
@@ -712,7 +714,7 @@ struct iwl_sap_oob_filters {
  * @filters: Out of band filters.
  */
 struct iwl_sap_csme_filters {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 mode;
 	u8 mac_address[6];
 	__le16 reserved;
@@ -732,7 +734,7 @@ struct iwl_sap_csme_filters {
  * @payload: The payload of the transmitted packet.
  */
 struct iwl_sap_cb_data {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 reserved[7];
 	__le32 to_me_filt_status;
 	__le32 reserved2;
@@ -746,7 +748,7 @@ struct iwl_sap_cb_data {
  * @version: SAP message version
  */
 struct iwl_sap_pldr_data {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 version;
 } __packed;
 
@@ -767,7 +769,7 @@ enum iwl_sap_pldr_status {
  * @status: PLDR end status
  */
 struct iwl_sap_pldr_end_data {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 version;
 	__le32 status;
 } __packed;
@@ -778,7 +780,7 @@ struct iwl_sap_pldr_end_data {
  * @status: CSME accept/refuse to the PLDR request
  */
 struct iwl_sap_pldr_ack_data {
-	struct iwl_sap_hdr hdr;
+	struct iwl_sap_hdr_hdr hdr;
 	__le32 version;
 	__le32 status;
 } __packed;

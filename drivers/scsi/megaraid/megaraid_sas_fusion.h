@@ -925,8 +925,9 @@ struct MR_LD_SPAN_MAP {
 };
 
 struct MR_FW_RAID_MAP {
-	__le32                 totalSize;
-	union {
+	struct_group_tagged(MR_FW_RAID_MAP_hdr, hdr,
+			    __le32                 totalSize;
+			    union {
 		struct {
 			__le32         maxLd;
 			__le32         maxSpanDepth;
@@ -945,7 +946,8 @@ struct MR_FW_RAID_MAP {
 	u8                  reserved2[7];
 	struct MR_ARRAY_INFO       arMapInfo[MAX_RAIDMAP_ARRAYS];
 	struct MR_DEV_HANDLE_INFO  devHndlInfo[MAX_RAIDMAP_PHYSICAL_DEVICES];
-	struct MR_LD_SPAN_MAP      ldSpanMap[];
+	);
+	struct MR_LD_SPAN_MAP ldSpanMap[];
 };
 
 struct IO_REQUEST_INFO {
@@ -1150,16 +1152,17 @@ typedef struct LOG_BLOCK_SPAN_INFO {
 } LD_SPAN_INFO, *PLD_SPAN_INFO;
 
 struct MR_FW_RAID_MAP_ALL {
-	struct MR_FW_RAID_MAP raidMap;
+	struct MR_FW_RAID_MAP_hdr raidMap;
 	struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES];
 } __attribute__ ((packed));
 
 struct MR_DRV_RAID_MAP {
-	/* total size of this structure, including this field.
+	struct_group_tagged(MR_DRV_RAID_MAP_hdr, hdr,
+			    /* total size of this structure, including this field.
 	 * This feild will be manupulated by driver for ext raid map,
 	 * else pick the value from firmware raid map.
 	 */
-	__le32                 totalSize;
+			    __le32                 totalSize;
 
 	union {
 	struct {
@@ -1185,7 +1188,8 @@ struct MR_DRV_RAID_MAP {
 		devHndlInfo[MAX_RAIDMAP_PHYSICAL_DEVICES_DYN];
 	u16 ldTgtIdToLd[MAX_LOGICAL_DRIVES_DYN];
 	struct MR_ARRAY_INFO arMapInfo[MAX_API_ARRAYS_DYN];
-	struct MR_LD_SPAN_MAP      ldSpanMap[];
+	);
+	struct MR_LD_SPAN_MAP ldSpanMap[];
 
 };
 
@@ -1195,7 +1199,7 @@ struct MR_DRV_RAID_MAP {
  */
 struct MR_DRV_RAID_MAP_ALL {
 
-	struct MR_DRV_RAID_MAP raidMap;
+	struct MR_DRV_RAID_MAP_hdr raidMap;
 	struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN];
 } __packed;
 
