@@ -183,18 +183,21 @@ struct cm_av {
 };
 
 struct cm_work {
-	struct delayed_work work;
-	struct list_head list;
-	struct cm_port *port;
-	struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
-	__be32 local_id;			/* Established / timewait */
-	__be32 remote_id;
-	struct ib_cm_event cm_event;
+	/* New members must be added within the struct_group() macro below. */
+	struct_group_tagged(cm_work_hdr, hdr,
+		struct delayed_work work;
+		struct list_head list;
+		struct cm_port *port;
+		struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
+		__be32 local_id;			/* Established / timewait */
+		__be32 remote_id;
+		struct ib_cm_event cm_event;
+	);
 	struct sa_path_rec path[];
 };
 
 struct cm_timewait_info {
-	struct cm_work work;
+	struct cm_work_hdr work;
 	struct list_head list;
 	struct rb_node remote_qp_node;
 	struct rb_node remote_id_node;
@@ -3453,7 +3456,7 @@ static int cm_timewait_handler(struct cm_work *work)
 	struct cm_timewait_info *timewait_info;
 	struct cm_id_private *cm_id_priv;
 
-	timewait_info = container_of(work, struct cm_timewait_info, work);
+	timewait_info = container_of(&work->hdr, struct cm_timewait_info, work);
 	spin_lock_irq(&cm.lock);
 	list_del(&timewait_info->list);
 	spin_unlock_irq(&cm.lock);
