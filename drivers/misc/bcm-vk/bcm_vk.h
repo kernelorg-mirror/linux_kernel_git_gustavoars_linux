@@ -412,9 +412,9 @@ struct bcm_vk {
 
 	/* offset of the peer log control in BAR2 */
 	u32 peerlog_off;
-	struct bcm_vk_peer_log peerlog_info; /* record of peer log info */
 	/* offset of processing monitoring info in BAR2 */
 	u32 proc_mon_off;
+	struct bcm_vk_peer_log peerlog_info; /* record of peer log info */
 };
 
 /* wq offload work items bits definitions */
