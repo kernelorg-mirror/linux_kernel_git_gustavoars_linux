@@ -105,11 +105,11 @@ struct amdgpu_kfd_dev {
 	bool init_complete;
 	struct work_struct reset_work;
 
-	/* HMM page migration MEMORY_DEVICE_PRIVATE mapping */
-	struct dev_pagemap pgmap;
-
 	/* Client for KFD BO GEM handle allocations */
 	struct drm_client_dev client;
+
+	/* HMM page migration MEMORY_DEVICE_PRIVATE mapping */
+	struct dev_pagemap pgmap;
 };
 
 enum kgd_engine_type {
