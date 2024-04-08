@@ -24,9 +24,11 @@
 
 /* extensible setup data list node */
 struct setup_data {
-	__u64 next;
-	__u32 type;
-	__u32 len;
+	__struct_group(setup_data_hdr, hdr, /* no attrs */,
+		__u64 next;
+		__u32 type;
+		__u32 len;
+	);
 	__u8 data[];
 };
 
