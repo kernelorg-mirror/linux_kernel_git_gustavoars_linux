@@ -1044,12 +1044,15 @@ struct octet_string {
 };
 
 struct rtl_hdr_3addr {
-	__le16 frame_ctl;
-	__le16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	__le16 seq_ctl;
+	/* New members must be added within the struct_group() macro below. */
+	__struct_group(rtl_hdr_3addr_hdr, hdr, __packed,
+		__le16 frame_ctl;
+		__le16 duration_id;
+		u8 addr1[ETH_ALEN];
+		u8 addr2[ETH_ALEN];
+		u8 addr3[ETH_ALEN];
+		__le16 seq_ctl;
+	);
 	u8 payload[];
 } __packed;
 
@@ -1060,7 +1063,7 @@ struct rtl_info_element {
 } __packed;
 
 struct rtl_probe_rsp {
-	struct rtl_hdr_3addr header;
+	struct rtl_hdr_3addr_hdr header;
 	u32 time_stamp[2];
 	__le16 beacon_interval;
 	__le16 capability;
