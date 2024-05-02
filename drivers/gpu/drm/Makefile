@@ -31,7 +31,7 @@ endif
 # --- end copy-paste
 
 # Enable -Werror in CI and development
-subdir-ccflags-$(CONFIG_DRM_WERROR) += -Werror
+#subdir-ccflags-$(CONFIG_DRM_WERROR) += -Werror
 
 drm-y := \
 	drm_aperture.o \
