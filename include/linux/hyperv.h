@@ -737,25 +737,27 @@ enum vmbus_channel_state {
  * variable-size data structure depending on the msg type itself
  */
 struct vmbus_channel_msginfo {
-	/* Bookkeeping stuff */
-	struct list_head msglistentry;
+	struct_group_tagged(vmbus_channel_msginfo_hdr, hdr,
+		/* Bookkeeping stuff */
+		struct list_head msglistentry;
 
-	/* So far, this is only used to handle gpadl body message */
-	struct list_head submsglist;
+		/* So far, this is only used to handle gpadl body message */
+		struct list_head submsglist;
 
-	/* Synchronize the request/response if needed */
-	struct completion  waitevent;
-	struct vmbus_channel *waiting_channel;
-	union {
-		struct vmbus_channel_version_supported version_supported;
-		struct vmbus_channel_open_result open_result;
-		struct vmbus_channel_gpadl_torndown gpadl_torndown;
-		struct vmbus_channel_gpadl_created gpadl_created;
-		struct vmbus_channel_version_response version_response;
-		struct vmbus_channel_modifychannel_response modify_response;
-	} response;
+		/* Synchronize the request/response if needed */
+		struct completion  waitevent;
+		struct vmbus_channel *waiting_channel;
+		union {
+			struct vmbus_channel_version_supported version_supported;
+			struct vmbus_channel_open_result open_result;
+			struct vmbus_channel_gpadl_torndown gpadl_torndown;
+			struct vmbus_channel_gpadl_created gpadl_created;
+			struct vmbus_channel_version_response version_response;
+			struct vmbus_channel_modifychannel_response modify_response;
+		} response;
 
-	u32 msgsize;
+		u32 msgsize;
+	);
 	/*
 	 * The channel message that goes out on the "wire".
 	 * It will contain at minimum the VMBUS_CHANNEL_MESSAGE_HEADER header
@@ -764,7 +766,7 @@ struct vmbus_channel_msginfo {
 };
 
 struct vmbus_close_msg {
-	struct vmbus_channel_msginfo info;
+	struct vmbus_channel_msginfo_hdr info;
 	struct vmbus_channel_close_channel msg;
 };
 
