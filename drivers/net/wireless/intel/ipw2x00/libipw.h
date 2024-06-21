@@ -345,12 +345,15 @@ struct libipw_hdr_2addr {
 } __packed;
 
 struct libipw_hdr_3addr {
-	__le16 frame_ctl;
-	__le16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	__le16 seq_ctl;
+	/* New members MUST be added within the struct_group() macro below. */
+	__struct_group(libipw_hdr_3addr_hdr, hdr, __packed,
+		__le16 frame_ctl;
+		__le16 duration_id;
+		u8 addr1[ETH_ALEN];
+		u8 addr2[ETH_ALEN];
+		u8 addr3[ETH_ALEN];
+		__le16 seq_ctl;
+	);
 	u8 payload[];
 } __packed;
 
@@ -400,7 +403,7 @@ struct libipw_info_element {
 */
 
 struct libipw_auth {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le16 algorithm;
 	__le16 transaction;
 	__le16 status;
@@ -417,7 +420,7 @@ struct libipw_channel_switch {
 } __packed;
 
 struct libipw_action {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	u8 category;
 	u8 action;
 	union {
@@ -430,7 +433,7 @@ struct libipw_action {
 } __packed;
 
 struct libipw_disassoc {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le16 reason;
 } __packed;
 
@@ -438,13 +441,13 @@ struct libipw_disassoc {
 #define libipw_deauth libipw_disassoc
 
 struct libipw_probe_request {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	/* SSID, supported rates */
 	u8 variable[];
 } __packed;
 
 struct libipw_probe_response {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le32 time_stamp[2];
 	__le16 beacon_interval;
 	__le16 capability;
@@ -457,7 +460,7 @@ struct libipw_probe_response {
 #define libipw_beacon libipw_probe_response
 
 struct libipw_assoc_request {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le16 capability;
 	__le16 listen_interval;
 	/* SSID, supported rates, RSN */
@@ -465,7 +468,7 @@ struct libipw_assoc_request {
 } __packed;
 
 struct libipw_reassoc_request {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le16 capability;
 	__le16 listen_interval;
 	u8 current_ap[ETH_ALEN];
@@ -473,7 +476,7 @@ struct libipw_reassoc_request {
 } __packed;
 
 struct libipw_assoc_response {
-	struct libipw_hdr_3addr header;
+	struct libipw_hdr_3addr_hdr header;
 	__le16 capability;
 	__le16 status;
 	__le16 aid;
@@ -587,13 +590,6 @@ struct libipw_channel_map {
 	u8 channel;
 	u8 map;
 } __packed;
-
-struct libipw_ibss_dfs {
-	struct libipw_info_element ie;
-	u8 owner[ETH_ALEN];
-	u8 recovery_interval;
-	struct libipw_channel_map channel_map[];
-};
 
 struct libipw_csa {
 	u8 mode;
