@@ -9,6 +9,7 @@
 #define	_FC_ELS_H_
 
 #include <linux/types.h>
+#include <linux/stddef.h> /* for offsetof */
 #include <asm/byteorder.h>
 
 /*
@@ -1109,12 +1110,15 @@ struct fc_els_fpin {
 
 /* Diagnostic Function Descriptor - FPIN Registration */
 struct fc_df_desc_fpin_reg {
-	__be32		desc_tag;	/* FPIN Registration (0x00030001) */
-	__be32		desc_len;	/* Length of Descriptor (in bytes).
-					 * Size of descriptor excluding
-					 * desc_tag and desc_len fields.
-					 */
-	__be32		count;		/* Number of desc_tags elements */
+	/* New members MUST be added within the __struct_group() macro below. */
+	__struct_group(fc_df_desc_fpin_reg_hdr, hdr, /* no attrs */,
+		__be32		desc_tag; /* FPIN Registration (0x00030001) */
+		__be32		desc_len; /* Length of Descriptor (in bytes).
+					   * Size of descriptor excluding
+					   * desc_tag and desc_len fields.
+					   */
+		__be32		count;	  /* Number of desc_tags elements */
+	);
 	__be32		desc_tags[];	/* Array of Descriptor Tags.
 					 * Each tag indicates a function
 					 * supported by the N_Port (request)
@@ -1124,19 +1128,26 @@ struct fc_df_desc_fpin_reg {
 					 * See ELS_FN_DTAG_xxx for tag values.
 					 */
 };
+static_assert(offsetof(struct fc_df_desc_fpin_reg, desc_tags) == sizeof(struct fc_df_desc_fpin_reg_hdr),
+	      "struct member likely outside of __struct_group()");
 
 /*
  * ELS_RDF - Register Diagnostic Functions
  */
 struct fc_els_rdf {
-	__u8		fpin_cmd;	/* command (0x19) */
-	__u8		fpin_zero[3];	/* specified as zero - part of cmd */
-	__be32		desc_len;	/* Length of Descriptor List (in bytes).
-					 * Size of ELS excluding fpin_cmd,
-					 * fpin_zero and desc_len fields.
-					 */
+	/* New members MUST be added within the __struct_group() macro below. */
+        __struct_group(fc_els_rdf_hdr, hdr, /* no attrs */,
+		__u8		fpin_cmd;	/* command (0x19) */
+		__u8		fpin_zero[3];	/* specified as zero - part of cmd */
+		__be32		desc_len;	/* Length of Descriptor List (in bytes).
+						 * Size of ELS excluding fpin_cmd,
+						 * fpin_zero and desc_len fields.
+						 */
+	);
 	struct fc_tlv_desc	desc[];	/* Descriptor list */
 };
+static_assert(offsetof(struct fc_els_rdf, desc) == sizeof(struct fc_els_rdf_hdr),
+              "struct member likely outside of __struct_group()");
 
 /*
  * ELS RDF LS_ACC Response.
