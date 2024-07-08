@@ -121,10 +121,15 @@ static __always_inline bool perf_raw_frag_last(const struct perf_raw_frag *frag)
  * already stored in age order, the hw_idx should be 0.
  */
 struct perf_branch_stack {
-	__u64				nr;
-	__u64				hw_idx;
+	/* New members MUST be added within the struct_group() macro below. */
+	struct_group_tagged(perf_branch_stack_hdr, hdr,
+		__u64				nr;
+		__u64				hw_idx;
+	);
 	struct perf_branch_entry	entries[];
 };
+static_assert(offsetof(struct perf_branch_stack, entries) == sizeof(struct perf_branch_stack_hdr),
+	      "struct member likely outside of struct_group_tagged()");
 
 struct task_struct;
 
