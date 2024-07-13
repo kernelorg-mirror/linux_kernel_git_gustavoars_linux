@@ -1427,8 +1427,6 @@ struct hci_vnd_codecs {
 
 struct hci_rp_read_local_supported_codecs {
 	__u8	status;
-	struct hci_std_codecs std_codecs;
-	struct hci_vnd_codecs vnd_codecs;
 } __packed;
 
 #define HCI_OP_READ_LOCAL_PAIRING_OPTS	0x100c
