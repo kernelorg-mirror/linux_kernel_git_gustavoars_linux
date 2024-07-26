@@ -20,6 +20,9 @@
 
 #ifndef __KERNEL__
 #include <limits.h> /* for INT_MAX */
+#include <stddef.h> /* for offsetof */
+#else
+#include <linux/stddef.h> /* for offsetof */
 #endif
 
 /* All structures exposed to userland should be defined such that they
@@ -1635,12 +1638,17 @@ struct ethtool_flash {
  * @data: data collected for get dump data operation
  */
 struct ethtool_dump {
-	__u32	cmd;
-	__u32	version;
-	__u32	flag;
-	__u32	len;
+	/* New members MUST be added within the __struct_group() macro below. */
+	__struct_group(ethtool_dump_hdr, hdr, /* no attrs */,
+		__u32	cmd;
+		__u32	version;
+		__u32	flag;
+		__u32	len;
+	);
 	__u8	data[];
 };
+static_assert(offsetof(struct ethtool_dump, data) == sizeof(struct ethtool_dump_hdr),
+	      "struct member likely outside of __struct_group()");
 
 #define ETH_FW_DUMP_DISABLE 0
 
