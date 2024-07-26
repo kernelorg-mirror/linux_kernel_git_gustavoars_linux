@@ -1212,7 +1212,7 @@ struct adapter {
 	struct work_struct flower_stats_work;
 
 	/* Ethtool Dump */
-	struct ethtool_dump eth_dump;
+	struct ethtool_dump_hdr eth_dump;
 
 	/* HMA */
 	struct hma_data hma;

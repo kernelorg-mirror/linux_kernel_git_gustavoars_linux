@@ -16,6 +16,7 @@
 
 #include <linux/const.h>
 #include <linux/types.h>
+#include <linux/stddef.h> /* for offsetof */
 #include <linux/if_ether.h>
 
 #ifndef __KERNEL__
@@ -1635,12 +1636,16 @@ struct ethtool_flash {
  * @data: data collected for get dump data operation
  */
 struct ethtool_dump {
-	__u32	cmd;
-	__u32	version;
-	__u32	flag;
-	__u32	len;
+	__struct_group(ethtool_dump_hdr, hdr, /* no attrs */,
+		__u32	cmd;
+		__u32	version;
+		__u32	flag;
+		__u32	len;
+	);
 	__u8	data[];
 };
+static_assert(offsetof(struct ethtool_dump, data) == sizeof(struct ethtool_dump_hdr),
+	      "struct member outside of __struct_group()");
 
 #define ETH_FW_DUMP_DISABLE 0
 
