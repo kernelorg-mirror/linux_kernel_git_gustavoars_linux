@@ -52,9 +52,11 @@ struct tcf_ct_flow_table {
 	struct rcu_work rwork;
 	struct nf_flowtable nf_ft;
 	refcount_t ref;
-	struct zones_ht_key key;
 
 	bool dying;
+
+	/* Must be last - ends in a flex-array member. */
+	struct zones_ht_key key;
 };
 
 static const struct rhashtable_params zones_params = {
