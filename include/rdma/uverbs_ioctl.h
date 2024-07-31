@@ -629,6 +629,7 @@ struct uverbs_attr {
 };
 
 struct uverbs_attr_bundle {
+	/* New members MUST be added within the struct_group() macro below. */
 	struct_group_tagged(uverbs_attr_bundle_hdr, hdr,
 		struct ib_udata driver_udata;
 		struct ib_udata ucore;
@@ -639,6 +640,8 @@ struct uverbs_attr_bundle {
 	);
 	struct uverbs_attr attrs[];
 };
+static_assert(offsetof(struct uverbs_attr_bundle, attrs) == sizeof(struct uverbs_attr_bundle_hdr),
+	      "struct member likely outside of struct_group_tagged()");
 
 static inline bool uverbs_attr_is_valid(const struct uverbs_attr_bundle *attrs_bundle,
 					unsigned int idx)
