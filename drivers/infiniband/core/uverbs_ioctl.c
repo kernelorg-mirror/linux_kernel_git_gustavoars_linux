@@ -36,11 +36,14 @@
 #include "uverbs.h"
 
 struct bundle_alloc_head {
+	/* New members MUST be added within the struct_group() macro below. */
 	struct_group_tagged(bundle_alloc_head_hdr, hdr,
 		struct bundle_alloc_head *next;
 	);
 	u8 data[];
 };
+static_assert(offsetof(struct bundle_alloc_head, data) == sizeof(struct bundle_alloc_head_hdr),
+	      "struct member likely outside of struct_group_tagged()");
 
 struct bundle_priv {
 	/* Must be first */
