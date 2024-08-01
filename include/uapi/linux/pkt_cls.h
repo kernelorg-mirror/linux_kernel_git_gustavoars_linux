@@ -5,6 +5,12 @@
 #include <linux/types.h>
 #include <linux/pkt_sched.h>
 
+#ifdef __KERNEL__
+#include <linux/stddef.h>       /* for offsetof */
+#else
+#include <stddef.h>             /* for offsetof */
+#endif
+
 #define TC_COOKIE_MAX_SIZE 16
 
 /* Action attributes */
@@ -246,18 +252,23 @@ struct tc_u32_key {
 };
 
 struct tc_u32_sel {
-	unsigned char		flags;
-	unsigned char		offshift;
-	unsigned char		nkeys;
+	/* New members MUST be added within the __struct_group() macro below. */
+	__struct_group(tc_u32_sel_hdr, hdr, /* no attrs */,
+		unsigned char		flags;
+		unsigned char		offshift;
+		unsigned char		nkeys;
 
-	__be16			offmask;
-	__u16			off;
-	short			offoff;
+		__be16			offmask;
+		__u16			off;
+		short			offoff;
 
-	short			hoff;
-	__be32			hmask;
+		short			hoff;
+		__be32			hmask;
+	);
 	struct tc_u32_key	keys[];
 };
+_Static_assert(offsetof(struct tc_u32_sel, keys) == sizeof(struct tc_u32_sel_hdr),
+	       "struct member likely outside of __struct_group()");
 
 struct tc_u32_mark {
 	__u32		val;
