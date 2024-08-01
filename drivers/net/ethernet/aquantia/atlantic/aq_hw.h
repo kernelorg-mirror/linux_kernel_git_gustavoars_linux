@@ -194,10 +194,12 @@ struct aq_hw_s {
 	u32 rpc_addr;
 	u32 settings_addr;
 	u32 rpc_tid;
-	struct hw_atl_utils_fw_rpc rpc;
 	s64 ptp_clk_offset;
 	u16 phy_id;
 	void *priv;
+
+	/* Must be last - ends in a flex-array member. */
+	struct hw_atl_utils_fw_rpc rpc;
 };
 
 struct aq_ring_s;
