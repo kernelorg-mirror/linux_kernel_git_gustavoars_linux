@@ -1033,8 +1033,6 @@ struct amdgpu_device {
 	/* for userq and VM fences */
 	struct amdgpu_seq64		seq64;
 
-	/* KFD */
-	struct amdgpu_kfd_dev		kfd;
 
 	/* UMC */
 	struct amdgpu_umc		umc;
@@ -1170,6 +1168,9 @@ struct amdgpu_device {
 	bool				enforce_isolation[MAX_XCP];
 	/* Added this mutex for cleaner shader isolation between GFX and compute processes */
 	struct mutex                    enforce_isolation_mutex;
+
+	/* KFD */
+        struct amdgpu_kfd_dev           kfd;
 };
 
 static inline uint32_t amdgpu_ip_version(const struct amdgpu_device *adev,
