@@ -2013,12 +2013,14 @@ struct bpf_prog_array_item {
 };
 
 struct bpf_prog_array {
-	struct rcu_head rcu;
+	struct_group_tagged(bpf_prog_array_hdr, hdr,
+		struct rcu_head rcu;
+	);
 	struct bpf_prog_array_item items[];
 };
 
 struct bpf_empty_prog_array {
-	struct bpf_prog_array hdr;
+	struct bpf_prog_array_hdr hdr;
 	struct bpf_prog *null_prog;
 };
 
