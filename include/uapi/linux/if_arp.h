@@ -115,18 +115,18 @@
 
 /* ARP ioctl request. */
 struct arpreq {
-	struct sockaddr	arp_pa;		/* protocol address		 */
-	struct sockaddr	arp_ha;		/* hardware address		 */
-	int		arp_flags;	/* flags			 */
-	struct sockaddr arp_netmask;    /* netmask (only for proxy arps) */
-	char		arp_dev[IFNAMSIZ];
+	struct __kernel_sockaddr_legacy	arp_pa;		/* protocol address		 */
+	struct __kernel_sockaddr_legacy	arp_ha;		/* hardware address		 */
+	int				arp_flags;	/* flags			 */
+	struct __kernel_sockaddr_legacy	arp_netmask;    /* netmask (only for proxy arps) */
+	char				arp_dev[IFNAMSIZ];
 };
 
 struct arpreq_old {
-	struct sockaddr	arp_pa;		/* protocol address		 */
-	struct sockaddr	arp_ha;		/* hardware address		 */
-	int		arp_flags;	/* flags			 */
-	struct sockaddr	arp_netmask;    /* netmask (only for proxy arps) */
+	struct __kernel_sockaddr_legacy	arp_pa;		/* protocol address		 */
+	struct __kernel_sockaddr_legacy	arp_ha;		/* hardware address		 */
+	int				arp_flags;	/* flags			 */
+	struct sockaddr			arp_netmask;    /* netmask (only for proxy arps) */
 };
 
 /* ARP Flag values. */
