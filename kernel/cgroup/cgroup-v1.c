@@ -1092,7 +1092,7 @@ int cgroup1_reconfigure(struct fs_context *fc)
 	int ret = 0;
 	u16 added_mask, removed_mask;
 
-	cgroup_lock_and_drain_offline(&cgrp_dfl_root.cgrp);
+	cgroup_lock_and_drain_offline(container_of(&cgrp_dfl_root.cgrp, struct cgroup, hdr));
 
 	/* See what subsystems are wanted */
 	ret = check_cgroupfs_options(fc);
@@ -1182,7 +1182,7 @@ static int cgroup1_root_to_use(struct fs_context *fc)
 
 		if (!percpu_ref_tryget_live(&ss->root->cgrp.self.refcnt))
 			return 1;	/* restart */
-		cgroup_put(&ss->root->cgrp);
+		cgroup_put(container_of(&ss->root->cgrp, struct cgroup, hdr));
 	}
 
 	for_each_root(root) {
@@ -1257,7 +1257,7 @@ int cgroup1_get_tree(struct fs_context *fc)
 	if (!ns_capable(ctx->ns->user_ns, CAP_SYS_ADMIN))
 		return -EPERM;
 
-	cgroup_lock_and_drain_offline(&cgrp_dfl_root.cgrp);
+	cgroup_lock_and_drain_offline(container_of(&cgrp_dfl_root.cgrp, struct cgroup, hdr));
 
 	ret = cgroup1_root_to_use(fc);
 	if (!ret && !percpu_ref_tryget_live(&ctx->root->cgrp.self.refcnt))
