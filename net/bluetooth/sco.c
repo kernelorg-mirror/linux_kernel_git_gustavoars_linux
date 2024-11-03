@@ -1455,7 +1455,7 @@ int __init sco_init(void)
 {
 	int err;
 
-	BUILD_BUG_ON(sizeof(struct sockaddr_sco) > sizeof(struct sockaddr));
+	BUILD_BUG_ON(sizeof(struct sockaddr_sco) > sizeof(struct sockaddr_legacy));
 
 	err = proto_register(&sco_proto, 0);
 	if (err < 0)

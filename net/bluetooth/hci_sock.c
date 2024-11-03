@@ -2221,7 +2221,7 @@ int __init hci_sock_init(void)
 {
 	int err;
 
-	BUILD_BUG_ON(sizeof(struct sockaddr_hci) > sizeof(struct sockaddr));
+	BUILD_BUG_ON(sizeof(struct sockaddr_hci) > sizeof(struct sockaddr_legacy));
 
 	err = proto_register(&hci_sk_proto, 0);
 	if (err < 0)

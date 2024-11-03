@@ -181,7 +181,7 @@ struct sockaddr_vm {
 	unsigned int svm_port;
 	unsigned int svm_cid;
 	__u8 svm_flags;
-	unsigned char svm_zero[sizeof(struct sockaddr) -
+	unsigned char svm_zero[sizeof(struct sockaddr_legacy) -
 			       sizeof(sa_family_t) -
 			       sizeof(unsigned short) -
 			       sizeof(unsigned int) -

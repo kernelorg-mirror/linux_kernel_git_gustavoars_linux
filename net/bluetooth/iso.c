@@ -2281,7 +2281,7 @@ int iso_init(void)
 {
 	int err;
 
-	BUILD_BUG_ON(sizeof(struct sockaddr_iso) > sizeof(struct sockaddr));
+	BUILD_BUG_ON(sizeof(struct sockaddr_iso) > sizeof(struct sockaddr_legacy));
 
 	if (iso_inited)
 		return -EALREADY;

@@ -9180,7 +9180,7 @@ int dev_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
 }
 EXPORT_SYMBOL(dev_set_mac_address_user);
 
-int dev_get_mac_address(struct sockaddr *sa, struct net *net, char *dev_name)
+int dev_get_mac_address(struct sockaddr_legacy *sa, struct net *net, char *dev_name)
 {
 	size_t size = sizeof(sa->sa_data);
 	struct net_device *dev;

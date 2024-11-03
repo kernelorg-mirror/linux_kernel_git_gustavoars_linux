@@ -1015,7 +1015,7 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
 	unsigned int __user *up = argp;
 	unsigned short u;
 	int __user *sp = argp;
-	struct sockaddr sa;
+	struct sockaddr_legacy sa;
 	int s;
 	int ret;
 
@@ -1145,7 +1145,7 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
 			rtnl_unlock();
 			return -ENOLINK;
 		}
-		ret = dev_set_mac_address_user(tap->dev, &sa, NULL);
+		ret = dev_set_mac_address_user(tap->dev, (struct sockaddr *)&sa, NULL);
 		tap_put_tap_dev(tap);
 		rtnl_unlock();
 		return ret;

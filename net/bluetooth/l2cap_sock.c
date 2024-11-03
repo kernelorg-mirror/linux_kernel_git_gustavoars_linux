@@ -1955,7 +1955,7 @@ int __init l2cap_init_sockets(void)
 {
 	int err;
 
-	BUILD_BUG_ON(sizeof(struct sockaddr_l2) > sizeof(struct sockaddr));
+	BUILD_BUG_ON(sizeof(struct sockaddr_l2) > sizeof(struct sockaddr_legacy));
 
 	err = proto_register(&l2cap_proto, 0);
 	if (err < 0)

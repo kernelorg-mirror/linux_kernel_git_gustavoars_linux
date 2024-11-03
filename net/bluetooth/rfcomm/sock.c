@@ -1035,7 +1035,7 @@ int __init rfcomm_init_sockets(void)
 {
 	int err;
 
-	BUILD_BUG_ON(sizeof(struct sockaddr_rc) > sizeof(struct sockaddr));
+	BUILD_BUG_ON(sizeof(struct sockaddr_rc) > sizeof(struct sockaddr_legacy));
 
 	err = proto_register(&rfcomm_proto, 0);
 	if (err < 0)

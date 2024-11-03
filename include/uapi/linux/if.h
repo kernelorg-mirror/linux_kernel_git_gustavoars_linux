@@ -239,11 +239,11 @@ struct ifreq {
 	} ifr_ifrn;
 	
 	union {
-		struct	sockaddr ifru_addr;
-		struct	sockaddr ifru_dstaddr;
-		struct	sockaddr ifru_broadaddr;
-		struct	sockaddr ifru_netmask;
-		struct  sockaddr ifru_hwaddr;
+		struct	__kernel_sockaddr_legacy ifru_addr;
+		struct	__kernel_sockaddr_legacy ifru_dstaddr;
+		struct	__kernel_sockaddr_legacy ifru_broadaddr;
+		struct	__kernel_sockaddr_legacy ifru_netmask;
+		struct  __kernel_sockaddr_legacy ifru_hwaddr;
 		short	ifru_flags;
 		int	ifru_ivalue;
 		int	ifru_mtu;
