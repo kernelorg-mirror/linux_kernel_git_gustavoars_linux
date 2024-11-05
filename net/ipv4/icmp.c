@@ -412,7 +412,7 @@ static void icmp_reply(struct icmp_bxm *icmp_param, struct sk_buff *skb)
 	int type = icmp_param->data.icmph.type;
 	int code = icmp_param->data.icmph.code;
 
-	if (ip_options_echo(net, &icmp_param->replyopts.opt.opt, skb))
+	if (ip_options_echo(net, container_of(&icmp_param->replyopts.opt.opt, struct ip_options, __hdr), skb))
 		return;
 
 	/* Needed by both icmpv4_global_allow and icmp_xmit_lock */
@@ -436,7 +436,7 @@ static void icmp_reply(struct icmp_bxm *icmp_param, struct sk_buff *skb)
 	saddr = fib_compute_spec_dst(skb);
 
 	if (icmp_param->replyopts.opt.opt.optlen) {
-		ipc.opt = &icmp_param->replyopts.opt;
+		ipc.opt = to_ip_options_rcu(&icmp_param->replyopts.opt);
 		if (ipc.opt->opt.srr)
 			daddr = icmp_param->replyopts.opt.opt.faddr;
 	}
@@ -719,7 +719,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 					   iph->tos;
 	mark = IP4_REPLY_MARK(net, skb_in->mark);
 
-	if (__ip_options_echo(net, &icmp_param.replyopts.opt.opt, skb_in, opt))
+	if (__ip_options_echo(net, container_of(&icmp_param.replyopts.opt.opt, struct ip_options, __hdr), skb_in, opt))
 		goto out_unlock;
 
 
@@ -736,7 +736,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 	inet_sk(sk)->tos = tos;
 	ipcm_init(&ipc);
 	ipc.addr = iph->saddr;
-	ipc.opt = &icmp_param.replyopts.opt;
+	ipc.opt = to_ip_options_rcu(&icmp_param.replyopts.opt);
 	ipc.sockc.mark = mark;
 
 	rt = icmp_route_lookup(net, &fl4, skb_in, iph, saddr,

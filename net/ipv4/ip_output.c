@@ -1612,7 +1612,7 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
 	int err;
 	int oif;
 
-	if (__ip_options_echo(net, &replyopts.opt.opt, skb, sopt))
+	if (__ip_options_echo(net, container_of(&replyopts.opt.opt, struct ip_options, __hdr), skb, sopt))
 		return;
 
 	ipcm_init(&ipc);
@@ -1620,7 +1620,7 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
 	ipc.sockc.transmit_time = transmit_time;
 
 	if (replyopts.opt.opt.optlen) {
-		ipc.opt = &replyopts.opt;
+		ipc.opt = to_ip_options_rcu(&replyopts.opt);
 
 		if (replyopts.opt.opt.srr)
 			daddr = replyopts.opt.opt.faddr;
