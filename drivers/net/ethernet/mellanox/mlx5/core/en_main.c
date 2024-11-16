@@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
 
 static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
 {
+	struct mlx5e_umr_wqe *umr_wqe =
+		container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
 	int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
 	size_t alloc_size;
 
@@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
 		bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
 	}
 
-	mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
+	mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
 
 	return 0;
 }
