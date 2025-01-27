@@ -197,7 +197,7 @@ static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
 	flush->hv_vp_set.valid_bank_mask = 0;
 
 	flush->hv_vp_set.format = HV_GENERIC_SET_SPARSE_4K;
-	nr_bank = cpumask_to_vpset_skip(&flush->hv_vp_set, cpus,
+	nr_bank = cpumask_to_vpset_skip((struct hv_vpset *)&flush->hv_vp_set, cpus,
 			info->freed_tables ? NULL : cpu_is_lazy);
 	if (nr_bank < 0)
 		return HV_STATUS_INVALID_PARAMETER;
@@ -208,7 +208,7 @@ static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
 	 */
 	max_gvas =
 		(PAGE_SIZE - sizeof(*flush) - nr_bank *
-		 sizeof(flush->hv_vp_set.bank_contents[0])) /
+		 sizeof(((struct hv_vpset *)&flush->hv_vp_set)->bank_contents[0])) /
 		sizeof(flush->gva_list[0]);
 
 	if (info->end == TLB_FLUSH_ALL) {

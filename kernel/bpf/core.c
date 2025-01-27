@@ -2479,14 +2479,14 @@ struct bpf_prog_array *bpf_prog_array_alloc(u32 prog_cnt, gfp_t flags)
 	if (prog_cnt)
 		p = kzalloc(struct_size(p, items, prog_cnt + 1), flags);
 	else
-		p = &bpf_empty_prog_array.hdr;
+		p = (struct bpf_prog_array *)&bpf_empty_prog_array.hdr;
 
 	return p;
 }
 
 void bpf_prog_array_free(struct bpf_prog_array *progs)
 {
-	if (!progs || progs == &bpf_empty_prog_array.hdr)
+	if (!progs || progs == (struct bpf_prog_array *)&bpf_empty_prog_array.hdr)
 		return;
 	kfree_rcu(progs, rcu);
 }
