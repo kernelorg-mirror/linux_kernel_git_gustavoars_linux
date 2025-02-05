@@ -67,11 +67,11 @@ static inline size_t tty_insert_flip_char(struct tty_port *port, u8 ch, u8 flag)
 	struct tty_buffer *tb = port->buf.tail;
 	int change;
 
-	change = !tb->flags && (flag != TTY_NORMAL);
-	if (!change && tb->used < tb->size) {
-		if (tb->flags)
-			*flag_buf_ptr(tb, tb->used) = flag;
-		*char_buf_ptr(tb, tb->used++) = ch;
+	change = !tb->hdr.flags && (flag != TTY_NORMAL);
+	if (!change && tb->hdr.used < tb->hdr.size) {
+		if (tb->hdr.flags)
+			*flag_buf_ptr(tb, tb->hdr.used) = flag;
+		*char_buf_ptr(tb, tb->hdr.used++) = ch;
 		return 1;
 	}
 	return __tty_insert_flip_string_flags(port, &ch, &flag, false, 1);
