@@ -7,7 +7,7 @@
 #include <linux/mutex.h>
 #include <linux/workqueue.h>
 
-struct tty_buffer {
+struct tty_buffer_hdr {
 	union {
 		struct tty_buffer *next;
 		struct llist_node free;
@@ -15,9 +15,13 @@ struct tty_buffer {
 	unsigned int used;
 	unsigned int size;
 	unsigned int commit;
-	unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
+	unsigned int lookahead; /* Lazy update on recv, can become less than "read" */
 	unsigned int read;
 	bool flags;
+};
+
+struct tty_buffer {
+	struct tty_buffer_hdr hdr;
 	/* Data points here */
 	u8 data[] __aligned(sizeof(unsigned long));
 };
@@ -29,7 +33,7 @@ static inline u8 *char_buf_ptr(struct tty_buffer *b, unsigned int ofs)
 
 static inline u8 *flag_buf_ptr(struct tty_buffer *b, unsigned int ofs)
 {
-	return char_buf_ptr(b, ofs) + b->size;
+	return char_buf_ptr(b, ofs) + b->hdr.size;
 }
 
 struct tty_bufhead {
@@ -37,7 +41,7 @@ struct tty_bufhead {
 	struct work_struct work;
 	struct mutex	   lock;
 	atomic_t	   priority;
-	struct tty_buffer sentinel;
+	struct tty_buffer_hdr sentinel;
 	struct llist_head free;		/* Free queue head */
 	atomic_t	   mem_used;    /* In-use buffers excluding free list */
 	int		   mem_limit;
