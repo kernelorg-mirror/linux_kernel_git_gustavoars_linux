@@ -2536,20 +2536,6 @@ struct mlx5_ifc_resource_dump_segment_header_bits {
 	u8         segment_type[0x10];
 };
 
-struct mlx5_ifc_resource_dump_command_segment_bits {
-	struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
-
-	u8         segment_called[0x10];
-	u8         vhca_id[0x10];
-
-	u8         index1[0x20];
-
-	u8         index2[0x20];
-
-	u8         num_of_obj1[0x10];
-	u8         num_of_obj2[0x10];
-};
-
 struct mlx5_ifc_resource_dump_error_segment_bits {
 	struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
 
@@ -2559,26 +2545,6 @@ struct mlx5_ifc_resource_dump_error_segment_bits {
 	u8         reserved_at_40[0x40];
 
 	u8         error[8][0x20];
-};
-
-struct mlx5_ifc_resource_dump_info_segment_bits {
-	struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
-
-	u8         reserved_at_20[0x18];
-	u8         dump_version[0x8];
-
-	u8         hw_version[0x20];
-
-	u8         fw_version[0x20];
-};
-
-struct mlx5_ifc_resource_dump_menu_segment_bits {
-	struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
-
-	u8         reserved_at_20[0x10];
-	u8         num_of_records[0x10];
-
-	struct mlx5_ifc_resource_dump_menu_record_bits record[];
 };
 
 struct mlx5_ifc_resource_dump_resource_segment_bits {
@@ -2591,17 +2557,6 @@ struct mlx5_ifc_resource_dump_resource_segment_bits {
 	u8         index2[0x20];
 
 	u8         payload[][0x20];
-};
-
-struct mlx5_ifc_resource_dump_terminate_segment_bits {
-	struct mlx5_ifc_resource_dump_segment_header_bits segment_header;
-};
-
-struct mlx5_ifc_menu_resource_dump_response_bits {
-	struct mlx5_ifc_resource_dump_info_segment_bits info;
-	struct mlx5_ifc_resource_dump_command_segment_bits cmd;
-	struct mlx5_ifc_resource_dump_menu_segment_bits menu;
-	struct mlx5_ifc_resource_dump_terminate_segment_bits terminate;
 };
 
 enum {
