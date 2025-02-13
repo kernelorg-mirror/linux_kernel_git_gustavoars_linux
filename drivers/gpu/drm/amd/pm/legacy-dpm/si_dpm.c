@@ -5234,7 +5234,8 @@ static int si_init_smc_table(struct amdgpu_device *adev)
 
 	table->driverState.flags = table->initialState.flags;
 	table->driverState.levelCount = table->initialState.levelCount;
-	table->driverState.levels[0] = table->initialState.level;
+	container_of(&table->driverState, SISLANDS_SMC_SWSTATE, __hdr)->levels[0] =
+								table->initialState.level;
 
 	ret = si_do_program_memory_timing_parameters(adev, amdgpu_boot_state,
 						     SISLANDS_INITIAL_STATE_ARB_INDEX);
@@ -5755,7 +5756,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
 	int ret;
 	u32 address = si_pi->state_table_start +
 		offsetof(SISLANDS_SMC_STATETABLE, driverState);
-	SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
+	SISLANDS_SMC_SWSTATE *smc_state =
+		container_of(&si_pi->smc_statetable.driverState,
+			     SISLANDS_SMC_SWSTATE, __hdr);
 	size_t state_size = struct_size(smc_state, levels,
 					new_state->performance_level_count);
 	memset(smc_state, 0, state_size);
