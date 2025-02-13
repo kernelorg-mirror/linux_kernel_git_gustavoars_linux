@@ -227,12 +227,15 @@ enum ars_masks {
  */
 
 struct nd_cmd_pkg {
-	__u64   nd_family;		/* family of commands */
-	__u64   nd_command;
-	__u32   nd_size_in;		/* INPUT: size of input args */
-	__u32   nd_size_out;		/* INPUT: size of payload */
-	__u32   nd_reserved2[9];	/* reserved must be zero */
-	__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
+	/* New members MUST be added within the __struct_group() macro below. */
+	__struct_group(nd_cmd_pkg_hdr, __hdr, /* no attrs */,
+		__u64   nd_family;		/* family of commands */
+		__u64   nd_command;
+		__u32   nd_size_in;		/* INPUT: size of input args */
+		__u32   nd_size_out;		/* INPUT: size of payload */
+		__u32   nd_reserved2[9];	/* reserved must be zero */
+		__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
+	);
 	unsigned char nd_payload[];	/* Contents of call      */
 };
 
