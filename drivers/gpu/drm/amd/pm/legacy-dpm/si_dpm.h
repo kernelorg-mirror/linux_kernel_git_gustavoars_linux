@@ -784,12 +784,16 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL NISLANDS_SMC_HW_PERFORMANCE_LEV
 
 struct NISLANDS_SMC_SWSTATE
 {
-    uint8_t                             flags;
-    uint8_t                             levelCount;
-    uint8_t                             padding2;
-    uint8_t                             padding3;
-    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+	struct_group_tagged(NISLANDS_SMC_SWSTATE_HDR, __hdr,
+		uint8_t                             flags;
+		uint8_t                             levelCount;
+		uint8_t                             padding2;
+		uint8_t                             padding3;
+	);
+	NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
 };
+static_assert(offsetof(struct NISLANDS_SMC_SWSTATE, levels) == sizeof(struct NISLANDS_SMC_SWSTATE_HDR),
+	      "struct member likely outside of struct_group_tagged()");
 
 typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
 
@@ -813,10 +817,10 @@ struct NISLANDS_SMC_STATETABLE
     uint32_t                            lowSMIO[NISLANDS_MAX_NO_VREG_STEPS];
     NISLANDS_SMC_VOLTAGEMASKTABLE       voltageMaskTable;
     PP_NIslands_DPM2Parameters          dpm2Params;
-    NISLANDS_SMC_SWSTATE                initialState;
-    NISLANDS_SMC_SWSTATE                ACPIState;
-    NISLANDS_SMC_SWSTATE                ULVState;
-    NISLANDS_SMC_SWSTATE                driverState;
+    struct NISLANDS_SMC_SWSTATE_HDR		initialState;
+    struct NISLANDS_SMC_SWSTATE_HDR		ACPIState;
+    struct NISLANDS_SMC_SWSTATE_HDR		ULVState;
+    struct NISLANDS_SMC_SWSTATE_HDR		driverState;
     NISLANDS_SMC_HW_PERFORMANCE_LEVEL   dpmLevels[NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1];
 };
 
