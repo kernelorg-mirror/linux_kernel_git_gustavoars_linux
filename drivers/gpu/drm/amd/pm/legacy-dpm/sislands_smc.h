@@ -172,12 +172,16 @@ struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL {
 typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PERFORMANCE_LEVEL;
 
 struct SISLANDS_SMC_SWSTATE {
-	uint8_t                             flags;
-	uint8_t                             levelCount;
-	uint8_t                             padding2;
-	uint8_t                             padding3;
+	struct_group_tagged(SISLANDS_SMC_SWSTATE_HDR, __hdr,
+		uint8_t                             flags;
+		uint8_t                             levelCount;
+		uint8_t                             padding2;
+		uint8_t                             padding3;
+	);
 	SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
 };
+static_assert(offsetof(struct SISLANDS_SMC_SWSTATE, levels) == sizeof(struct SISLANDS_SMC_SWSTATE_HDR),
+	      "struct member likely outside of struct_group_tagged()");
 
 typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
 
@@ -215,7 +219,7 @@ struct SISLANDS_SMC_STATETABLE {
 	struct SISLANDS_SMC_SWSTATE_SINGLE	initialState;
 	struct SISLANDS_SMC_SWSTATE_SINGLE	ACPIState;
 	struct SISLANDS_SMC_SWSTATE_SINGLE	ULVState;
-	SISLANDS_SMC_SWSTATE			driverState;
+	struct SISLANDS_SMC_SWSTATE_HDR		driverState;
 	SISLANDS_SMC_HW_PERFORMANCE_LEVEL	dpmLevels[SISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE];
 };
 
