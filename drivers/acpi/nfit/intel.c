@@ -56,7 +56,7 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	unsigned long security_flags = 0;
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_get_security_state cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -121,7 +121,7 @@ static int intel_security_freeze(struct nvdimm *nvdimm)
 {
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_freeze_lock cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -154,7 +154,7 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
 		NVDIMM_INTEL_SET_MASTER_PASSPHRASE :
 		NVDIMM_INTEL_SET_PASSPHRASE;
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_set_passphrase cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -196,7 +196,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
 {
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_unlock_unit cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -235,7 +235,7 @@ static int intel_security_disable(struct nvdimm *nvdimm,
 	int rc;
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_disable_passphrase cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -278,7 +278,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
 	unsigned int cmd = ptype == NVDIMM_MASTER ?
 		NVDIMM_INTEL_MASTER_SECURE_ERASE : NVDIMM_INTEL_SECURE_ERASE;
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_secure_erase cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -319,7 +319,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
 	int rc;
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_query_overwrite cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -355,7 +355,7 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
 	int rc;
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_overwrite cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -408,7 +408,7 @@ static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
 		struct nd_intel_bus_fw_activate_businfo *info)
 {
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_bus_fw_activate_businfo cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -519,7 +519,7 @@ static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
 {
 	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_bus_fw_activate cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -583,7 +583,7 @@ static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
 		struct nd_intel_fw_activate_dimminfo *info)
 {
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_fw_activate_dimminfo cmd;
 	} nd_cmd = {
 		.pkg = {
@@ -689,7 +689,7 @@ static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
 	struct {
-		struct nd_cmd_pkg pkg;
+		struct nd_cmd_pkg_hdr pkg;
 		struct nd_intel_fw_activate_arm cmd;
 	} nd_cmd = {
 		.pkg = {
