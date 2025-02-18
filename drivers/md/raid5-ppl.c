@@ -150,7 +150,7 @@ struct ppl_io_unit {
 	bool submitted;			/* true if write to log started */
 
 	/* inline bio and its biovec for submitting the iounit */
-	struct bio bio;
+	struct bio_hdr bio;
 	struct bio_vec biovec[PPL_IO_INLINE_BVECS];
 };
 
@@ -250,8 +250,8 @@ static struct ppl_io_unit *ppl_new_iounit(struct ppl_log *log,
 	INIT_LIST_HEAD(&io->stripe_list);
 	atomic_set(&io->pending_stripes, 0);
 	atomic_set(&io->pending_flushes, 0);
-	bio_init(&io->bio, log->rdev->bdev, io->biovec, PPL_IO_INLINE_BVECS,
-		 REQ_OP_WRITE | REQ_FUA);
+	bio_init(container_of(&io->bio, struct bio, __hdr), log->rdev->bdev,
+		 io->biovec, PPL_IO_INLINE_BVECS, REQ_OP_WRITE | REQ_FUA);
 
 	pplhdr = page_address(io->header_page);
 	clear_page(pplhdr);
@@ -430,7 +430,7 @@ static void ppl_submit_iounit(struct ppl_io_unit *io)
 	struct ppl_log *log = io->log;
 	struct ppl_conf *ppl_conf = log->ppl_conf;
 	struct ppl_header *pplhdr = page_address(io->header_page);
-	struct bio *bio = &io->bio;
+	struct bio *bio = container_of(&io->bio, struct bio, __hdr);
 	struct stripe_head *sh;
 	int i;
 
