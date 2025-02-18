@@ -1245,7 +1245,7 @@ xlog_ioend_work(
 	}
 
 	xlog_state_done_syncing(iclog);
-	bio_uninit(&iclog->ic_bio);
+	bio_uninit(container_of(&iclog->ic_bio, struct bio, __hdr));
 
 	/*
 	 * Drop the lock to signal that we are done. Nothing references the
@@ -1663,7 +1663,8 @@ xlog_write_iclog(
 	 * writeback throttle from throttling log writes behind background
 	 * metadata writeback and causing priority inversions.
 	 */
-	bio_init(&iclog->ic_bio, log->l_targ->bt_bdev, iclog->ic_bvec,
+	bio_init(container_of(&iclog->ic_bio, struct bio, __hdr),
+		 log->l_targ->bt_bdev, iclog->ic_bvec,
 		 howmany(count, PAGE_SIZE),
 		 REQ_OP_WRITE | REQ_META | REQ_SYNC | REQ_IDLE);
 	iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart + bno;
@@ -1692,7 +1693,8 @@ xlog_write_iclog(
 
 	iclog->ic_flags &= ~(XLOG_ICL_NEED_FLUSH | XLOG_ICL_NEED_FUA);
 
-	if (xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, count))
+	if (xlog_map_iclog_data(container_of(&iclog->ic_bio, struct bio, __hdr),
+				iclog->ic_data, count))
 		goto shutdown;
 
 	if (is_vmalloc_addr(iclog->ic_data))
@@ -1705,16 +1707,17 @@ xlog_write_iclog(
 	if (bno + BTOBB(count) > log->l_logBBsize) {
 		struct bio *split;
 
-		split = bio_split(&iclog->ic_bio, log->l_logBBsize - bno,
+		split = bio_split(container_of(&iclog->ic_bio, struct bio, __hdr),
+				  log->l_logBBsize - bno,
 				  GFP_NOIO, &fs_bio_set);
-		bio_chain(split, &iclog->ic_bio);
+		bio_chain(split, container_of(&iclog->ic_bio, struct bio, __hdr));
 		submit_bio(split);
 
 		/* restart at logical offset zero for the remainder */
 		iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart;
 	}
 
-	submit_bio(&iclog->ic_bio);
+	submit_bio(container_of(&iclog->ic_bio, struct bio, __hdr));
 	return;
 shutdown:
 	xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
