@@ -7,7 +7,7 @@
 
 struct erofs_fileio_rq {
 	struct bio_vec bvecs[16];
-	struct bio bio;
+	struct bio_hdr bio;
 	struct kiocb iocb;
 	struct super_block *sb;
 };
@@ -26,20 +26,21 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
 
 	if (ret > 0) {
 		if (ret != rq->bio.bi_iter.bi_size) {
-			bio_advance(&rq->bio, ret);
-			zero_fill_bio(&rq->bio);
+			bio_advance(container_of(&rq->bio, struct bio, __hdr),
+				    ret);
+			zero_fill_bio(container_of(&rq->bio, struct bio, __hdr));
 		}
 		ret = 0;
 	}
 	if (rq->bio.bi_end_io) {
-		rq->bio.bi_end_io(&rq->bio);
+		rq->bio.bi_end_io(container_of(&rq->bio, struct bio, __hdr));
 	} else {
-		bio_for_each_folio_all(fi, &rq->bio) {
+		bio_for_each_folio_all(fi, container_of(&rq->bio, struct bio, __hdr)) {
 			DBG_BUGON(folio_test_uptodate(fi.folio));
 			erofs_onlinefolio_end(fi.folio, ret);
 		}
 	}
-	bio_uninit(&rq->bio);
+	bio_uninit(container_of(&rq->bio, struct bio, __hdr));
 	kfree(rq);
 }
 
@@ -68,7 +69,8 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
 	struct erofs_fileio_rq *rq = kzalloc(sizeof(*rq),
 					     GFP_KERNEL | __GFP_NOFAIL);
 
-	bio_init(&rq->bio, NULL, rq->bvecs, ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
+	bio_init(container_of(&rq->bio, struct bio, __hdr), NULL, rq->bvecs,
+		 ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
 	rq->iocb.ki_filp = mdev->m_dif->file;
 	rq->sb = mdev->m_sb;
 	return rq;
@@ -76,12 +78,13 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
 
 struct bio *erofs_fileio_bio_alloc(struct erofs_map_dev *mdev)
 {
-	return &erofs_fileio_rq_alloc(mdev)->bio;
+	return container_of(&erofs_fileio_rq_alloc(mdev)->bio, struct bio, __hdr);
 }
 
 void erofs_fileio_submit_bio(struct bio *bio)
 {
-	return erofs_fileio_rq_submit(container_of(bio, struct erofs_fileio_rq,
+	return erofs_fileio_rq_submit(container_of(&bio->__hdr,
+						   struct erofs_fileio_rq,
 						   bio));
 }
 
@@ -150,7 +153,9 @@ io_retry:
 			}
 			if (!attached++)
 				erofs_onlinefolio_split(folio);
-			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
+			if (!bio_add_folio(container_of(&io->rq->bio,
+							struct bio, __hdr),
+					   folio, len, cur))
 				goto io_retry;
 			io->dev.m_pa += len;
 		}

@@ -176,7 +176,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
 
 struct erofs_fscache_bio {
 	struct erofs_fscache_io io;
-	struct bio bio;		/* w/o bdev to share bio_add_page/endio() */
+	struct bio_hdr bio;	/* w/o bdev to share bio_add_page/endio() */
 	struct bio_vec bvecs[BIO_MAX_VECS];
 };
 
@@ -187,7 +187,7 @@ static void erofs_fscache_bio_endio(void *priv,
 
 	if (IS_ERR_VALUE(transferred_or_error))
 		io->bio.bi_status = errno_to_blk_status(transferred_or_error);
-	io->bio.bi_end_io(&io->bio);
+	io->bio.bi_end_io(container_of(&io->bio, struct bio, __hdr));
 	BUILD_BUG_ON(offsetof(struct erofs_fscache_bio, io) != 0);
 	erofs_fscache_io_put(&io->io);
 }
@@ -197,17 +197,18 @@ struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev)
 	struct erofs_fscache_bio *io;
 
 	io = kmalloc(sizeof(*io), GFP_KERNEL | __GFP_NOFAIL);
-	bio_init(&io->bio, NULL, io->bvecs, BIO_MAX_VECS, REQ_OP_READ);
+	bio_init(container_of(&io->bio, struct bio, __hdr), NULL, io->bvecs,
+		 BIO_MAX_VECS, REQ_OP_READ);
 	io->io.private = mdev->m_dif->fscache->cookie;
 	io->io.end_io = erofs_fscache_bio_endio;
 	refcount_set(&io->io.ref, 1);
-	return &io->bio;
+	return container_of(&io->bio, struct bio, __hdr);
 }
 
 void erofs_fscache_submit_bio(struct bio *bio)
 {
-	struct erofs_fscache_bio *io = container_of(bio,
-			struct erofs_fscache_bio, bio);
+	struct erofs_fscache_bio *io =
+		container_of(&bio->__hdr, struct erofs_fscache_bio, bio);
 	int ret;
 
 	iov_iter_bvec(&io->io.iter, ITER_DEST, io->bvecs, bio->bi_vcnt,
