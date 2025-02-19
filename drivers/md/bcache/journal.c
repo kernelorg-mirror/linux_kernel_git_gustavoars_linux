@@ -36,7 +36,7 @@ static int journal_read_bucket(struct cache *ca, struct list_head *list,
 			       unsigned int bucket_index)
 {
 	struct journal_device *ja = &ca->journal;
-	struct bio *bio = &ja->bio;
+	struct bio *bio = container_of(&ja->bio, struct bio, __hdr);
 
 	struct journal_replay *i;
 	struct jset *j, *data = ca->set->journal.w[0].data;
@@ -571,7 +571,7 @@ out:
 static void journal_discard_endio(struct bio *bio)
 {
 	struct journal_device *ja =
-		container_of(bio, struct journal_device, discard_bio);
+		container_of(&bio->__hdr, struct journal_device, discard_bio);
 	struct cache *ca = container_of(ja, struct cache, journal);
 
 	atomic_set(&ja->discard_in_flight, DISCARD_DONE);
@@ -585,13 +585,13 @@ static void journal_discard_work(struct work_struct *work)
 	struct journal_device *ja =
 		container_of(work, struct journal_device, discard_work);
 
-	submit_bio(&ja->discard_bio);
+	submit_bio(container_of(&ja->discard_bio, struct bio, __hdr));
 }
 
 static void do_journal_discard(struct cache *ca)
 {
 	struct journal_device *ja = &ca->journal;
-	struct bio *bio = &ja->discard_bio;
+	struct bio *bio = container_of(&ja->discard_bio, struct bio, __hdr);
 
 	if (!ca->discard) {
 		ja->discard_idx = ja->last_idx;
@@ -787,7 +787,7 @@ static CLOSURE_CALLBACK(journal_write_unlocked)
 
 	for (i = 0; i < KEY_PTRS(k); i++) {
 		ca = c->cache;
-		bio = &ca->journal.bio;
+		bio = container_of(&ca->journal.bio, struct bio, __hdr);
 
 		atomic_long_add(sectors, &ca->meta_sectors_written);
 

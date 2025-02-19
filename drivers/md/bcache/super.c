@@ -337,7 +337,7 @@ static CLOSURE_CALLBACK(bch_write_bdev_super_unlock)
 void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent)
 {
 	struct closure *cl = &dc->sb_write;
-	struct bio *bio = &dc->sb_bio;
+	struct bio *bio = container_of(&dc->sb_bio, struct bio, __hdr);
 
 	down(&dc->sb_write_mutex);
 	closure_init(cl, parent);
@@ -374,7 +374,7 @@ void bcache_write_super(struct cache_set *c)
 {
 	struct closure *cl = &c->sb_write;
 	struct cache *ca = c->cache;
-	struct bio *bio = &ca->sb_bio;
+	struct bio *bio = container_of(&ca->sb_bio, struct bio, __hdr);
 	unsigned int version = BCACHE_SB_VERSION_CDEV_WITH_UUID;
 
 	down(&c->sb_write_mutex);
@@ -2230,7 +2230,9 @@ static int cache_alloc(struct cache *ca)
 	__module_get(THIS_MODULE);
 	kobject_init(&ca->kobj, &bch_cache_ktype);
 
-	bio_init(&ca->journal.bio, NULL, ca->journal.bio.bi_inline_vecs, 8, 0);
+	bio_init(container_of(&ca->journal.bio, struct bio, __hdr), NULL,
+		 container_of(&ca->journal.bio, struct bio, __hdr)->bi_inline_vecs,
+		 8, 0);
 
 	/*
 	 * when ca->sb.njournal_buckets is not zero, journal exists,

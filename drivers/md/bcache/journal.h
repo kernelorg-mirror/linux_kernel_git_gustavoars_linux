@@ -149,11 +149,11 @@ struct journal_device {
 	atomic_t		discard_in_flight;
 
 	struct work_struct	discard_work;
-	struct bio		discard_bio;
+	struct bio_hdr		discard_bio;
 	struct bio_vec		discard_bv;
 
 	/* Bio for journal reads/writes to this device */
-	struct bio		bio;
+	struct bio_hdr		bio;
 	struct bio_vec		bv[8];
 };
 
