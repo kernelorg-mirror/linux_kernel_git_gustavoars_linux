@@ -268,7 +268,7 @@ static int nvmet_passthru_map_sg(struct nvmet_req *req, struct request *rq)
 		return -EINVAL;
 
 	if (nvmet_use_inline_bvec(req)) {
-		bio = &req->p.inline_bio;
+		bio = container_of(&req->p.inline_bio, struct bio, __hdr);
 		bio_init(bio, NULL, req->inline_bvec,
 			 ARRAY_SIZE(req->inline_bvec), req_op(rq));
 	} else {

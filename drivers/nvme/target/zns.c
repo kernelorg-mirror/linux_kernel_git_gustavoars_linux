@@ -570,7 +570,7 @@ void nvmet_bdev_execute_zone_append(struct nvmet_req *req)
 	}
 
 	if (nvmet_use_inline_bvec(req)) {
-		bio = &req->z.inline_bio;
+		bio = container_of(&req->z.inline_bio, struct bio, __hdr);
 		bio_init(bio, req->ns->bdev, req->inline_bvec,
 			 ARRAY_SIZE(req->inline_bvec), opf);
 	} else {

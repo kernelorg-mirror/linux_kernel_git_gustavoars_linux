@@ -452,14 +452,14 @@ struct nvmet_req {
 			struct work_struct      work;
 		} f;
 		struct {
-			struct bio		inline_bio;
+			struct bio_hdr		inline_bio;
 			struct request		*rq;
 			struct work_struct      work;
 			bool			use_workqueue;
 		} p;
 #ifdef CONFIG_BLK_DEV_ZONED
 		struct {
-			struct bio		inline_bio;
+			struct bio_hdr		inline_bio;
 			struct work_struct	zmgmt_work;
 		} z;
 #endif /* CONFIG_BLK_DEV_ZONED */
