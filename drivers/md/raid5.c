@@ -1178,8 +1178,8 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
 
 again:
 		dev = &sh->dev[i];
-		bi = &dev->req;
-		rbi = &dev->rreq; /* For writing to replacement */
+		bi = container_of(&dev->req, struct bio, __hdr);
+		rbi = container_of(&dev->rreq, struct bio, __hdr); /* For writing to replacement */
 
 		rdev = conf->disks[i].rdev;
 		rrdev = conf->disks[i].replacement;
@@ -2720,7 +2720,7 @@ static void raid5_end_read_request(struct bio * bi)
 	sector_t s;
 
 	for (i=0 ; i<disks; i++)
-		if (bi == &sh->dev[i].req)
+		if (bi == container_of(&sh->dev[i].req, struct bio, __hdr))
 			break;
 
 	pr_debug("end_read_request %llu/%d, count: %d, error %d.\n",
@@ -2848,11 +2848,11 @@ static void raid5_end_write_request(struct bio *bi)
 	int replacement = 0;
 
 	for (i = 0 ; i < disks; i++) {
-		if (bi == &sh->dev[i].req) {
+		if (bi == container_of(&sh->dev[i].req, struct bio, __hdr)) {
 			rdev = conf->disks[i].rdev;
 			break;
 		}
-		if (bi == &sh->dev[i].rreq) {
+		if (bi == container_of(&sh->dev[i].rreq, struct bio, __hdr)) {
 			rdev = conf->disks[i].replacement;
 			if (rdev)
 				replacement = 1;

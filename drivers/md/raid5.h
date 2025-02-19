@@ -259,7 +259,7 @@ struct stripe_head {
 		/* rreq and rvec are used for the replacement device when
 		 * writing data to both devices.
 		 */
-		struct bio	req, rreq;
+		struct bio_hdr	req, rreq;
 		struct bio_vec	vec, rvec;
 		struct page	*page, *orig_page;
 		unsigned int    offset;     /* offset of the page */
