@@ -175,7 +175,7 @@ struct btrfs_device {
 	u64 commit_bytes_used;
 
 	/* Bio used for flushing device barriers */
-	struct bio flush_bio;
+	struct bio_hdr flush_bio;
 	struct completion flush_wait;
 
 	/* per-device scrub information */

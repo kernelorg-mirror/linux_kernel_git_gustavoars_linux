@@ -3963,7 +3963,7 @@ static void btrfs_end_empty_barrier(struct bio *bio)
  */
 static void write_dev_flush(struct btrfs_device *device)
 {
-	struct bio *bio = &device->flush_bio;
+	struct bio *bio = container_of(&device->flush_bio, struct bio, __hdr);
 
 	device->last_flush_error = BLK_STS_OK;
 
@@ -3982,7 +3982,7 @@ static void write_dev_flush(struct btrfs_device *device)
  */
 static bool wait_dev_flush(struct btrfs_device *device)
 {
-	struct bio *bio = &device->flush_bio;
+	struct bio *bio = container_of(&device->flush_bio, struct bio, __hdr);
 
 	if (!test_and_clear_bit(BTRFS_DEV_STATE_FLUSH_SENT, &device->dev_state))
 		return false;
