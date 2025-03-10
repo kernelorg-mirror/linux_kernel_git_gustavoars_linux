@@ -7,7 +7,7 @@
 #ifndef __ASSEMBLY__
 
 struct pci_setup_rom {
-	struct setup_data data;
+	struct setup_data_hdr data;
 	uint16_t vendor;
 	uint16_t devid;
 	uint64_t pcilen;
