@@ -411,12 +411,13 @@ static int ehci_fsl_setup(struct usb_hcd *hcd)
 }
 
 struct ehci_fsl {
-	struct ehci_hcd	ehci;
-
 #ifdef CONFIG_PM
 	/* Saved USB PHY settings, need to restore after deep sleep. */
 	u32 usb_ctrl;
 #endif
+
+	/* Must be last --ends in a flexible-array member. */
+	struct ehci_hcd	ehci;
 };
 
 #ifdef CONFIG_PM
