@@ -49,15 +49,12 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm, u8 index,
 				u16 duty)
 {
 	struct cros_ec_device *ec = ec_pwm->ec;
-	struct {
-		struct cros_ec_command msg;
-		struct ec_params_pwm_set_duty params;
-	} __packed buf;
-	struct ec_params_pwm_set_duty *params = &buf.params;
-	struct cros_ec_command *msg = &buf.msg;
+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
+			sizeof(struct ec_params_pwm_set_duty));
+	struct ec_params_pwm_set_duty *params =
+				(struct ec_params_pwm_set_duty *)buf->data;
+	struct cros_ec_command *msg = buf;
 	int ret;
-
-	memset(&buf, 0, sizeof(buf));
 
 	msg->version = 0;
 	msg->command = EC_CMD_PWM_SET_DUTY;
@@ -83,19 +80,15 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm, u8 index,
 
 static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, bool use_pwm_type, u8 index)
 {
-	struct {
-		struct cros_ec_command msg;
-		union {
-			struct ec_params_pwm_get_duty params;
-			struct ec_response_pwm_get_duty resp;
-		};
-	} __packed buf;
-	struct ec_params_pwm_get_duty *params = &buf.params;
-	struct ec_response_pwm_get_duty *resp = &buf.resp;
-	struct cros_ec_command *msg = &buf.msg;
+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
+			MAX(sizeof(struct ec_params_pwm_get_duty),
+			   sizeof(struct ec_response_pwm_get_duty)));
+	struct ec_params_pwm_get_duty *params =
+				(struct ec_params_pwm_get_duty *)buf->data;
+	struct ec_response_pwm_get_duty *resp =
+				(struct ec_response_pwm_get_duty *)buf->data;
+	struct cros_ec_command *msg = buf;
 	int ret;
-
-	memset(&buf, 0, sizeof(buf));
 
 	msg->version = 0;
 	msg->command = EC_CMD_PWM_GET_DUTY;
