@@ -99,51 +99,56 @@ irqreturn_t cros_ec_irq_thread(int irq, void *data)
 }
 EXPORT_SYMBOL(cros_ec_irq_thread);
 
+union cros_ec_sleep_data {
+	struct ec_params_host_sleep_event req0;
+	struct ec_params_host_sleep_event_v1 req1;
+	struct ec_response_host_sleep_event_v1 resp1;
+} __packed;
+
 static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
 {
 	int ret;
-	struct {
-		struct cros_ec_command msg;
-		union {
-			struct ec_params_host_sleep_event req0;
-			struct ec_params_host_sleep_event_v1 req1;
-			struct ec_response_host_sleep_event_v1 resp1;
-		} u;
-	} __packed buf;
+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
+			sizeof(union cros_ec_sleep_data));
+	struct ec_params_host_sleep_event *req0 =
+			(struct ec_params_host_sleep_event *)msg->data;
+	struct ec_params_host_sleep_event_v1 *req1 =
+			(struct ec_params_host_sleep_event_v1 *)msg->data;
+	struct ec_response_host_sleep_event_v1 *resp1 =
+			(struct ec_response_host_sleep_event_v1 *)msg->data;
 
-	memset(&buf, 0, sizeof(buf));
 
 	if (ec_dev->host_sleep_v1) {
-		buf.u.req1.sleep_event = sleep_event;
-		buf.u.req1.suspend_params.sleep_timeout_ms =
+		req1->sleep_event = sleep_event;
+		req1->suspend_params.sleep_timeout_ms =
 				ec_dev->suspend_timeout_ms;
 
-		buf.msg.outsize = sizeof(buf.u.req1);
+		msg->outsize = sizeof(*req1);
 		if ((sleep_event == HOST_SLEEP_EVENT_S3_RESUME) ||
 		    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
-			buf.msg.insize = sizeof(buf.u.resp1);
+			msg->insize = sizeof(*resp1);
 
-		buf.msg.version = 1;
+		msg->version = 1;
 
 	} else {
-		buf.u.req0.sleep_event = sleep_event;
-		buf.msg.outsize = sizeof(buf.u.req0);
+		req0->sleep_event = sleep_event;
+		msg->outsize = sizeof(*req0);
 	}
 
-	buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
+	msg->command = EC_CMD_HOST_SLEEP_EVENT;
 
-	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
 	/* Report failure to transition to system wide suspend with a warning. */
 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
 	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME ||
 	     sleep_event == HOST_SLEEP_EVENT_S3_RESUME)) {
 		ec_dev->last_resume_result =
-			buf.u.resp1.resume_response.sleep_transitions;
+			resp1->resume_response.sleep_transitions;
 
-		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+		WARN_ONCE(resp1->resume_response.sleep_transitions &
 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
 			  "EC detected sleep transition timeout. Total sleep transitions: %d",
-			  buf.u.resp1.resume_response.sleep_transitions &
+			  resp1->resume_response.sleep_transitions &
 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
 	}
 
