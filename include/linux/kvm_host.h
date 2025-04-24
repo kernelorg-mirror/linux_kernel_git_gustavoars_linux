@@ -1937,7 +1937,7 @@ struct kvm_stat_data {
 };
 
 struct _kvm_stats_desc {
-	struct kvm_stats_desc desc;
+	struct kvm_stats_desc_hdr desc;
 	char name[KVM_STATS_NAME_SIZE];
 };
 

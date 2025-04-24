@@ -188,7 +188,7 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
 	struct bpf_prog_array *array;
 
 	array = rcu_access_pointer(cgrp->bpf.effective[type]);
-	return array != &bpf_empty_prog_array.hdr;
+	return array != (struct bpf_prog_array *)&bpf_empty_prog_array.hdr;
 }
 
 /* Wrappers for __cgroup_bpf_run_filter_skb() guarded by cgroup_bpf_enabled. */
