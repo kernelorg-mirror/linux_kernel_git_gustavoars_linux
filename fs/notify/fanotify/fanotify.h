@@ -275,18 +275,14 @@ static inline void fanotify_init_event(struct fanotify_event *event,
 	event->pid = NULL;
 }
 
-#define FANOTIFY_INLINE_FH(name, size)					\
-struct {								\
-	struct fanotify_fh name;					\
-	/* Space for object_fh.buf[] - access with fanotify_fh_buf() */	\
-	unsigned char _inline_fh_buf[size];				\
-}
+#define FANOTIFY_INLINE_FH(name, buf, size)						      \
+	EMBED_FIXED_FLEX(struct fanotify_fh, name, buf, size)
 
 struct fanotify_fid_event {
 	struct fanotify_event fae;
 	__kernel_fsid_t fsid;
 
-	FANOTIFY_INLINE_FH(object_fh, FANOTIFY_INLINE_FH_LEN);
+	FANOTIFY_INLINE_FH(object_fh, buf, FANOTIFY_INLINE_FH_LEN);
 };
 
 static inline struct fanotify_fid_event *
@@ -314,7 +310,7 @@ struct fanotify_error_event {
 
 	__kernel_fsid_t fsid; /* FSID this error refers to. */
 
-	FANOTIFY_INLINE_FH(object_fh, MAX_HANDLE_SZ);
+	FANOTIFY_INLINE_FH(object_fh, buf, MAX_HANDLE_SZ);
 };
 
 static inline struct fanotify_error_event *
