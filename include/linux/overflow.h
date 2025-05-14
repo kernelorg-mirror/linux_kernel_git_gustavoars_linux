@@ -408,6 +408,66 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
 	type *name = (type *)&name##_u
 
 /**
+ * _EMBED_FIXED_FLEX() - helper macro for EMBED_FIXED_FLEX() family.
+ * Enables caller macro to pass attributes.
+ *
+ * @type: structure type name, including "struct" keyword.
+ * @name: Name for a variable to embed into another struct or union.
+ * @member: Name of the flexible-array member.
+ * @count: Number of elements in the array; must be compile-time const.
+ * @attrs: Any attributes.
+ */
+#define _EMBED_FIXED_FLEX(type, name, member, count, attrs)			\
+	_Static_assert(__builtin_constant_p(count),				\
+		       "requires compile-time const count"); 			\
+	union {									\
+		u8 bytes[struct_size_t(type, member, count)];			\
+		type name;							\
+	} attrs
+
+/**
+ * EMBED_FIXED_FLEX() - Embed an instance of a flexible structure of fixed size
+ * (size of flexible-array member know at compile time) as member of another object
+ * type. IT MUST BE THE LAST MEMBER IN ANY CONTAINING STRUCT OR UNION.
+ *
+ * Inteded to replace code like the following, and avoid ending up with
+ * flexible-arrays-in-the-middle (-Wflex-array-member-not-at-end warnings):
+ *
+ * struct flex {
+ * 	...
+ * 	struct foo flex_array[];
+ * };
+ *
+ * struct composite {
+ *	...
+ *	struct flex f;
+ *	struct foo fixed_array[COUNT];
+ * };
+ *
+ * into:
+ *
+ * struct composite {
+ * 	...
+ * 	EMBED_FIXED_FLEX(struct flex, f, flex_array, COUNT);
+ * };
+ *
+ * Similarly to the DEFINE_FLEX() family, but for non-stack objects.
+ *
+ * @type: structure type name, including "struct" keyword.
+ * @name: Name for a variable to define.
+ * @array: Name of the array member.
+ * @count: Number of elements in the array; must be compile-time const.
+ *
+ * Define an instance of @type structure -a flexible structure.
+ * Use __struct_size(@name) to get compile-time size of it afterwards.
+ * Use __member_size(@name->member) to get compile-time size of @name members.
+ * Use STACK_FLEX_ARRAY_SIZE(@name, @array) to get compile-time number of
+ * elements in array @array.
+ */
+#define EMBED_FIXED_FLEX(type, name, array, count)				\
+	_EMBED_FIXED_FLEX(type, name, array, count, /* no attrs */)
+
+/**
  * DEFINE_RAW_FLEX() - Define an on-stack instance of structure with a trailing
  * flexible array member, when it does not have a __counted_by annotation.
  *
@@ -456,5 +516,57 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
 #define STACK_FLEX_ARRAY_SIZE(name, array)						\
 	(__member_size((name)->array) / sizeof(*(name)->array) +			\
 						__must_be_array((name)->array))
+
+/* Example of usage:
+ *
+ * -       struct {
+ * -               struct cros_ec_command msg;
+ * +       DEFINE_FLEX_GROUP(struct cros_ec_command, msg, data,
+ *               union {
+ *                       struct ec_response_usb_pd_control_v1 resp;
+ *                       struct ec_params_usb_pd_control params;
+ *               };
+ * -       } __packed ec_buf;
+ * -       struct cros_ec_command *msg;
+ * +       );
+ *       struct ec_response_usb_pd_control_v1 *resp;
+ *       struct ec_params_usb_pd_control *params;
+ *       int i;
+ *
+ * -       msg = &ec_buf.msg;
+ *
+ * */
+#define _DEFINE_FLEX_GROUP(type, name, array, members, initializer...)			\
+	_Static_assert(__builtin_constant_p(sizeof(struct {members})),			\
+		       "onstack flex array members require compile-time const count");	\
+	union {										\
+		u8 __total_bytes[sizeof(type) + sizeof(struct {members})]; 		\
+		struct {								\
+			u8 __members_bytes[sizeof(type)];				\
+			members;							\
+		};									\
+		type obj;								\
+	} name##_u = { .obj initializer };						\
+	type *name = (type *)&name##_u;							\
+	_Static_assert(offsetof(type, array) == sizeof(name##_u.__members_bytes),	\
+			"missalignment between flexible array and members")
+
+
+
+#define DEFINE_FLEX_GROUP(type, name, array, members)	\
+	_DEFINE_FLEX_GROUP(type, name, array, members, = {})
+
+#define flex_struct_group(type, name, array, members)					\
+	union {                                                                         \
+                u8 __total_bytes[sizeof(type) + sizeof(struct {members})];              \
+                struct {                                                                \
+                        u8 __members_bytes[sizeof(type)];                               \
+                        members;                                                        \
+                };                                                                      \
+                type obj;                                                               \
+        }
+
+//        _Static_assert(offsetof(type, array) == sizeof(name##_u.__members_bytes),
+ //                       "missalignment between flexible array and members")
 
 #endif /* __LINUX_OVERFLOW_H */
