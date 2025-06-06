@@ -436,6 +436,7 @@ struct cgroup_freezer_state {
 };
 
 struct cgroup {
+	struct_group_tagged(cgroup_hdr, hdr,
 	/* self css with NULL ->ss, points back to this cgroup */
 	struct cgroup_subsys_state self;
 
@@ -590,7 +591,7 @@ struct cgroup {
 #ifdef CONFIG_BPF_SYSCALL
 	struct bpf_local_storage __rcu  *bpf_cgrp_storage;
 #endif
-
+	);
 	/* All ancestors including self */
 	struct cgroup *ancestors[];
 };
@@ -618,7 +619,7 @@ struct cgroup_root {
 	 * release. cgrp->ancestors[0] will be used overflowing into the
 	 * following field. cgrp_ancestor_storage must immediately follow.
 	 */
-	struct cgroup cgrp;
+	struct cgroup_hdr cgrp;
 
 	/* must follow cgrp for cgrp->ancestors[0], see above */
 	struct cgroup *cgrp_ancestor_storage;
