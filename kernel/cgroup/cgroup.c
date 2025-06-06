@@ -764,7 +764,7 @@ struct css_set init_css_set = {
 	 * statically too so that the default cgroup can be accessed safely
 	 * early during boot.
 	 */
-	.dfl_cgrp		= &cgrp_dfl_root.cgrp,
+	.dfl_cgrp		= (struct cgroup *)&cgrp_dfl_root.cgrp,
 };
 
 static int css_set_count	= 1;	/* 1 for init_css_set */
@@ -1340,13 +1340,14 @@ void cgroup_free_root(struct cgroup_root *root)
 
 static void cgroup_destroy_root(struct cgroup_root *root)
 {
-	struct cgroup *cgrp = &root->cgrp;
+	struct cgroup *cgrp = container_of(&root->cgrp, struct cgroup, hdr);
 	struct cgrp_cset_link *link, *tmp_link;
 	int ret;
 
 	trace_cgroup_destroy_root(root);
 
-	cgroup_lock_and_drain_offline(&cgrp_dfl_root.cgrp);
+	cgroup_lock_and_drain_offline(container_of(&cgrp_dfl_root.cgrp,
+						   struct cgroup, hdr));
 
 	BUG_ON(atomic_read(&root->nr_cgrps));
 	BUG_ON(!list_empty(&cgrp->self.children));
@@ -1396,7 +1397,7 @@ static inline struct cgroup *__cset_cgroup_from_root(struct css_set *cset,
 	struct cgroup *res_cgroup = NULL;
 
 	if (cset == &init_css_set) {
-		res_cgroup = &root->cgrp;
+		res_cgroup = container_of(&root->cgrp, struct cgroup, hdr);
 	} else if (root == &cgrp_dfl_root) {
 		res_cgroup = cset->dfl_cgrp;
 	} else {
@@ -1477,7 +1478,7 @@ static struct cgroup *current_cgns_cgroup_dfl(void)
 		 * nsproxy == NULL. Fall back to cgrp_dfl_root which will make all
 		 * cgroups visible for lookups.
 		 */
-		return &cgrp_dfl_root.cgrp;
+		return container_of(&cgrp_dfl_root.cgrp, struct cgroup, hdr);
 	}
 }
 
@@ -1804,7 +1805,8 @@ err:
 
 int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
 {
-	struct cgroup *dcgrp = &dst_root->cgrp;
+	struct cgroup *dcgrp = container_of(&dst_root->cgrp,
+					    struct cgroup, hdr);
 	struct cgroup_subsys *ss;
 	int ssid, ret;
 	u16 dfl_disable_ss_mask = 0;
@@ -1817,8 +1819,10 @@ int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
 		 * If @ss is an implicit controller, it is exempt from this
 		 * rule and can be stolen.
 		 */
-		if (css_next_child(NULL, cgroup_css(&ss->root->cgrp, ss)) &&
-		    !ss->implicit_on_dfl)
+		if (css_next_child(NULL,
+			cgroup_css(container_of(&ss->root->cgrp,
+						struct cgroup, hdr), ss)) &&
+				!ss->implicit_on_dfl)
 			return -EBUSY;
 
 		/* can't move between two non-dummy roots either */
@@ -1835,7 +1839,8 @@ int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
 	} while_each_subsys_mask();
 
 	if (dfl_disable_ss_mask) {
-		struct cgroup *scgrp = &cgrp_dfl_root.cgrp;
+		struct cgroup *scgrp = container_of(&cgrp_dfl_root.cgrp,
+						    struct cgroup, hdr);
 
 		/*
 		 * Controllers from default hierarchy that need to be rebound
@@ -1848,7 +1853,7 @@ int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
 
 	do_each_subsys_mask(ss, ssid, ss_mask) {
 		struct cgroup_root *src_root = ss->root;
-		struct cgroup *scgrp = &src_root->cgrp;
+		struct cgroup *scgrp = container_of(&src_root->cgrp, struct cgroup, hdr);
 		struct cgroup_subsys_state *css = cgroup_css(scgrp, ss);
 		struct css_set *cset, *cset_pos;
 		struct css_task_iter *it;
@@ -2081,7 +2086,7 @@ static void init_cgroup_housekeeping(struct cgroup *cgrp)
 void init_cgroup_root(struct cgroup_fs_context *ctx)
 {
 	struct cgroup_root *root = ctx->root;
-	struct cgroup *cgrp = &root->cgrp;
+	struct cgroup *cgrp = container_of(&root->cgrp, struct cgroup, hdr);
 
 	INIT_LIST_HEAD_RCU(&root->root_list);
 	atomic_set(&root->nr_cgrps, 1);
@@ -2101,7 +2106,7 @@ void init_cgroup_root(struct cgroup_fs_context *ctx)
 int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
 {
 	LIST_HEAD(tmp_links);
-	struct cgroup *root_cgrp = &root->cgrp;
+	struct cgroup *root_cgrp = container_of(&root->cgrp, struct cgroup, hdr);
 	struct kernfs_syscall_ops *kf_sops;
 	struct css_set *cset;
 	int i, ret;
@@ -2243,7 +2248,7 @@ int cgroup_do_get_tree(struct fs_context *fc)
 	}
 
 	if (!ctx->kfc.new_sb_created)
-		cgroup_put(&ctx->root->cgrp);
+		cgroup_put(container_of(&ctx->root->cgrp, struct cgroup, hdr));
 
 	return ret;
 }
@@ -2268,7 +2273,7 @@ static int cgroup_get_tree(struct fs_context *fc)
 	int ret;
 
 	WRITE_ONCE(cgrp_dfl_visible, true);
-	cgroup_get_live(&cgrp_dfl_root.cgrp);
+	cgroup_get_live(container_of(&cgrp_dfl_root.cgrp, struct cgroup, hdr));
 	ctx->root = &cgrp_dfl_root;
 
 	ret = cgroup_do_get_tree(fc);
@@ -2334,7 +2339,7 @@ static void cgroup_kill_sb(struct super_block *sb)
 	if (list_empty(&root->cgrp.self.children) && root != &cgrp_dfl_root &&
 	    !percpu_ref_is_dying(&root->cgrp.self.refcnt))
 		percpu_ref_kill(&root->cgrp.self.refcnt);
-	cgroup_put(&root->cgrp);
+	cgroup_put(container_of(&root->cgrp, struct cgroup, hdr));
 	kernfs_kill_sb(sb);
 }
 
@@ -4361,7 +4366,7 @@ restart:
 static int cgroup_apply_cftypes(struct cftype *cfts, bool is_add)
 {
 	struct cgroup_subsys *ss = cfts[0].ss;
-	struct cgroup *root = &ss->root->cgrp;
+	struct cgroup *root = container_of(&ss->root->cgrp, struct cgroup, hdr);
 	struct cgroup_subsys_state *css;
 	int ret = 0;
 
@@ -6125,7 +6130,8 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
 	css = ss->css_alloc(NULL);
 	/* We don't handle early failures gracefully */
 	BUG_ON(IS_ERR(css));
-	init_and_link_css(css, ss, &cgrp_dfl_root.cgrp);
+	init_and_link_css(css, ss, container_of(&cgrp_dfl_root.cgrp,
+						struct cgroup, hdr));
 
 	/*
 	 * Root csses are never destroyed and we can't initialize
@@ -7110,7 +7116,7 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
 	rcu_read_lock();
 	/* Don't associate the sock with unrelated interrupted task's cgroup. */
 	if (in_interrupt()) {
-		cgroup = &cgrp_dfl_root.cgrp;
+		cgroup = container_of(&cgrp_dfl_root.cgrp, struct cgroup, hdr);
 		cgroup_get(cgroup);
 		goto out;
 	}
