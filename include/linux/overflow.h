@@ -470,4 +470,128 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
 	(__member_size((name)->array) / sizeof(*(name)->array) +			\
 						__must_be_array((name)->array))
 
+/**
+ * _EMBED_TRAILING_FIXED_FLEX() - helper macro for EMBED_TRAILING_FIXED_FLEX() family.
+ * Enables caller macro to pass attributes.
+ *
+ * @type: structure type name, including "struct" keyword.
+ * @name: Name for a variable to embed into another struct or union.
+ * @member: Name of the flexible-array member.
+ * @count: Number of elements in the array; must be compile-time const.
+ * @attrs: Any attributes.
+ */
+#define _EMBED_TRAILING_FIXED_FLEX(type, name, member, count, attrs)		\
+	_Static_assert(__builtin_constant_p(count),				\
+		       "requires compile-time const count"); 			\
+	union {									\
+		u8 bytes[struct_size_t(type, member, count)];			\
+		type name;							\
+	} attrs
+
+/**
+ * EMBED_TRAILING_FIXED_FLEX() - Embed an instance of a flexible structure of fixed size
+ * (size of flexible-array member know at compile time) as member of another object
+ * type. IT MUST BE THE LAST MEMBER IN ANY CONTAINING STRUCT OR UNION.
+ *
+ * Inteded to replace code like the following, and avoid ending up with
+ * flexible-arrays-in-the-middle (-Wflex-array-member-not-at-end warnings):
+ *
+ * struct flex {
+ * 	...
+ * 	struct foo flex_array[];
+ * };
+ *
+ * struct composite {
+ *	...
+ *	struct flex f;
+ *	struct foo fixed_array[COUNT];
+ * };
+ *
+ * into:
+ *
+ * struct composite {
+ * 	...
+ * 	EMBED_TRAILING_FIXED_FLEX(struct flex, f, flex_array, COUNT);
+ * };
+ *
+ * Similarly to what the DEFINE_FLEX() family do, but for non-stack objects.
+ *
+ * @type: structure type name, including "struct" keyword.
+ * @name: Name for a variable to define.
+ * @fam: Name of the flexible-array member.
+ * @count: Number of elements in the array; must be compile-time const.
+ *
+ * Define an instance of @type structure -a flexible structure.
+ * Use __struct_size(@name) to get compile-time size of it afterwards.
+ * Use __member_size(@name->member) to get compile-time size of @name members.
+ * Use STACK_FLEX_ARRAY_SIZE(@name, @fam) to get compile-time number of
+ * elements in array @fam.
+ */
+#define EMBED_TRAILING_FIXED_FLEX(type, name, fam, count)				\
+	_EMBED_TRAILING_FIXED_FLEX(type, name, fam, count, /* no attrs */)
+
+/* Example of usage:
+ *
+ * -       struct {
+ * -               struct cros_ec_command msg;
+ * +       DEFINE_FLEX_GROUP(struct cros_ec_command, msg, data,
+ *               union {
+ *                       struct ec_response_usb_pd_control_v1 resp;
+ *                       struct ec_params_usb_pd_control params;
+ *               };
+ * -       } __packed ec_buf;
+ * -       struct cros_ec_command *msg;
+ * +       );
+ *       struct ec_response_usb_pd_control_v1 *resp;
+ *       struct ec_params_usb_pd_control *params;
+ *       int i;
+ *
+ * -       msg = &ec_buf.msg;
+ *
+ * @type: structure type name, including "struct" keyword.
+ * @name: Name for a variable to define.
+ * @fam: Name of the flexible-array member.
+ * @members: All members following @fam.
+ * @trailer: Trailing expressions for attributes and/or initializers.
+ */
+#define __DEFINE_FLEX_GROUP(type, name, fam, members, trailer...)                  \
+        _Static_assert(__builtin_constant_p(sizeof(struct {members;})),                  \
+                       "onstack flex array members require compile-time const count");  \
+        TRAILING_OVERLAP(type, obj, fam, members) __##name##_u trailer;	\
+        type *name = (type *)&__##name##_u;                                                 \
+        _Static_assert(offsetof(type, fam) == sizeof(__##name##_u.__##obj##_s),       \
+                        "missalignment between flexible array and members")
+
+/**
+ * _DEFINE_FLEX_GROUP() - helper macro for DEFINE_FLEX_GROUP() family.
+ * Enables caller macro to pass (different) initializer.
+ *
+ * @type: structure type name, including "struct" keyword.
+ * @name: Name for a variable to define.
+ * @fam: Name of the flexible-array member.
+ * @members: All members following @fam.
+ * @trailer: Trailing expressions for attributes and/or initializers.
+ */
+#define _DEFINE_FLEX_GROUP(type, name, fam, members, initializer...)                 \
+        __DEFINE_FLEX_GROUP(type, name, fam, members, = { .obj initializer })
+
+/**
+ * DEFINE_FLEX_GROUP() - Define an on-stack instance of structure with a
+ * trailing flexible-array member.
+ *
+ * @TYPE: structure type name, including "struct" keyword.
+ * @NAME: Name for a variable to define.
+ * @FAM: Name of the flexible-array member.
+ * @MEMBERS: All members following @FAM.
+ *
+ * Define a zeroed, on-stack, instance of @TYPE structure with a trailing
+ * flexible-array member.
+ * Use __struct_size(@NAME) to get compile-time size of it afterwards.
+ * Use __member_size(@NAME->member) to get compile-time size of @NAME members.
+ * Use STACK_FLEX_ARRAY_SIZE(@NAME, @FAM) to get compile-time number of
+ * elements in array @FAM.
+ */
+#define DEFINE_FLEX_GROUP(TYPE, NAME, FAM, MEMBERS)	\
+	_DEFINE_FLEX(TYPE, NAME, FAM, MEMBERS, = { })
+
 #endif /* __LINUX_OVERFLOW_H */
