@@ -55,11 +55,9 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
 {
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	unsigned long security_flags = 0;
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_get_security_state cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_get_security_state cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_out =
@@ -67,7 +65,7 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
 			.nd_fw_size =
 				sizeof(struct nd_intel_get_security_state),
 		},
-	};
+	);
 	int rc;
 
 	if (!test_bit(NVDIMM_INTEL_GET_SECURITY_STATE, &nfit_mem->dsm_mask))
@@ -81,33 +79,33 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
 	if (nvdimm_in_overwrite(nvdimm) && ptype == NVDIMM_USER)
 		return BIT(NVDIMM_SECURITY_OVERWRITE);
 
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-	if (rc < 0 || nd_cmd.cmd.status) {
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
+	if (rc < 0 || __nd_cmd_u.cmd.status) {
 		pr_err("%s: security state retrieval failed (%d:%#x)\n",
-				nvdimm_name(nvdimm), rc, nd_cmd.cmd.status);
+				nvdimm_name(nvdimm), rc, __nd_cmd_u.cmd.status);
 		return 0;
 	}
 
 	/* check and see if security is enabled and locked */
 	if (ptype == NVDIMM_MASTER) {
-		if (nd_cmd.cmd.extended_state & ND_INTEL_SEC_ESTATE_ENABLED)
+		if (__nd_cmd_u.cmd.extended_state & ND_INTEL_SEC_ESTATE_ENABLED)
 			set_bit(NVDIMM_SECURITY_UNLOCKED, &security_flags);
 		else
 			set_bit(NVDIMM_SECURITY_DISABLED, &security_flags);
-		if (nd_cmd.cmd.extended_state & ND_INTEL_SEC_ESTATE_PLIMIT)
+		if (__nd_cmd_u.cmd.extended_state & ND_INTEL_SEC_ESTATE_PLIMIT)
 			set_bit(NVDIMM_SECURITY_FROZEN, &security_flags);
 		return security_flags;
 	}
 
-	if (nd_cmd.cmd.state & ND_INTEL_SEC_STATE_UNSUPPORTED)
+	if (__nd_cmd_u.cmd.state & ND_INTEL_SEC_STATE_UNSUPPORTED)
 		return 0;
 
-	if (nd_cmd.cmd.state & ND_INTEL_SEC_STATE_ENABLED) {
-		if (nd_cmd.cmd.state & ND_INTEL_SEC_STATE_FROZEN ||
-		    nd_cmd.cmd.state & ND_INTEL_SEC_STATE_PLIMIT)
+	if (__nd_cmd_u.cmd.state & ND_INTEL_SEC_STATE_ENABLED) {
+		if (__nd_cmd_u.cmd.state & ND_INTEL_SEC_STATE_FROZEN ||
+		    __nd_cmd_u.cmd.state & ND_INTEL_SEC_STATE_PLIMIT)
 			set_bit(NVDIMM_SECURITY_FROZEN, &security_flags);
 
-		if (nd_cmd.cmd.state & ND_INTEL_SEC_STATE_LOCKED)
+		if (__nd_cmd_u.cmd.state & ND_INTEL_SEC_STATE_LOCKED)
 			set_bit(NVDIMM_SECURITY_LOCKED, &security_flags);
 		else
 			set_bit(NVDIMM_SECURITY_UNLOCKED, &security_flags);
@@ -120,26 +118,24 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
 static int intel_security_freeze(struct nvdimm *nvdimm)
 {
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_freeze_lock cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_freeze_lock cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_FREEZE_LOCK,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 		},
-	};
+	);
 	int rc;
 
 	if (!test_bit(NVDIMM_INTEL_FREEZE_LOCK, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
-	if (nd_cmd.cmd.status)
+	if (__nd_cmd_u.cmd.status)
 		return -EIO;
 	return 0;
 }
@@ -153,32 +149,30 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
 	unsigned int cmd = ptype == NVDIMM_MASTER ?
 		NVDIMM_INTEL_SET_MASTER_PASSPHRASE :
 		NVDIMM_INTEL_SET_PASSPHRASE;
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_set_passphrase cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_set_passphrase cmd,
+		= {
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_in = ND_INTEL_PASSPHRASE_SIZE * 2,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 			.nd_command = cmd,
 		},
-	};
+	);
 	int rc;
 
 	if (!test_bit(cmd, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	memcpy(nd_cmd.cmd.old_pass, old_data->data,
-			sizeof(nd_cmd.cmd.old_pass));
-	memcpy(nd_cmd.cmd.new_pass, new_data->data,
-			sizeof(nd_cmd.cmd.new_pass));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	memcpy(__nd_cmd_u.cmd.old_pass, old_data->data,
+			sizeof(__nd_cmd_u.cmd.old_pass));
+	memcpy(__nd_cmd_u.cmd.new_pass, new_data->data,
+			sizeof(__nd_cmd_u.cmd.new_pass));
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
 
-	switch (nd_cmd.cmd.status) {
+	switch (__nd_cmd_u.cmd.status) {
 	case 0:
 		return 0;
 	case ND_INTEL_STATUS_INVALID_PASS:
@@ -195,29 +189,27 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
 		const struct nvdimm_key_data *key_data)
 {
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_unlock_unit cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_unlock_unit cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_UNLOCK_UNIT,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_in = ND_INTEL_PASSPHRASE_SIZE,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 		},
-	};
+	);
 	int rc;
 
 	if (!test_bit(NVDIMM_INTEL_UNLOCK_UNIT, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	memcpy(nd_cmd.cmd.passphrase, key_data->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	memcpy(__nd_cmd_u.cmd.passphrase, key_data->data,
+			sizeof(__nd_cmd_u.cmd.passphrase));
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
-	switch (nd_cmd.cmd.status) {
+	switch (__nd_cmd_u.cmd.status) {
 	case 0:
 		break;
 	case ND_INTEL_STATUS_INVALID_PASS:
@@ -234,29 +226,27 @@ static int intel_security_disable(struct nvdimm *nvdimm,
 {
 	int rc;
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_disable_passphrase cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_disable_passphrase cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_DISABLE_PASSPHRASE,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_in = ND_INTEL_PASSPHRASE_SIZE,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 		},
-	};
+	);
 
 	if (!test_bit(NVDIMM_INTEL_DISABLE_PASSPHRASE, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	memcpy(nd_cmd.cmd.passphrase, key_data->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	memcpy(__nd_cmd_u.cmd.passphrase, key_data->data,
+			sizeof(__nd_cmd_u.cmd.passphrase));
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
 
-	switch (nd_cmd.cmd.status) {
+	switch (__nd_cmd_u.cmd.status) {
 	case 0:
 		break;
 	case ND_INTEL_STATUS_INVALID_PASS:
@@ -277,29 +267,27 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	unsigned int cmd = ptype == NVDIMM_MASTER ?
 		NVDIMM_INTEL_MASTER_SECURE_ERASE : NVDIMM_INTEL_SECURE_ERASE;
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_secure_erase cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_secure_erase cmd,
+		= {
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_in = ND_INTEL_PASSPHRASE_SIZE,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 			.nd_command = cmd,
 		},
-	};
+	);
 
 	if (!test_bit(cmd, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	memcpy(nd_cmd.cmd.passphrase, key->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	memcpy(__nd_cmd_u.cmd.passphrase, key->data,
+			sizeof(__nd_cmd_u.cmd.passphrase));
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
 
-	switch (nd_cmd.cmd.status) {
+	switch (__nd_cmd_u.cmd.status) {
 	case 0:
 		break;
 	case ND_INTEL_STATUS_NOT_SUPPORTED:
@@ -318,26 +306,24 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
 {
 	int rc;
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_query_overwrite cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_query_overwrite cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_QUERY_OVERWRITE,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 		},
-	};
+	);
 
 	if (!test_bit(NVDIMM_INTEL_QUERY_OVERWRITE, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
 
-	switch (nd_cmd.cmd.status) {
+	switch (__nd_cmd_u.cmd.status) {
 	case 0:
 		break;
 	case ND_INTEL_STATUS_OQUERY_INPROGRESS:
@@ -354,29 +340,27 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
 {
 	int rc;
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_overwrite cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_overwrite cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_OVERWRITE,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_in = ND_INTEL_PASSPHRASE_SIZE,
 			.nd_size_out = ND_INTEL_STATUS_SIZE,
 			.nd_fw_size = ND_INTEL_STATUS_SIZE,
 		},
-	};
+	);
 
 	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
 		return -ENOTTY;
 
-	memcpy(nd_cmd.cmd.passphrase, nkey->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	memcpy(__nd_cmd_u.cmd.passphrase, nkey->data,
+			sizeof(__nd_cmd_u.cmd.passphrase));
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 	if (rc < 0)
 		return rc;
 
-	switch (nd_cmd.cmd.status) {
+	switch (__nd_cmd_u.cmd.status) {
 	case 0:
 		return 0;
 	case ND_INTEL_STATUS_OVERWRITE_UNSUPPORTED:
@@ -407,11 +391,9 @@ const struct nvdimm_security_ops *intel_security_ops = &__intel_security_ops;
 static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
 		struct nd_intel_bus_fw_activate_businfo *info)
 {
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_bus_fw_activate_businfo cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_bus_fw_activate_businfo cmd,
+		= {
 			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO,
 			.nd_family = NVDIMM_BUS_FAMILY_INTEL,
 			.nd_size_out =
@@ -419,12 +401,12 @@ static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
 			.nd_fw_size =
 				sizeof(struct nd_intel_bus_fw_activate_businfo),
 		},
-	};
+	);
 	int rc;
 
-	rc = nd_desc->ndctl(nd_desc, NULL, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd),
+	rc = nd_desc->ndctl(nd_desc, NULL, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd),
 			NULL);
-	*info = nd_cmd.cmd;
+	*info = __nd_cmd_u.cmd;
 	return rc;
 }
 
@@ -518,31 +500,27 @@ static enum nvdimm_fwa_capability intel_bus_fwa_capability(
 static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
 {
 	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_bus_fw_activate cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_bus_fw_activate cmd,
+		= {
 			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE,
 			.nd_family = NVDIMM_BUS_FAMILY_INTEL,
-			.nd_size_in = sizeof(nd_cmd.cmd.iodev_state),
+			.nd_size_in = sizeof(__nd_cmd_u.cmd.iodev_state),
 			.nd_size_out =
 				sizeof(struct nd_intel_bus_fw_activate),
 			.nd_fw_size =
 				sizeof(struct nd_intel_bus_fw_activate),
 		},
-		/*
-		 * Even though activate is run from a suspended context,
-		 * for safety, still ask platform firmware to force
-		 * quiesce devices by default. Let a module
-		 * parameter override that policy.
-		 */
-		.cmd = {
-			.iodev_state = acpi_desc->fwa_noidle
-				? ND_INTEL_BUS_FWA_IODEV_OS_IDLE
-				: ND_INTEL_BUS_FWA_IODEV_FORCE_IDLE,
-		},
-	};
+	);
+	/*
+	 * Even though activate is run from a suspended context,
+	 * for safety, still ask platform firmware to force
+	 * quiesce devices by default. Let a module
+	 * parameter override that policy.
+	 */
+	__nd_cmd_u.cmd.iodev_state = acpi_desc->fwa_noidle
+			? ND_INTEL_BUS_FWA_IODEV_OS_IDLE
+			: ND_INTEL_BUS_FWA_IODEV_FORCE_IDLE;
 	int rc;
 
 	switch (intel_bus_fwa_state(nd_desc)) {
@@ -553,7 +531,7 @@ static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
 		return -ENXIO;
 	}
 
-	rc = nd_desc->ndctl(nd_desc, NULL, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd),
+	rc = nd_desc->ndctl(nd_desc, NULL, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd),
 			NULL);
 
 	/*
@@ -582,11 +560,9 @@ const struct nvdimm_bus_fw_ops *intel_bus_fw_ops = &__intel_bus_fw_ops;
 static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
 		struct nd_intel_fw_activate_dimminfo *info)
 {
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_fw_activate_dimminfo cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_fw_activate_dimminfo cmd,
+		= {
 			.nd_command = NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO,
 			.nd_family = NVDIMM_FAMILY_INTEL,
 			.nd_size_out =
@@ -594,11 +570,11 @@ static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
 			.nd_fw_size =
 				sizeof(struct nd_intel_fw_activate_dimminfo),
 		},
-	};
+	);
 	int rc;
 
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-	*info = nd_cmd.cmd;
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
+	*info = __nd_cmd_u.cmd;
 	return rc;
 }
 
@@ -688,25 +664,21 @@ static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
 {
 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
 	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-	struct {
-		struct nd_cmd_pkg pkg;
-		struct nd_intel_fw_activate_arm cmd;
-	} nd_cmd = {
-		.pkg = {
+	_DEFINE_FLEX_GROUP(struct nd_cmd_pkg, nd_cmd, nd_payload,
+		struct nd_intel_fw_activate_arm cmd;,
+		= {
 			.nd_command = NVDIMM_INTEL_FW_ACTIVATE_ARM,
 			.nd_family = NVDIMM_FAMILY_INTEL,
-			.nd_size_in = sizeof(nd_cmd.cmd.activate_arm),
+			.nd_size_in = sizeof(__nd_cmd_u.cmd.activate_arm),
 			.nd_size_out =
 				sizeof(struct nd_intel_fw_activate_arm),
 			.nd_fw_size =
 				sizeof(struct nd_intel_fw_activate_arm),
 		},
-		.cmd = {
-			.activate_arm = arm == NVDIMM_FWA_ARM
+	);
+	__nd_cmd_u.cmd.activate_arm = arm == NVDIMM_FWA_ARM
 				? ND_INTEL_DIMM_FWA_ARM
-				: ND_INTEL_DIMM_FWA_DISARM,
-		},
-	};
+				: ND_INTEL_DIMM_FWA_DISARM;
 	int rc;
 
 	switch (intel_fwa_state(nvdimm)) {
@@ -733,7 +705,7 @@ static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
 	acpi_desc->fwa_state = NVDIMM_FWA_INVALID;
 	nfit_mem->fwa_state = NVDIMM_FWA_INVALID;
 
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, nd_cmd, __struct_size(nd_cmd), NULL);
 
 	dev_dbg(acpi_desc->dev, "%s result: %d\n", arm == NVDIMM_FWA_ARM
 			? "arm" : "disarm", rc);
