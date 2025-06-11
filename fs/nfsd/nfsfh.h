@@ -43,22 +43,17 @@
  *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
  *   in include/linux/exportfs.h for currently registered values.
  */
-
 struct knfsd_fh {
 	unsigned int	fh_size;	/*
 					 * Points to the current size while
 					 * building a new file handle.
 					 */
-	union {
-		char			fh_raw[NFS4_FHSIZE];
-		struct {
-			u8		fh_version;	/* == 1 */
-			u8		fh_auth_type;	/* deprecated */
-			u8		fh_fsid_type;
-			u8		fh_fileid_type;
-			u32		fh_fsid[]; /* flexible-array member */
-		};
-	};
+	char		fh_raw[NFS4_FHSIZE];
+#define FH_VERSION		0
+#define FH_AUTH_TYPE		1
+#define FH_FSID_TYPE		2
+#define FH_FILEID_TYPE		3
+#define FH_FSID			4
 };
 
 static inline __u32 ino_t_to_u32(ino_t ino)
@@ -141,10 +136,12 @@ extern enum fsid_source fsid_source(const struct svc_fh *fhp);
  * sparse from complaining. Since these values are opaque to the
  * client, that shouldn't be a problem.
  */
-static inline void mk_fsid(int vers, u32 *fsidv, dev_t dev, ino_t ino,
-			   u32 fsid, unsigned char *uuid)
+static inline void mk_fsid(int vers, void *fsid, dev_t dev, ino_t ino,
+			   u32 fsid_num, unsigned char *uuid)
 {
+	u32 *fsidv = fsid;
 	u32 *up;
+
 	switch(vers) {
 	case FSID_DEV:
 		fsidv[0] = (__force __u32)htonl((MAJOR(dev)<<16) |
@@ -152,7 +149,7 @@ static inline void mk_fsid(int vers, u32 *fsidv, dev_t dev, ino_t ino,
 		fsidv[1] = ino_t_to_u32(ino);
 		break;
 	case FSID_NUM:
-		fsidv[0] = fsid;
+		fsidv[0] = fsid_num;
 		break;
 	case FSID_MAJOR_MINOR:
 		fsidv[0] = (__force __u32)htonl(MAJOR(dev));
@@ -260,9 +257,10 @@ static inline bool fh_match(const struct knfsd_fh *fh1,
 static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
 				 const struct knfsd_fh *fh2)
 {
-	if (fh1->fh_fsid_type != fh2->fh_fsid_type)
+	if (fh1->fh_raw[FH_FSID_TYPE] != fh2->fh_raw[FH_FSID_TYPE])
 		return false;
-	if (memcmp(fh1->fh_fsid, fh2->fh_fsid, key_len(fh1->fh_fsid_type)) != 0)
+	if (memcmp(fh1->fh_raw + FH_FSID, fh2->fh_raw + FH_FSID,
+			key_len(fh1->fh_raw[FH_FSID_TYPE])) != 0)
 		return false;
 	return true;
 }

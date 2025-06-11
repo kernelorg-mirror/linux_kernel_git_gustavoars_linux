@@ -1231,7 +1231,7 @@ gss:
 struct svc_export *
 rqst_exp_find(struct cache_req *reqp, struct net *net,
 	      struct auth_domain *cl, struct auth_domain *gsscl,
-	      int fsid_type, u32 *fsidv)
+	      int fsid_type, void *fsidv)
 {
 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
 	struct svc_export *gssexp, *exp = ERR_PTR(-ENOENT);

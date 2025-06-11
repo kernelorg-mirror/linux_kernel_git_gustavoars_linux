@@ -131,6 +131,6 @@ static inline struct svc_export *exp_get(struct svc_export *exp)
 }
 struct svc_export *rqst_exp_find(struct cache_req *reqp, struct net *net,
 				 struct auth_domain *cl, struct auth_domain *gsscl,
-				 int fsid_type, u32 *fsidv);
+				 int fsid_type, void *fsidv);
 
 #endif /* NFSD_EXPORT_H */

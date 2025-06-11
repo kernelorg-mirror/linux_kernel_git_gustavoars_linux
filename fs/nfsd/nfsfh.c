@@ -161,37 +161,40 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
 	if (fh->fh_size == 0)
 		return nfserr_nofilehandle;
 
-	if (fh->fh_version != 1)
+	if (fh->fh_raw[FH_VERSION] != 1)
 		return error;
 
 	if (--data_left < 0)
 		return error;
-	if (fh->fh_auth_type != 0)
+	if (fh->fh_raw[FH_AUTH_TYPE] != 0)
 		return error;
-	len = key_len(fh->fh_fsid_type) / 4;
+	len = key_len(fh->fh_raw[FH_FSID_TYPE]) / 4;
 	if (len == 0)
 		return error;
-	if (fh->fh_fsid_type == FSID_MAJOR_MINOR) {
+	if (fh->fh_raw[FH_FSID_TYPE] == FSID_MAJOR_MINOR) {
 		/* deprecated, convert to type 3 */
+		u32 *fsidv = (u32 *)(fh->fh_raw + FH_FSID);
+
 		len = key_len(FSID_ENCODE_DEV)/4;
-		fh->fh_fsid_type = FSID_ENCODE_DEV;
+		fh->fh_raw[FH_FSID_TYPE] = FSID_ENCODE_DEV;
 		/*
 		 * struct knfsd_fh uses host-endian fields, which are
 		 * sometimes used to hold net-endian values. This
 		 * confuses sparse, so we must use __force here to
 		 * keep it from complaining.
 		 */
-		fh->fh_fsid[0] = new_encode_dev(MKDEV(ntohl((__force __be32)fh->fh_fsid[0]),
-						      ntohl((__force __be32)fh->fh_fsid[1])));
-		fh->fh_fsid[1] = fh->fh_fsid[2];
+		fsidv[0] = new_encode_dev(MKDEV(
+			ntohl((__force __be32)fsidv[0]),
+			ntohl((__force __be32)fsidv[1])));
+		fsidv[1] = fsidv[2];
 	}
 	data_left -= len;
 	if (data_left < 0)
 		return error;
 	exp = rqst_exp_find(rqstp ? &rqstp->rq_chandle : NULL,
 			    net, client, gssclient,
-			    fh->fh_fsid_type, fh->fh_fsid);
-	fid = (struct fid *)(fh->fh_fsid + len);
+			    fh->fh_raw[FH_FSID_TYPE], fh->fh_raw + FH_FSID);
+	fid = (struct fid *)(fh->fh_raw + FH_FSID + len);
 
 	error = nfserr_stale;
 	if (IS_ERR(exp)) {
@@ -233,7 +236,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
 	 */
 	error = nfserr_badhandle;
 
-	fileid_type = fh->fh_fileid_type;
+	fileid_type = fh->fh_raw[FH_FILEID_TYPE];
 
 	if (fileid_type == FILEID_ROOT)
 		dentry = dget(exp->ex_path.dentry);
@@ -463,18 +466,19 @@ static void _fh_update(struct svc_fh *fhp, struct svc_export *exp,
 {
 	if (dentry != exp->ex_path.dentry) {
 		struct fid *fid = (struct fid *)
-			(fhp->fh_handle.fh_fsid + fhp->fh_handle.fh_size/4 - 1);
+			(fhp->fh_handle.fh_raw + FH_FSID +
+			 fhp->fh_handle.fh_size - 1);
 		int maxsize = (fhp->fh_maxsize - fhp->fh_handle.fh_size)/4;
 		int fh_flags = (exp->ex_flags & NFSEXP_NOSUBTREECHECK) ? 0 :
 				EXPORT_FH_CONNECTABLE;
 		int fileid_type =
 			exportfs_encode_fh(dentry, fid, &maxsize, fh_flags);
 
-		fhp->fh_handle.fh_fileid_type =
+		fhp->fh_handle.fh_raw[FH_FILEID_TYPE] =
 			fileid_type > 0 ? fileid_type : FILEID_INVALID;
 		fhp->fh_handle.fh_size += maxsize * 4;
 	} else {
-		fhp->fh_handle.fh_fileid_type = FILEID_ROOT;
+		fhp->fh_handle.fh_raw[FH_FILEID_TYPE] = FILEID_ROOT;
 	}
 }
 
@@ -520,8 +524,8 @@ static void set_version_and_fsid_type(struct svc_fh *fhp, struct svc_export *exp
 retry:
 	version = 1;
 	if (ref_fh && ref_fh->fh_export == exp) {
-		version = ref_fh->fh_handle.fh_version;
-		fsid_type = ref_fh->fh_handle.fh_fsid_type;
+		version = ref_fh->fh_handle.fh_raw[FH_VERSION];
+		fsid_type = ref_fh->fh_handle.fh_raw[FH_FSID_TYPE];
 
 		ref_fh = NULL;
 
@@ -562,9 +566,9 @@ retry:
 		fsid_type = FSID_ENCODE_DEV;
 	else
 		fsid_type = FSID_DEV;
-	fhp->fh_handle.fh_version = version;
+	fhp->fh_handle.fh_raw[FH_VERSION] = version;
 	if (version)
-		fhp->fh_handle.fh_fsid_type = fsid_type;
+		fhp->fh_handle.fh_raw[FH_FSID_TYPE] = fsid_type;
 }
 
 __be32
@@ -610,18 +614,18 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, struct dentry *dentry,
 	fhp->fh_export = exp_get(exp);
 
 	fhp->fh_handle.fh_size =
-		key_len(fhp->fh_handle.fh_fsid_type) + 4;
-	fhp->fh_handle.fh_auth_type = 0;
+		key_len(fhp->fh_handle.fh_raw[FH_FSID_TYPE]) + 4;
+	fhp->fh_handle.fh_raw[FH_AUTH_TYPE] = 0;
 
-	mk_fsid(fhp->fh_handle.fh_fsid_type,
-		fhp->fh_handle.fh_fsid,
+	mk_fsid(fhp->fh_handle.fh_raw[FH_FSID_TYPE],
+		fhp->fh_handle.fh_raw + FH_FSID,
 		ex_dev,
 		d_inode(exp->ex_path.dentry)->i_ino,
 		exp->ex_fsid, exp->ex_uuid);
 
 	if (inode)
 		_fh_update(fhp, exp, dentry);
-	if (fhp->fh_handle.fh_fileid_type == FILEID_INVALID) {
+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] == FILEID_INVALID) {
 		fh_put(fhp);
 		return nfserr_stale;
 	}
@@ -644,11 +648,11 @@ fh_update(struct svc_fh *fhp)
 	dentry = fhp->fh_dentry;
 	if (d_really_is_negative(dentry))
 		goto out_negative;
-	if (fhp->fh_handle.fh_fileid_type != FILEID_ROOT)
+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] != FILEID_ROOT)
 		return 0;
 
 	_fh_update(fhp, fhp->fh_export, dentry);
-	if (fhp->fh_handle.fh_fileid_type == FILEID_INVALID)
+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] == FILEID_INVALID)
 		return nfserr_stale;
 	return 0;
 out_bad:
@@ -776,9 +780,9 @@ char * SVCFH_fmt(struct svc_fh *fhp)
 
 enum fsid_source fsid_source(const struct svc_fh *fhp)
 {
-	if (fhp->fh_handle.fh_version != 1)
+	if (fhp->fh_handle.fh_raw[FH_VERSION] != 1)
 		return FSIDSOURCE_DEV;
-	switch(fhp->fh_handle.fh_fsid_type) {
+	switch (fhp->fh_handle.fh_raw[FH_FSID_TYPE]) {
 	case FSID_DEV:
 	case FSID_ENCODE_DEV:
 	case FSID_MAJOR_MINOR:

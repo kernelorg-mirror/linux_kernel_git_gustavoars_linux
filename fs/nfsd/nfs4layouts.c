@@ -56,7 +56,7 @@ static void
 nfsd4_alloc_devid_map(const struct svc_fh *fhp)
 {
 	const struct knfsd_fh *fh = &fhp->fh_handle;
-	size_t fsid_len = key_len(fh->fh_fsid_type);
+	size_t fsid_len = key_len(fh->fh_raw[FH_FSID_TYPE]);
 	struct nfsd4_deviceid_map *map, *old;
 	int i;
 
@@ -64,8 +64,8 @@ nfsd4_alloc_devid_map(const struct svc_fh *fhp)
 	if (!map)
 		return;
 
-	map->fsid_type = fh->fh_fsid_type;
-	memcpy(&map->fsid, fh->fh_fsid, fsid_len);
+	map->fsid_type = fh->fh_raw[FH_FSID_TYPE];
+	memcpy(&map->fsid, fh->fh_raw + FH_FSID, fsid_len);
 
 	spin_lock(&nfsd_devid_lock);
 	if (fhp->fh_export->ex_devid_map)
@@ -73,9 +73,9 @@ nfsd4_alloc_devid_map(const struct svc_fh *fhp)
 
 	for (i = 0; i < DEVID_HASH_SIZE; i++) {
 		list_for_each_entry(old, &nfsd_devid_hash[i], hash) {
-			if (old->fsid_type != fh->fh_fsid_type)
+			if (old->fsid_type != map->fsid_type)
 				continue;
-			if (memcmp(old->fsid, fh->fh_fsid,
+			if (memcmp(old->fsid, map->fsid,
 					key_len(old->fsid_type)))
 				continue;
 
