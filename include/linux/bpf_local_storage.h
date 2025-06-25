@@ -88,8 +88,9 @@ struct bpf_local_storage_elem {
 	/* The data is stored in another cacheline to minimize
 	 * the number of cachelines access during a cache hit.
 	 */
-	struct bpf_local_storage_data sdata ____cacheline_aligned;
-};
+	____cacheline_aligned TRAILING_OVERLAP(struct bpf_local_storage_data,
+					       sdata, data,
+	);};
 
 struct bpf_local_storage {
 	struct bpf_local_storage_data __rcu *cache[BPF_LOCAL_STORAGE_CACHE_SIZE];

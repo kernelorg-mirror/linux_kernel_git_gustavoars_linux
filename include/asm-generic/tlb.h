@@ -368,14 +368,14 @@ struct mmu_gather {
 
 #ifndef CONFIG_MMU_GATHER_NO_GATHER
 	struct mmu_gather_batch *active;
-	struct mmu_gather_batch	local;
-	struct page		*__pages[MMU_GATHER_BUNDLE];
+	TRAILING_OVERLAP(struct mmu_gather_batch, local, encoded_pages,
+			 struct page		*__pages[MMU_GATHER_BUNDLE];
 
 #ifdef CONFIG_MMU_GATHER_PAGE_SIZE
 	unsigned int page_size;
 #endif
 #endif
-};
+	);};
 
 void tlb_flush_mmu(struct mmu_gather *tlb);
 

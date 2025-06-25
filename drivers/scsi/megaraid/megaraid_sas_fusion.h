@@ -1150,9 +1150,9 @@ typedef struct LOG_BLOCK_SPAN_INFO {
 } LD_SPAN_INFO, *PLD_SPAN_INFO;
 
 struct MR_FW_RAID_MAP_ALL {
-	struct MR_FW_RAID_MAP raidMap;
-	struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES];
-} __attribute__ ((packed));
+	TRAILING_OVERLAP(struct MR_FW_RAID_MAP, raidMap, ldSpanMap,
+			 struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES];
+	);} __attribute__ ((packed));
 
 struct MR_DRV_RAID_MAP {
 	/* total size of this structure, including this field.
@@ -1195,9 +1195,9 @@ struct MR_DRV_RAID_MAP {
  */
 struct MR_DRV_RAID_MAP_ALL {
 
-	struct MR_DRV_RAID_MAP raidMap;
-	struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN];
-} __packed;
+	TRAILING_OVERLAP(struct MR_DRV_RAID_MAP, raidMap, ldSpanMap,
+			 struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN];
+	);} __packed;
 
 
 

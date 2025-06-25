@@ -28,9 +28,9 @@ static struct tpm_chip *chip;
 static struct tpm_digest *digests;
 
 struct sdesc {
-	struct shash_desc shash;
-	char ctx[];
-};
+	TRAILING_OVERLAP(struct shash_desc, shash, __ctx,
+			 char ctx[];
+	);};
 
 static struct crypto_shash *hashalg;
 static struct crypto_shash *hmacalg;
