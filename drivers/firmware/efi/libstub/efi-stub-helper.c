@@ -513,18 +513,22 @@ void *get_efi_config_table(efi_guid_t guid)
  * to the firmware to decide whether it needs to expose its filesystem hierarchy
  * via EFI protocols.
  */
-static const struct {
+static const union {
 	struct efi_vendor_dev_path	vendor;
-	struct efi_generic_dev_path	end;
+	struct {
+		u8 _offset_to_fam[offsetof(struct efi_vendor_dev_path, vendordata)];
+		struct efi_generic_dev_path	end;
+	};
 } __packed initrd_dev_path = {
-	{
+	.vendor = {
 		{
 			EFI_DEV_MEDIA,
 			EFI_DEV_MEDIA_VENDOR,
 			sizeof(struct efi_vendor_dev_path),
 		},
 		LINUX_EFI_INITRD_MEDIA_GUID
-	}, {
+	},
+	.end = {
 		EFI_DEV_END_PATH,
 		EFI_DEV_END_ENTIRE,
 		sizeof(struct efi_generic_dev_path)
