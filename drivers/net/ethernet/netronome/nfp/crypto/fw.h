@@ -55,18 +55,18 @@ struct nfp_crypto_req_add_back {
 };
 
 struct nfp_crypto_req_add_v4 {
-	struct nfp_crypto_req_add_front front;
-	__be32 src_ip;
-	__be32 dst_ip;
-	struct nfp_crypto_req_add_back back;
-};
+	TRAILING_OVERLAP(struct nfp_crypto_req_add_front, front, l3_addrs,
+			 __be32 src_ip;
+			 __be32 dst_ip;
+			 struct nfp_crypto_req_add_back back;
+	);};
 
 struct nfp_crypto_req_add_v6 {
-	struct nfp_crypto_req_add_front front;
-	__be32 src_ip[4];
-	__be32 dst_ip[4];
-	struct nfp_crypto_req_add_back back;
-};
+	TRAILING_OVERLAP(struct nfp_crypto_req_add_front, front, l3_addrs,
+			 __be32 src_ip[4];
+			 __be32 dst_ip[4];
+			 struct nfp_crypto_req_add_back back;
+	);};
 
 struct nfp_crypto_reply_add {
 	struct nfp_ccm_hdr hdr;

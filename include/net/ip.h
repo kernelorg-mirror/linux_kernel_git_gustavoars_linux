@@ -46,8 +46,9 @@ struct sock;
 
 struct inet_skb_parm {
 	int			iif;
-	struct ip_options	opt;		/* Compiled IP options		*/
-	u16			flags;
+	TRAILING_OVERLAP(struct ip_options, opt, __data,
+			 		/* Compiled IP options		*/
+			 u16			flags;
 
 #define IPSKB_FORWARDED		BIT(0)
 #define IPSKB_XFRM_TUNNEL_SIZE	BIT(1)
@@ -62,7 +63,7 @@ struct inet_skb_parm {
 #define IPSKB_MCROUTE		BIT(10)
 
 	u16			frag_max_size;
-};
+	);};
 
 static inline bool ipv4_l3mdev_skb(u16 flags)
 {

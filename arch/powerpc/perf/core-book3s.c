@@ -49,16 +49,18 @@ struct cpu_hw_events {
 	unsigned int txn_flags;
 	int n_txn_start;
 
+	u64 ic_init;
+
+	/* Store the PMC values */
+	unsigned long pmcs[MAX_HWEVENTS];
+
 	/* BHRB bits */
 	u64				bhrb_filter;	/* BHRB HW branch filter */
 	unsigned int			bhrb_users;
 	void				*bhrb_context;
-	struct	perf_branch_stack	bhrb_stack;
-	struct	perf_branch_entry	bhrb_entries[BHRB_MAX_ENTRIES];
-	u64				ic_init;
-
-	/* Store the PMC values */
-	unsigned long pmcs[MAX_HWEVENTS];
+	TRAILING_OVERLAP(struct perf_branch_stack, bhrb_stack, entries,
+		struct	perf_branch_entry	bhrb_entries[BHRB_MAX_ENTRIES];
+	);
 };
 
 static DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events);
