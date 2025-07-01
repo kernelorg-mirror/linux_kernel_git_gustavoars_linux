@@ -111,9 +111,9 @@ struct gf_poly {
 
 /* polynomial of degree 1 */
 struct gf_poly_deg1 {
-	struct gf_poly poly;
-	unsigned int   c[2];
-};
+	TRAILING_OVERLAP(struct gf_poly, poly, c,
+			 unsigned int   c[2];
+	);};
 
 static u8 swap_bits(struct bch_control *bch, u8 in)
 {

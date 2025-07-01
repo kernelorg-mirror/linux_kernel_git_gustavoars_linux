@@ -20,9 +20,9 @@ static inline void sort_iter_init(struct sort_iter *iter, struct btree *b, unsig
 }
 
 struct sort_iter_stack {
-	struct sort_iter	iter;
-	struct sort_iter_set	sets[MAX_BSETS + 1];
-};
+	TRAILING_OVERLAP(struct sort_iter, iter, data,
+			 struct sort_iter_set	sets[MAX_BSETS + 1];
+	);};
 
 static inline void sort_iter_stack_init(struct sort_iter_stack *iter, struct btree *b)
 {

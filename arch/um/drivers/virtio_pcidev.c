@@ -27,8 +27,9 @@
 #define NUM_IRQ_MSGS	10
 
 struct virtio_pcidev_message_buffer {
-	struct virtio_pcidev_msg hdr;
-	u8 data[8];
+	TRAILING_OVERLAP(struct virtio_pcidev_msg, hdr, data,
+		u8 data[8];
+	);
 };
 
 struct virtio_pcidev_device {
@@ -242,10 +243,13 @@ static void virtio_pcidev_cfgspace_write(struct um_pci_device *pdev,
 					 unsigned long val)
 {
 	struct virtio_pcidev_device *dev = to_virtio_pcidev(pdev);
-	struct {
+	union {
 		struct virtio_pcidev_msg hdr;
-		/* maximum size - we may only use parts of it */
-		u8 data[8];
+		struct {
+			u8 _offset_to_fam[offsetof(struct virtio_pcidev_msg, data)];
+			/* maximum size - we may only use parts of it */
+			u8 data[8];
+		};
 	} msg = {
 		.hdr = {
 			.op = VIRTIO_PCIDEV_OP_CFG_WRITE,
@@ -364,9 +368,12 @@ static void virtio_pcidev_bar_set(struct um_pci_device *pdev, int bar,
 				  unsigned int offset, u8 value, int size)
 {
 	struct virtio_pcidev_device *dev = to_virtio_pcidev(pdev);
-	struct {
+	union {
 		struct virtio_pcidev_msg hdr;
-		u8 data;
+		struct {
+			u8 _offset_to_fam[offsetof(struct virtio_pcidev_msg, data)];
+			u8 data;
+		};
 	} msg = {
 		.hdr = {
 			.op = VIRTIO_PCIDEV_OP_CFG_WRITE,

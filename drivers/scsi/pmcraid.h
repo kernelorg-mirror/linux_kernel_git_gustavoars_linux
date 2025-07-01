@@ -628,9 +628,9 @@ struct pmcraid_aen_msg {
 
 /* Controller state event message type */
 struct pmcraid_state_msg {
-	struct pmcraid_aen_msg msg;
-	u32 ioa_state;
-};
+	TRAILING_OVERLAP(struct pmcraid_aen_msg, msg, data,
+			 u32 ioa_state;
+	);};
 
 #define PMC_DEVICE_EVENT_RESET_START		0x11000000
 #define PMC_DEVICE_EVENT_RESET_SUCCESS		0x11000001

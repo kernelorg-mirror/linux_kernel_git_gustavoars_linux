@@ -731,8 +731,10 @@ struct hv_get_perf_counter_info_params {
 	(HGPCI_REQ_BUFFER_SIZE - sizeof(struct hv_get_perf_counter_info_params))
 
 struct hv_gpci_request_buffer {
-	struct hv_get_perf_counter_info_params params;
-	uint8_t bytes[HGPCI_MAX_DATA_BYTES];
+	TRAILING_OVERLAP(struct hv_get_perf_counter_info_params, params,
+			 counter_value,
+		uint8_t bytes[HGPCI_MAX_DATA_BYTES];
+	);
 } __packed;
 
 #endif /* __ASSEMBLY__ */

@@ -305,24 +305,6 @@ struct cpu_hw_events {
 	u64			acr_cfg_c[X86_PMC_IDX_MAX];
 
 	/*
-	 * Intel LBR bits
-	 */
-	int				lbr_users;
-	int				lbr_pebs_users;
-	struct perf_branch_stack	lbr_stack;
-	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
-	u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
-	union {
-		struct er_account		*lbr_sel;
-		struct er_account		*lbr_ctl;
-	};
-	u64				br_sel;
-	void				*last_task_ctx;
-	int				last_log_id;
-	int				lbr_select;
-	void				*lbr_xsave;
-
-	/*
 	 * Intel host/guest exclude bits
 	 */
 	u64				intel_ctrl_guest_mask;
@@ -370,6 +352,25 @@ struct cpu_hw_events {
 	void				*kfree_on_online[X86_PERF_KFREE_MAX];
 
 	struct pmu			*pmu;
+
+	/*
+	 * Intel LBR bits
+	 */
+	int				lbr_users;
+	int				lbr_pebs_users;
+	union {
+		struct er_account		*lbr_sel;
+		struct er_account		*lbr_ctl;
+	};
+	u64				br_sel;
+	void				*last_task_ctx;
+	int				last_log_id;
+	int				lbr_select;
+	void				*lbr_xsave;
+	TRAILING_OVERLAP(struct perf_branch_stack, lbr_stack, entries,
+		struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+		u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+	);
 };
 
 #define __EVENT_CONSTRAINT_RANGE(c, e, n, m, w, o, f) {	\

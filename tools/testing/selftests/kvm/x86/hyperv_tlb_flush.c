@@ -49,9 +49,9 @@ struct hv_tlb_flush {
 struct hv_tlb_flush_ex {
 	u64 address_space;
 	u64 flags;
-	struct hv_vpset hv_vp_set;
-	u64 gva_list[];
-} __packed;
+	TRAILING_OVERLAP(struct hv_vpset, hv_vp_set, bank_contents,
+			 u64 gva_list[];
+	);} __packed;
 
 /*
  * Pass the following info to 'workers' and 'sender'

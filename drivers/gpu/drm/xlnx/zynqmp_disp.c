@@ -99,9 +99,9 @@ struct zynqmp_disp_format {
  */
 struct zynqmp_disp_layer_dma {
 	struct dma_chan *chan;
-	struct dma_interleaved_template xt;
-	struct data_chunk sgl;
-};
+	TRAILING_OVERLAP(struct dma_interleaved_template, xt, sgl,
+			 struct data_chunk sgl;
+	);};
 
 /**
  * struct zynqmp_disp_layer_info - Static layer information

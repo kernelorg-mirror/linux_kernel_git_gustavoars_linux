@@ -371,10 +371,10 @@ struct oxu_onchip_mem {
 #define	EHCI_MAX_ROOT_PORTS	15		/* see HCS_N_PORTS */
 
 struct oxu_murb {
-	struct urb		urb;
-	struct urb		*main;
-	u8			last;
-};
+	TRAILING_OVERLAP(struct urb, urb, iso_frame_desc,
+			 struct urb		*main;
+			 u8			last;
+	);};
 
 struct oxu_hcd {				/* one per controller */
 	unsigned int		is_otg:1;

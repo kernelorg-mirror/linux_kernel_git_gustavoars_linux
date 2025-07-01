@@ -1203,15 +1203,15 @@ static inline bool jset_entry_is_key(struct jset_entry *e)
  * don't think there was a missing journal entry.
  */
 struct jset_entry_blacklist {
-	struct jset_entry	entry;
-	__le64			seq;
-};
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __le64			seq;
+	);};
 
 struct jset_entry_blacklist_v2 {
-	struct jset_entry	entry;
-	__le64			start;
-	__le64			end;
-};
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __le64			start;
+			 __le64			end;
+	);};
 
 #define BCH_FS_USAGE_TYPES()			\
 	x(reserved,		0)		\
@@ -1226,22 +1226,22 @@ enum bch_fs_usage_type {
 };
 
 struct jset_entry_usage {
-	struct jset_entry	entry;
-	__le64			v;
-} __packed;
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __le64			v;
+	);} __packed;
 
 struct jset_entry_data_usage {
-	struct jset_entry	entry;
-	__le64			v;
-	struct bch_replicas_entry_v1 r;
-} __packed;
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __le64			v;
+			 struct bch_replicas_entry_v1 r;
+	);} __packed;
 
 struct jset_entry_clock {
-	struct jset_entry	entry;
-	__u8			rw;
-	__u8			pad[7];
-	__le64			time;
-} __packed;
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __u8			rw;
+			 __u8			pad[7];
+			 __le64			time;
+	);} __packed;
 
 struct jset_entry_dev_usage_type {
 	__le64			buckets;
@@ -1250,15 +1250,15 @@ struct jset_entry_dev_usage_type {
 } __packed;
 
 struct jset_entry_dev_usage {
-	struct jset_entry	entry;
-	__le32			dev;
-	__u32			pad;
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __le32			dev;
+			 __u32			pad;
 
 	__le64			_buckets_ec;		/* No longer used */
 	__le64			_buckets_unavailable;	/* No longer used */
 
 	struct jset_entry_dev_usage_type d[];
-};
+	);};
 
 static inline unsigned jset_entry_dev_usage_nr_types(struct jset_entry_dev_usage *u)
 {
@@ -1267,9 +1267,9 @@ static inline unsigned jset_entry_dev_usage_nr_types(struct jset_entry_dev_usage
 }
 
 struct jset_entry_log {
-	struct jset_entry	entry;
-	u8			d[];
-} __packed __aligned(8);
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 u8			d[];
+	);} __packed __aligned(8);
 
 static inline unsigned jset_entry_log_msg_bytes(struct jset_entry_log *l)
 {
@@ -1281,9 +1281,9 @@ static inline unsigned jset_entry_log_msg_bytes(struct jset_entry_log *l)
 }
 
 struct jset_entry_datetime {
-	struct jset_entry	entry;
-	__le64			seconds;
-} __packed __aligned(8);
+	TRAILING_OVERLAP(struct jset_entry, entry, _data,
+			 __le64			seconds;
+	);} __packed __aligned(8);
 
 /*
  * On disk format for a journal entry:

@@ -327,9 +327,9 @@ struct btree_iter {
 /* Fixed-size btree_iter that can be allocated on the stack */
 
 struct btree_iter_stack {
-	struct btree_iter iter;
-	struct btree_iter_set stack_data[MAX_BSETS];
-};
+	TRAILING_OVERLAP(struct btree_iter, iter, data,
+			 struct btree_iter_set stack_data[MAX_BSETS];
+	);};
 
 typedef bool (*ptr_filter_fn)(struct btree_keys *b, const struct bkey *k);
 

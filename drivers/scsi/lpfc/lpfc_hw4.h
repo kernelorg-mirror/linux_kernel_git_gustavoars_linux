@@ -4920,9 +4920,10 @@ struct lpfc_els_rdf_req {
 };
 
 struct lpfc_els_rdf_rsp {
-	struct fc_els_rdf_resp		rdf_resp;  /* hdr up to descriptors */
-	struct lpfc_els_rdf_reg_desc	reg_d1;	/* 1st descriptor */
-};
+	TRAILING_OVERLAP(struct fc_els_rdf_resp, rdf_resp, desc,
+			   /* hdr up to descriptors */
+			 struct lpfc_els_rdf_reg_desc	reg_d1;	/* 1st descriptor */
+	);};
 
 union lpfc_wqe {
 	uint32_t words[16];
