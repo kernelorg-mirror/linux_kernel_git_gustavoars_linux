@@ -1655,8 +1655,8 @@ static struct mlx5_ib_flow_handler *create_leftovers_rule(struct mlx5_ib_dev *de
 
 	static struct {
 		struct ib_flow_spec_eth eth_flow;
-		struct ib_flow_attr	flow_attr;
-	} leftovers_wc = { .flow_attr = { .num_of_specs = 1,
+		TRAILING_OVERLAP(struct ib_flow_attr, flow_attr, flows,
+		);} leftovers_wc = { .flow_attr = { .num_of_specs = 1,
 					  .size = sizeof(leftovers_wc) },
 			   .eth_flow = {
 				   .type = IB_FLOW_SPEC_ETH,
@@ -1666,8 +1666,8 @@ static struct mlx5_ib_flow_handler *create_leftovers_rule(struct mlx5_ib_dev *de
 
 	static struct {
 		struct ib_flow_spec_eth eth_flow;
-		struct ib_flow_attr	flow_attr;
-	} leftovers_uc = { .flow_attr = { .num_of_specs = 1,
+		TRAILING_OVERLAP(struct ib_flow_attr, flow_attr, flows,
+		);} leftovers_uc = { .flow_attr = { .num_of_specs = 1,
 					  .size = sizeof(leftovers_uc) },
 			   .eth_flow = {
 				   .type = IB_FLOW_SPEC_ETH,

@@ -575,14 +575,14 @@ static const struct file_operations surface_dtx_fops = {
 #define SDTX_DEVICE_MODE_DELAY_RECHECK	msecs_to_jiffies(100)
 
 struct sdtx_status_event {
-	struct sdtx_event e;
-	__u16 v;
-} __packed;
+	TRAILING_OVERLAP(struct sdtx_event, e, data,
+			 __u16 v;
+	);} __packed;
 
 struct sdtx_base_info_event {
-	struct sdtx_event e;
-	struct sdtx_base_info v;
-} __packed;
+	TRAILING_OVERLAP(struct sdtx_event, e, data,
+			 struct sdtx_base_info v;
+	);} __packed;
 
 union sdtx_generic_event {
 	struct sdtx_event common;
