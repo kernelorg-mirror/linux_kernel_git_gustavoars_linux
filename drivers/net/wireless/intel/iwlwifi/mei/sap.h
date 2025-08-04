@@ -300,20 +300,12 @@ enum iwl_sap_msg {
  * @type: See &enum iwl_sap_msg.
  * @len: The length of the message (header not included).
  * @seq_num: For debug.
+ * @payload: The payload of the message.
  */
 struct iwl_sap_hdr {
 	__le16 type;
 	__le16 len;
 	__le32 seq_num;
-};
-
-/**
- * struct iwl_sap_payload - SAP header and payload message.
- * @hdr: SAP header.
- * @payload: The payload of the message.
- */
-struct iwl_sap_payload {
-	struct iwl_sap_hdr hdr;
 	u8 payload[];
 };
 
