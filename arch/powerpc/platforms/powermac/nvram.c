@@ -59,11 +59,10 @@ struct chrp_header {
 };
 
 struct core99_header {
-	TRAILING_OVERLAP(struct chrp_header, hdr, data,
-		u32			adler;
-		u32			generation;
-		u32			reserved[2];
-	);
+  struct chrp_header	hdr;
+  u32			adler;
+  u32			generation;
+  u32			reserved[2];
 };
 
 /*

@@ -1072,12 +1072,11 @@ struct nft_rule_dp {
 };
 
 struct nft_rule_dp_last {
-	TRAILING_OVERLAP(struct nft_rule_dp, end, data,
-			 		/* end of nft_rule_blob marker */
-			 struct rcu_head h;		/* call_rcu head */
-			 struct nft_rule_blob *blob;	/* ptr to free via call_rcu */
-			 const struct nft_chain *chain;	/* for nftables tracing */
-	);};
+	struct nft_rule_dp end;		/* end of nft_rule_blob marker */
+	struct rcu_head h;		/* call_rcu head */
+	struct nft_rule_blob *blob;	/* ptr to free via call_rcu */
+	const struct nft_chain *chain;	/* for nftables tracing */
+};
 
 static inline const struct nft_rule_dp *nft_rule_next(const struct nft_rule_dp *rule)
 {

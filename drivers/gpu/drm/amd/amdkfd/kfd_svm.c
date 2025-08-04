@@ -65,8 +65,8 @@ static uint64_t max_svm_range_pages;
 
 struct criu_svm_metadata {
 	struct list_head list;
-	TRAILING_OVERLAP(struct kfd_criu_svm_range_priv_data, data, attrs,
-	);};
+	struct kfd_criu_svm_range_priv_data data;
+};
 
 static void svm_range_evict_svm_bo_worker(struct work_struct *work);
 static bool

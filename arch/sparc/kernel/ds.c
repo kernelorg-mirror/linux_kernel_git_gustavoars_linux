@@ -887,12 +887,9 @@ static int register_services(struct ds_info *dp)
 	int i;
 
 	for (i = 0; i < dp->num_ds_states; i++) {
-		union {
+		struct {
 			struct ds_reg_req req;
-			struct {
-				u8 _offset_to_fam[offsetof(struct ds_reg_req, svc_id)];
-				u8 id_buf[256];
-			};
+			u8 id_buf[256];
 		} pbuf;
 		struct ds_cap_state *cp = &dp->ds_states[i];
 		int err, msg_len;

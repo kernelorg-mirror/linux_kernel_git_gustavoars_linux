@@ -81,8 +81,8 @@ struct synthhid_protocol_response {
 struct synthhid_device_info {
 	struct synthhid_msg_hdr header;
 	struct hv_input_dev_info hid_dev_info;
-	TRAILING_OVERLAP(struct hid_descriptor, hid_descriptor, opt_descs,
-	);};
+	struct hid_descriptor hid_descriptor;
+};
 
 struct synthhid_device_info_ack {
 	struct synthhid_msg_hdr header;
