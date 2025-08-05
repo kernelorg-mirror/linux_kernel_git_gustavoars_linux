@@ -306,7 +306,6 @@ struct iwl_sap_hdr {
 	__le16 type;
 	__le16 len;
 	__le32 seq_num;
-	u8 payload[];
 };
 
 /**
