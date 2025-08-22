@@ -31,10 +31,7 @@ enum evm_ima_xattr_type {
 };
 
 struct evm_ima_xattr_data {
-	/* New members must be added within the __struct_group() macro below. */
-	__struct_group(evm_ima_xattr_data_hdr, hdr, __packed,
-		u8 type;
-	);
+	u8 type;
 	u8 data[];
 } __packed;
 static_assert(offsetof(struct evm_ima_xattr_data, data) == sizeof(struct evm_ima_xattr_data_hdr),
@@ -42,15 +39,13 @@ static_assert(offsetof(struct evm_ima_xattr_data, data) == sizeof(struct evm_ima
 
 /* Only used in the EVM HMAC code. */
 struct evm_xattr {
-	struct evm_ima_xattr_data_hdr data;
+	struct evm_ima_xattr_data data;
 	u8 digest[SHA1_DIGEST_SIZE];
 } __packed;
 
 #define IMA_MAX_DIGEST_SIZE	HASH_MAX_DIGESTSIZE
 
 struct ima_digest_data {
-	/* New members must be added within the __struct_group() macro below. */
-	__struct_group(ima_digest_data_hdr, hdr, __packed,
 	u8 algo;
 	u8 length;
 	union {
@@ -64,7 +59,6 @@ struct ima_digest_data {
 		} ng;
 		u8 data[2];
 	} xattr;
-	);
 	u8 digest[];
 } __packed;
 static_assert(offsetof(struct ima_digest_data, digest) == sizeof(struct ima_digest_data_hdr),
@@ -75,7 +69,7 @@ static_assert(offsetof(struct ima_digest_data, digest) == sizeof(struct ima_dige
  * with the maximum hash size, define ima_max_digest_data struct.
  */
 struct ima_max_digest_data {
-	struct ima_digest_data_hdr hdr;
+	struct ima_digest_data hdr;
 	u8 digest[HASH_MAX_DIGESTSIZE];
 } __packed;
 
