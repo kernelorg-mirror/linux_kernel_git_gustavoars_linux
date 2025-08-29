@@ -708,8 +708,9 @@ struct vmbus_channel_msginfo {
 };
 
 struct vmbus_close_msg {
-	struct vmbus_channel_msginfo info;
-	struct vmbus_channel_close_channel msg;
+	TRAILING_OVERLAP(struct vmbus_channel_msginfo, info, msg,
+		struct vmbus_channel_close_channel msg;
+	);
 };
 
 enum vmbus_device_type {
@@ -799,8 +800,6 @@ struct vmbus_channel {
 	u32 ringbuffer_send_offset;
 	struct hv_ring_buffer_info outbound;	/* send to parent */
 	struct hv_ring_buffer_info inbound;	/* receive from parent */
-
-	struct vmbus_close_msg close_msg;
 
 	/* Statistics */
 	u64	interrupts;	/* Host to Guest interrupts */
@@ -1008,6 +1007,9 @@ struct vmbus_channel {
 
 	/* boolean to control visibility of sysfs for ring buffer */
 	bool ring_sysfs_visible;
+
+	/* Must be last --ends in a flexible-array member. */
+	struct vmbus_close_msg close_msg;
 };
 
 #define lock_requestor(channel, flags)					\
