@@ -593,19 +593,22 @@ static void iwl_mld_send_tlc_cmd(struct iwl_mld *mld,
 
 int iwl_mld_send_tlc_dhc(struct iwl_mld *mld, u8 sta_id, u32 type, u32 data)
 {
-	struct {
-		struct iwl_dhc_cmd dhc;
+	__TRAILING_OVERLAP(struct iwl_dhc_cmd, dhc, data, __packed,
 		struct iwl_dhc_tlc_cmd tlc;
-	} __packed cmd = {
-		.tlc.sta_id = sta_id,
-		.tlc.type = cpu_to_le32(type),
-		.tlc.data[0] = cpu_to_le32(data),
-		.dhc.length = cpu_to_le32(sizeof(cmd.tlc) >> 2),
-		.dhc.index_and_mask =
+	) cmd;
+	int ret;
+
+	cmd.tlc = (struct iwl_dhc_tlc_cmd) {
+		.sta_id = sta_id,
+		.type = cpu_to_le32(type),
+		.data[0] = cpu_to_le32(data),
+	};
+	cmd.dhc = (struct iwl_dhc_cmd) {
+		.length = cpu_to_le32(sizeof(cmd.tlc) >> 2),
+		.index_and_mask =
 			cpu_to_le32(DHC_TABLE_INTEGRATION | DHC_TARGET_UMAC |
 				    DHC_INTEGRATION_TLC_DEBUG_CONFIG),
 	};
-	int ret;
 
 	ret = iwl_mld_send_cmd_with_flags_pdu(mld,
 					      WIDE_ID(IWL_ALWAYS_LONG_GROUP,
