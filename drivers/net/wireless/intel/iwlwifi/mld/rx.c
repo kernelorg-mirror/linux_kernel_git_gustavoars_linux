@@ -2169,25 +2169,29 @@ void iwl_mld_sync_rx_queues(struct iwl_mld *mld,
 			    const void *notif_payload, u32 notif_payload_size)
 {
 	u8 num_rx_queues = mld->trans->info.num_rxqs;
-	struct {
-		struct iwl_rxq_sync_cmd sync_cmd;
+	__TRAILING_OVERLAP(struct iwl_rxq_sync_cmd, sync_cmd, payload, __packed,
 		struct iwl_mld_internal_rxq_notif notif;
-	} __packed cmd = {
-		.sync_cmd.rxq_mask = cpu_to_le32(BIT(num_rx_queues) - 1),
-		.sync_cmd.count =
+	) cmd;
+	struct iwl_host_cmd hcmd;
+	int ret;
+
+	 cmd.sync_cmd = (struct iwl_rxq_sync_cmd) {
+		.rxq_mask = cpu_to_le32(BIT(num_rx_queues) - 1),
+		.count =
 			cpu_to_le32(sizeof(struct iwl_mld_internal_rxq_notif) +
 				    notif_payload_size),
-		.notif.type = type,
-		.notif.cookie = mld->rxq_sync.cookie,
+	 };
+	 cmd.notif = (struct iwl_mld_internal_rxq_notif) {
+		.type = type,
+		.cookie = mld->rxq_sync.cookie,
 	};
-	struct iwl_host_cmd hcmd = {
+	hcmd = (struct iwl_host_cmd) {
 		.id = WIDE_ID(DATA_PATH_GROUP, TRIGGER_RX_QUEUES_NOTIF_CMD),
 		.data[0] = &cmd,
 		.len[0] = sizeof(cmd),
 		.data[1] = notif_payload,
 		.len[1] = notif_payload_size,
 	};
-	int ret;
 
 	/* size must be a multiple of DWORD */
 	if (WARN_ON(cmd.sync_cmd.count & cpu_to_le32(3)))
