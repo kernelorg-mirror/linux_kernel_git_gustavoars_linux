@@ -1137,7 +1137,7 @@ static struct purex_item
 	if (!item)
 		return item;
 
-	memcpy(&item->iocb, pkt, sizeof(item->iocb));
+	memcpy(&item->iocb, pkt, sizeof(item->__default_item_iocb));
 	return item;
 }
 
