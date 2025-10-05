@@ -14,6 +14,12 @@
 #include <linux/ioctl.h>
 #include <asm/kvm.h>
 
+#ifdef __KERNEL__
+#include <linux/stddef.h>       /* for offsetof */
+#else
+#include <stddef.h>             /* for offsetof */
+#endif
+
 #define KVM_API_VERSION 12
 
 /*
@@ -1574,13 +1580,18 @@ struct kvm_stats_header {
  *        &kvm_stats_header->name_size.
  */
 struct kvm_stats_desc {
-	__u32 flags;
-	__s16 exponent;
-	__u16 size;
-	__u32 offset;
-	__u32 bucket_size;
+	/* New members MUST be added within the __struct_group() macro below. */
+	__struct_group(kvm_stats_desc_hdr, __hdr, /* no attrs */,
+		__u32 flags;
+		__s16 exponent;
+		__u16 size;
+		__u32 offset;
+		__u32 bucket_size;
+	);
 	char name[];
 };
+_Static_assert(offsetof(struct kvm_stats_desc, name) == sizeof(struct kvm_stats_desc_hdr),
+	       "struct member likely outside of __struct_group()");
 
 #define KVM_GET_STATS_FD  _IO(KVMIO,  0xce)
 
