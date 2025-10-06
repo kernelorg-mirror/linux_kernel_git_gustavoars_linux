@@ -320,7 +320,7 @@ struct initiate_ssp_task {
 	u8     proto_conn_rate;	  /* proto:6,4, conn_rate:3,0 */
 	__le32 total_xfer_len;
 	struct ssp_frame_hdr  ssp_frame;
-	struct ssp_command_iu ssp_cmd;
+	struct ssp_command_iu_hdr ssp_cmd;
 	__le16 sister_scb;	  /* 0xFFFF */
 	__le16 conn_handle;	  /* index to DDB for the intended target */
 	u8     data_dir;	  /* :1,0 */
