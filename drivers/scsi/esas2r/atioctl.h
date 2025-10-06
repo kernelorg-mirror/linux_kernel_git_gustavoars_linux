@@ -1156,6 +1156,12 @@ struct __packed atto_ioctl_vda {
 	u8 reserved[8];
 
 	union {
+		u8 data[1];
+		struct atto_vda_devinfo2 dev_info2;
+	} data;
+
+	/* Must be last --ends in a flexible-array member. */
+	union {
 		struct atto_ioctl_vda_scsi_cmd scsi;
 		struct atto_ioctl_vda_flash_cmd flash;
 		struct atto_ioctl_vda_diag_cmd diag;
@@ -1166,12 +1172,6 @@ struct __packed atto_ioctl_vda {
 		struct atto_ioctl_vda_gsv_cmd gsv;
 		u8 cmd_info[256];
 	} cmd;
-
-	union {
-		u8 data[1];
-		struct atto_vda_devinfo2 dev_info2;
-	} data;
-
 };
 
 struct __packed atto_ioctl_smp {
