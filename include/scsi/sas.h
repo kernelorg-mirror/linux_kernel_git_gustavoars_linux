@@ -12,6 +12,7 @@
 #include <linux/types.h>
 #include <asm/byteorder.h>
 
+
 #define SAS_ADDR_SIZE        8
 #define HASHED_SAS_ADDR_SIZE 3
 #define SAS_ADDR(_sa) ((unsigned long long) be64_to_cpu(*(__be64 *)(_sa)))
@@ -338,7 +339,7 @@ struct ssp_response_iu {
 	};
 } __attribute__ ((packed));
 
-struct ssp_command_iu {
+struct ssp_command_iu_hdr {
 	u8     lun[8];
 	u8     _r_a;
 
@@ -357,6 +358,10 @@ struct ssp_command_iu {
 	u8    add_cdb_len:6;
 
 	u8    cdb[16];
+} __packed;
+
+struct ssp_command_iu {
+	struct ssp_command_iu_hdr;
 	u8    add_cdb[];
 } __attribute__ ((packed));
 
@@ -557,28 +562,6 @@ struct ssp_response_iu {
 		DECLARE_FLEX_ARRAY(u8, resp_data);
 		DECLARE_FLEX_ARRAY(u8, sense_data);
 	};
-} __attribute__ ((packed));
-
-struct ssp_command_iu {
-	u8     lun[8];
-	u8     _r_a;
-
-	union {
-		struct {
-			u8  efb:1;
-			u8  prio:4;
-			u8  attr:3;
-		};
-		u8 efb_prio_attr;
-	};
-
-	u8    _r_b;
-
-	u8    add_cdb_len:6;
-	u8    _r_c:2;
-
-	u8    cdb[16];
-	u8    add_cdb[];
 } __attribute__ ((packed));
 
 struct xfer_rdy_iu {
