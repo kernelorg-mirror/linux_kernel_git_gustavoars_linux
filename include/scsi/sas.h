@@ -11,6 +11,8 @@
 
 #include <linux/types.h>
 #include <asm/byteorder.h>
+#include <linux/build_bug.h>
+
 
 #define SAS_ADDR_SIZE        8
 #define HASHED_SAS_ADDR_SIZE 3
@@ -339,26 +341,31 @@ struct ssp_response_iu {
 } __attribute__ ((packed));
 
 struct ssp_command_iu {
-	u8     lun[8];
-	u8     _r_a;
+	/* New members MUST be added within the __struct_group() macro below. */
+	__struct_group(ssp_command_iu_hdr, __hdr, __packed,
+		u8     lun[8];
+		u8     _r_a;
 
-	union {
-		struct {
-			u8  attr:3;
-			u8  prio:4;
-			u8  efb:1;
+		union {
+			struct {
+				u8  attr:3;
+				u8  prio:4;
+				u8  efb:1;
+			};
+			u8 efb_prio_attr;
 		};
-		u8 efb_prio_attr;
-	};
 
-	u8    _r_b;
+		u8    _r_b;
 
-	u8    _r_c:2;
-	u8    add_cdb_len:6;
+		u8    _r_c:2;
+		u8    add_cdb_len:6;
 
-	u8    cdb[16];
+		u8    cdb[16];
+	);
 	u8    add_cdb[];
 } __attribute__ ((packed));
+static_assert(offsetof(struct ssp_command_iu, add_cdb) == sizeof(struct ssp_command_iu_hdr),
+	      "struct member likely outside of __struct_group()");
 
 struct xfer_rdy_iu {
 	__be32 requested_offset;
@@ -557,28 +564,6 @@ struct ssp_response_iu {
 		DECLARE_FLEX_ARRAY(u8, resp_data);
 		DECLARE_FLEX_ARRAY(u8, sense_data);
 	};
-} __attribute__ ((packed));
-
-struct ssp_command_iu {
-	u8     lun[8];
-	u8     _r_a;
-
-	union {
-		struct {
-			u8  efb:1;
-			u8  prio:4;
-			u8  attr:3;
-		};
-		u8 efb_prio_attr;
-	};
-
-	u8    _r_b;
-
-	u8    add_cdb_len:6;
-	u8    _r_c:2;
-
-	u8    cdb[16];
-	u8    add_cdb[];
 } __attribute__ ((packed));
 
 struct xfer_rdy_iu {
