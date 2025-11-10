@@ -214,8 +214,10 @@ union hv_reference_tsc_msr {
  * how the "valid_bank_mask" field should be accounted.
  */
 struct hv_vpset {	 /* HV_VP_SET */
-	u64 format;
-	u64 valid_bank_mask;
+	struct_group_tagged(hv_vpset_hdr, hdr,
+		u64 format;
+		u64 valid_bank_mask;
+	);
 	u64 bank_contents[];
 } __packed;
 
@@ -576,7 +578,7 @@ struct hv_tlb_flush {	 /* HV_INPUT_FLUSH_VIRTUAL_ADDRESS_LIST */
 struct hv_tlb_flush_ex {
 	u64 address_space;
 	u64 flags;
-	struct hv_vpset hv_vp_set;
+	struct hv_vpset_hdr hv_vp_set;
 	u64 gva_list[];
 } __packed;
 
