@@ -690,6 +690,7 @@ EXPORT_IPV6_MOD_GPL(ping_common_sendmsg);
 
 static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 {
+	DEFINE_RAW_FLEX(struct ip_options_data, opt_copy, opt.opt.__data, 40);
 	struct net *net = sock_net(sk);
 	struct flowi4 fl4;
 	struct inet_sock *inet = inet_sk(sk);
@@ -697,7 +698,6 @@ static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 	struct icmphdr user_icmph;
 	struct pingfakehdr pfh;
 	struct rtable *rt = NULL;
-	struct ip_options_data opt_copy;
 	int free = 0;
 	__be32 saddr, daddr, faddr;
 	u8 scope;
@@ -746,9 +746,9 @@ static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 		rcu_read_lock();
 		inet_opt = rcu_dereference(inet->inet_opt);
 		if (inet_opt) {
-			memcpy(&opt_copy, inet_opt,
+			memcpy(opt_copy, inet_opt,
 			       sizeof(*inet_opt) + inet_opt->opt.optlen);
-			ipc.opt = &opt_copy.opt;
+			ipc.opt = &opt_copy->opt;
 		}
 		rcu_read_unlock();
 	}
