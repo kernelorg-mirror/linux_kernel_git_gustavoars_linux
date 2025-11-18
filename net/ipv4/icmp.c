@@ -353,8 +353,10 @@ void icmp_out_count(struct net *net, unsigned char type)
 static int icmp_glue_bits(void *from, char *to, int offset, int len, int odd,
 			  struct sk_buff *skb)
 {
-	struct icmp_bxm *icmp_param = from;
+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
 	__wsum csum;
+
+	icmp_param = from;
 
 	csum = skb_copy_and_csum_bits(icmp_param->skb,
 				      icmp_param->offset + offset,
@@ -775,9 +777,9 @@ free_skb:
 void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 		 const struct inet_skb_parm *parm)
 {
+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
 	struct iphdr *iph;
 	int room;
-	struct icmp_bxm icmp_param;
 	struct rtable *rt = skb_rtable(skb_in);
 	bool apply_ratelimit = false;
 	struct sk_buff *ext_skb;
@@ -906,7 +908,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 					   iph->tos;
 	mark = IP4_REPLY_MARK(net, skb_in->mark);
 
-	if (__ip_options_echo(net, &icmp_param.replyopts.opt.opt, skb_in,
+	if (__ip_options_echo(net, &icmp_param->replyopts.opt.opt, skb_in,
 			      &parm->opt))
 		goto out_unlock;
 
@@ -915,21 +917,21 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 	 *	Prepare data for ICMP header.
 	 */
 
-	icmp_param.data.icmph.type	 = type;
-	icmp_param.data.icmph.code	 = code;
-	icmp_param.data.icmph.un.gateway = info;
-	icmp_param.data.icmph.checksum	 = 0;
-	icmp_param.skb	  = skb_in;
-	icmp_param.offset = skb_network_offset(skb_in);
+	icmp_param->data.icmph.type	 = type;
+	icmp_param->data.icmph.code	 = code;
+	icmp_param->data.icmph.un.gateway = info;
+	icmp_param->data.icmph.checksum	 = 0;
+	icmp_param->skb	  = skb_in;
+	icmp_param->offset = skb_network_offset(skb_in);
 	ipcm_init(&ipc);
 	ipc.tos = tos;
 	ipc.addr = iph->saddr;
-	ipc.opt = &icmp_param.replyopts.opt;
+	ipc.opt = &icmp_param->replyopts.opt;
 	ipc.sockc.mark = mark;
 
 	rt = icmp_route_lookup(net, &fl4, skb_in, iph, saddr,
 			       inet_dsfield_to_dscp(tos), mark, type, code,
-			       &icmp_param);
+			       icmp_param);
 	if (IS_ERR(rt))
 		goto out_unlock;
 
@@ -942,7 +944,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 	room = dst_mtu(&rt->dst);
 	if (room > 576)
 		room = 576;
-	room -= sizeof(struct iphdr) + icmp_param.replyopts.opt.opt.optlen;
+	room -= sizeof(struct iphdr) + icmp_param->replyopts.opt.opt.optlen;
 	room -= sizeof(struct icmphdr);
 	/* Guard against tiny mtu. We need to include at least one
 	 * IP network header for this message to make any sense.
@@ -950,15 +952,15 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 	if (room <= (int)sizeof(struct iphdr))
 		goto ende;
 
-	ext_skb = icmp_ext_append(net, skb_in, &icmp_param.data.icmph, room,
+	ext_skb = icmp_ext_append(net, skb_in, &icmp_param->data.icmph, room,
 				  parm->iif);
 	if (ext_skb)
-		icmp_param.skb = ext_skb;
+		icmp_param->skb = ext_skb;
 
-	icmp_param.data_len = icmp_param.skb->len - icmp_param.offset;
-	if (icmp_param.data_len > room)
-		icmp_param.data_len = room;
-	icmp_param.head_len = sizeof(struct icmphdr);
+	icmp_param->data_len = icmp_param->skb->len - icmp_param->offset;
+	if (icmp_param->data_len > room)
+		icmp_param->data_len = room;
+	icmp_param->head_len = sizeof(struct icmphdr);
 
 	/* if we don't have a source address at this point, fall back to the
 	 * dummy address instead of sending out a packet with a source address
@@ -969,7 +971,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
 
 	trace_icmp_send(skb_in, type, code);
 
-	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
+	icmp_push_reply(sk, icmp_param, &fl4, &ipc, &rt);
 
 	if (ext_skb)
 		consume_skb(ext_skb);
@@ -1206,7 +1208,7 @@ static enum skb_drop_reason icmp_redirect(struct sk_buff *skb)
 
 static enum skb_drop_reason icmp_echo(struct sk_buff *skb)
 {
-	struct icmp_bxm icmp_param;
+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
 	struct net *net;
 
 	net = skb_dst_dev_net_rcu(skb);
@@ -1214,18 +1216,18 @@ static enum skb_drop_reason icmp_echo(struct sk_buff *skb)
 	if (READ_ONCE(net->ipv4.sysctl_icmp_echo_ignore_all))
 		return SKB_NOT_DROPPED_YET;
 
-	icmp_param.data.icmph	   = *icmp_hdr(skb);
-	icmp_param.skb		   = skb;
-	icmp_param.offset	   = 0;
-	icmp_param.data_len	   = skb->len;
-	icmp_param.head_len	   = sizeof(struct icmphdr);
+	icmp_param->data.icmph	   = *icmp_hdr(skb);
+	icmp_param->skb		   = skb;
+	icmp_param->offset	   = 0;
+	icmp_param->data_len	   = skb->len;
+	icmp_param->head_len	   = sizeof(struct icmphdr);
 
-	if (icmp_param.data.icmph.type == ICMP_ECHO)
-		icmp_param.data.icmph.type = ICMP_ECHOREPLY;
-	else if (!icmp_build_probe(skb, &icmp_param.data.icmph))
+	if (icmp_param->data.icmph.type == ICMP_ECHO)
+		icmp_param->data.icmph.type = ICMP_ECHOREPLY;
+	else if (!icmp_build_probe(skb, &icmp_param->data.icmph))
 		return SKB_NOT_DROPPED_YET;
 
-	icmp_reply(&icmp_param, skb);
+	icmp_reply(icmp_param, skb);
 	return SKB_NOT_DROPPED_YET;
 }
 
@@ -1353,7 +1355,7 @@ EXPORT_SYMBOL_GPL(icmp_build_probe);
  */
 static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
 {
-	struct icmp_bxm icmp_param;
+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
 	/*
 	 *	Too short.
 	 */
@@ -1363,19 +1365,19 @@ static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
 	/*
 	 *	Fill in the current time as ms since midnight UT:
 	 */
-	icmp_param.data.times[1] = inet_current_timestamp();
-	icmp_param.data.times[2] = icmp_param.data.times[1];
+	icmp_param->data.times[1] = inet_current_timestamp();
+	icmp_param->data.times[2] = icmp_param->data.times[1];
 
-	BUG_ON(skb_copy_bits(skb, 0, &icmp_param.data.times[0], 4));
+	BUG_ON(skb_copy_bits(skb, 0, &icmp_param->data.times[0], 4));
 
-	icmp_param.data.icmph	   = *icmp_hdr(skb);
-	icmp_param.data.icmph.type = ICMP_TIMESTAMPREPLY;
-	icmp_param.data.icmph.code = 0;
-	icmp_param.skb		   = skb;
-	icmp_param.offset	   = 0;
-	icmp_param.data_len	   = 0;
-	icmp_param.head_len	   = sizeof(struct icmphdr) + 12;
-	icmp_reply(&icmp_param, skb);
+	icmp_param->data.icmph	   = *icmp_hdr(skb);
+	icmp_param->data.icmph.type = ICMP_TIMESTAMPREPLY;
+	icmp_param->data.icmph.code = 0;
+	icmp_param->skb		   = skb;
+	icmp_param->offset	   = 0;
+	icmp_param->data_len	   = 0;
+	icmp_param->head_len	   = sizeof(struct icmphdr) + 12;
+	icmp_reply(icmp_param, skb);
 	return SKB_NOT_DROPPED_YET;
 
 out_err:
