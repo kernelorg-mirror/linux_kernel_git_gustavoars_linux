@@ -62,12 +62,9 @@ struct ip_options_rcu {
 };
 
 struct ip_options_data {
-	TRAILING_OVERLAP(struct ip_options_rcu, opt, opt.__data,
-			 char			data[40];
-	);
+	struct ip_options_rcu	opt;
+	char			data[40];
 };
-static_assert(offsetof(struct ip_options_data, opt.opt.__data) ==
-	      offsetof(struct ip_options_data, data));
 
 struct inet_request_sock {
 	struct request_sock	req;
