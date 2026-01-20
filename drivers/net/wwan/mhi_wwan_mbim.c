@@ -78,9 +78,12 @@ struct mhi_mbim_context {
 
 struct mbim_tx_hdr {
 	struct usb_cdc_ncm_nth16 nth16;
-	struct usb_cdc_ncm_ndp16 ndp16;
-	struct usb_cdc_ncm_dpe16 dpe16[2];
+	__TRAILING_OVERLAP(struct usb_cdc_ncm_ndp16, ndp16, dpe16, __packed,
+		struct usb_cdc_ncm_dpe16 dpe16[2];
+	);
 } __packed;
+static_assert(offsetof(struct mbim_tx_hdr, ndp16.dpe16) ==
+	      offsetof(struct mbim_tx_hdr, dpe16));
 
 static struct mhi_mbim_link *mhi_mbim_get_link_rcu(struct mhi_mbim_context *mbim,
 						   unsigned int session)
