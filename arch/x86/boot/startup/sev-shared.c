@@ -518,7 +518,7 @@ fail:
 }
 
 struct cc_setup_data {
-	struct setup_data header;
+	struct setup_data_hdr header;
 	u32 cc_blob_address;
 };
 

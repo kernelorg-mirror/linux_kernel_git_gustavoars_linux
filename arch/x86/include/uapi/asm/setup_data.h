@@ -23,11 +23,16 @@
 
 #include <linux/types.h>
 
-/* extensible setup data list node */
-struct setup_data {
+/* extensible setup data list node header */
+struct setup_data_hdr {
 	__u64 next;
 	__u32 type;
 	__u32 len;
+};
+
+/* extensible setup data list node */
+struct setup_data {
+	struct setup_data_hdr;
 	__u8 data[];
 };
 
