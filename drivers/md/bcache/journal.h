@@ -117,7 +117,7 @@ struct journal {
 	uint64_t		seq;
 	DECLARE_FIFO(atomic_t, pin);
 
-	BKEY_PADDED(key);
+	struct bkey_fixed	key;
 
 	struct journal_write	w[2], *cur;
 };

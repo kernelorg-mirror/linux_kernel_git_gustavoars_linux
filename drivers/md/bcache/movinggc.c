@@ -146,14 +146,14 @@ static void read_moving(struct cache_set *c)
 		}
 
 		io = kzalloc(sizeof(*io) + sizeof(struct bio_vec) *
-				DIV_ROUND_UP(KEY_SIZE(&w->key), PAGE_SECTORS),
+				DIV_ROUND_UP(KEY_SIZE(BKEY_FROM_FIXED(&w->key)), PAGE_SECTORS),
 				GFP_KERNEL);
 		if (!io)
 			goto err;
 
 		w->private	= io;
 		io->w		= w;
-		io->op.inode	= KEY_INODE(&w->key);
+		io->op.inode	= KEY_INODE(BKEY_FROM_FIXED(&w->key));
 		io->op.c	= c;
 		io->op.wq	= c->moving_gc_wq;
 

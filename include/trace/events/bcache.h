@@ -69,7 +69,7 @@ DECLARE_EVENT_CLASS(btree_node,
 	),
 
 	TP_fast_assign(
-		__entry->bucket	= PTR_BUCKET_NR(b->c, &b->key, 0);
+		__entry->bucket	= PTR_BUCKET_NR(b->c, BKEY_FROM_FIXED(&b->key), 0);
 	),
 
 	TP_printk("bucket %zu", __entry->bucket)
@@ -270,7 +270,7 @@ TRACE_EVENT(bcache_btree_write,
 	),
 
 	TP_fast_assign(
-		__entry->bucket	= PTR_BUCKET_NR(b->c, &b->key, 0);
+		__entry->bucket	= PTR_BUCKET_NR(b->c, BKEY_FROM_FIXED(&b->key), 0);
 		__entry->block	= b->written;
 		__entry->keys	= b->keys.set[b->keys.nsets].data->keys;
 	),
@@ -345,7 +345,7 @@ TRACE_EVENT(bcache_btree_insert_key,
 	),
 
 	TP_fast_assign(
-		__entry->btree_node = PTR_BUCKET_NR(b->c, &b->key, 0);
+		__entry->btree_node = PTR_BUCKET_NR(b->c, BKEY_FROM_FIXED(&b->key), 0);
 		__entry->btree_level = b->level;
 		__entry->inode	= KEY_INODE(k);
 		__entry->offset	= KEY_OFFSET(k);
@@ -372,7 +372,7 @@ DECLARE_EVENT_CLASS(btree_split,
 	),
 
 	TP_fast_assign(
-		__entry->bucket	= PTR_BUCKET_NR(b->c, &b->key, 0);
+		__entry->bucket	= PTR_BUCKET_NR(b->c, BKEY_FROM_FIXED(&b->key), 0);
 		__entry->keys	= keys;
 	),
 

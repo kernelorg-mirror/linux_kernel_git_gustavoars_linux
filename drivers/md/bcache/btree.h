@@ -119,7 +119,7 @@ struct btree {
 	struct hlist_node	hash;
 
 	/* Key/pointer for this btree node */
-	BKEY_PADDED(key);
+	struct bkey_fixed	key;
 
 	unsigned long		seq;
 	struct rw_semaphore	lock;

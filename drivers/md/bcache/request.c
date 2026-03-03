@@ -914,7 +914,7 @@ static int cached_dev_cache_miss(struct btree *b, struct search *s,
 				 bio->bi_iter.bi_sector + s->insert_bio_sectors,
 				 s->insert_bio_sectors);
 
-	ret = bch_btree_insert_check_key(b, &s->op, &s->iop.replace_key);
+	ret = bch_btree_insert_check_key(b, &s->op, BKEY_FROM_FIXED(&s->iop.replace_key));
 	if (ret)
 		return ret;
 

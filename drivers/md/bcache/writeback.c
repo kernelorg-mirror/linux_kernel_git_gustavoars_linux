@@ -364,12 +364,12 @@ static CLOSURE_CALLBACK(write_dirty_finish)
 
 		bch_keylist_init(&keys);
 
-		bkey_copy(keys.top, &w->key);
+		bkey_copy(keys.top, BKEY_FROM_FIXED(&w->key));
 		SET_KEY_DIRTY(keys.top, false);
 		bch_keylist_push(&keys);
 
-		for (i = 0; i < KEY_PTRS(&w->key); i++)
-			atomic_inc(&PTR_BUCKET(dc->disk.c, &w->key, i)->pin);
+		for (i = 0; i < KEY_PTRS(BKEY_FROM_FIXED(&w->key)); i++)
+			atomic_inc(&PTR_BUCKET(dc->disk.c, BKEY_FROM_FIXED(&w->key), i)->pin);
 
 		ret = bch_btree_insert(dc->disk.c, &keys, NULL, &w->key);
 
@@ -432,10 +432,10 @@ static CLOSURE_CALLBACK(write_dirty)
 	 * backing device.  Instead, immediately go to write_dirty_finish
 	 * to clean up.
 	 */
-	if (KEY_DIRTY(&w->key)) {
+	if (KEY_DIRTY(BKEY_FROM_FIXED(&w->key))) {
 		dirty_init(w);
 		io->bio.bi_opf = REQ_OP_WRITE;
-		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
+		io->bio.bi_iter.bi_sector = KEY_START(BKEY_FROM_FIXED(&w->key));
 		bio_set_dev(&io->bio, io->dc->bdev);
 		io->bio.bi_end_io	= dirty_endio;
 
@@ -499,7 +499,7 @@ static void read_dirty(struct cached_dev *dc)
 		nk = 0;
 
 		do {
-			BUG_ON(ptr_stale(dc->disk.c, &next->key, 0));
+			BUG_ON(ptr_stale(dc->disk.c, BKEY_FROM_FIXED(&next->key), 0));
 
 			/*
 			 * Don't combine too many operations, even if they
@@ -525,7 +525,7 @@ static void read_dirty(struct cached_dev *dc)
 			 * command queueing.
 			 */
 			if ((nk != 0) && bkey_cmp(&keys[nk-1]->key,
-						&START_KEY(&next->key)))
+						&START_KEY(BKEY_FROM_FIXED(&next->key))))
 				break;
 
 			size += KEY_SIZE(&next->key);
@@ -537,7 +537,7 @@ static void read_dirty(struct cached_dev *dc)
 			w = keys[i];
 
 			io = kzalloc(sizeof(*io) + sizeof(struct bio_vec) *
-				DIV_ROUND_UP(KEY_SIZE(&w->key), PAGE_SECTORS),
+				DIV_ROUND_UP(KEY_SIZE(BKEY_FROM_FIXED(&w->key)), PAGE_SECTORS),
 				GFP_KERNEL);
 			if (!io)
 				goto err;

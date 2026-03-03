@@ -573,7 +573,7 @@ static unsigned int free_journal_buckets(struct cache_set *c)
 
 static void journal_reclaim(struct cache_set *c)
 {
-	struct bkey *k = &c->journal.key;
+	struct bkey *k = BKEY_FROM_FIXED(&c->journal.key);
 	struct cache *ca = c->cache;
 	uint64_t last_seq;
 	struct journal_device *ja = &ca->journal;
@@ -674,7 +674,7 @@ static CLOSURE_CALLBACK(journal_write_unlocked)
 	closure_type(c, struct cache_set, journal.io);
 	struct cache *ca = c->cache;
 	struct journal_write *w = c->journal.cur;
-	struct bkey *k = &c->journal.key;
+	struct bkey *k = BKEY_FROM_FIXED(&c->journal.key);
 	unsigned int i, sectors = set_blocks(w->data, block_bytes(ca)) *
 		ca->sb.block_size;
 
@@ -699,8 +699,8 @@ static CLOSURE_CALLBACK(journal_write_unlocked)
 
 	w->data->btree_level = c->root->level;
 
-	bkey_copy(&w->data->btree_root, &c->root->key);
-	bkey_copy(&w->data->uuid_bucket, &c->uuid_bucket);
+	bkey_copy(&w->data->btree_root, BKEY_FROM_FIXED(&c->root->key));
+	bkey_copy(&w->data->uuid_bucket, BKEY_FROM_FIXED(&c->uuid_bucket));
 
 	w->data->prio_bucket[ca->sb.nr_this_dev] = ca->prio_buckets[0];
 	w->data->magic		= jset_magic(&ca->sb);

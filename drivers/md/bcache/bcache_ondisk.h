@@ -20,11 +20,23 @@ static inline void SET_##name(type *k, __u64 v)			\
 
 /* Btree keys - all units are in sectors */
 
+/* Enough for a key with 6 pointers */
+#define BKEY_PAD		8
+
 struct bkey {
 	__u64	high;
 	__u64	low;
 	__u64	ptr[];
 };
+
+struct bkey_fixed {
+	__u64	high;
+	__u64	low;
+	__u64	ptr[BKEY_PAD];
+};
+
+#define BKEY_FROM_FIXED(x) ((struct bkey *)(x))
+#define BKEY_TO_FIXED(x)   ((struct bkey_fixed *)(x))
 
 #define KEY_FIELD(name, field, offset, size)				\
 	BITMASK(name, struct bkey, field, offset, size)
@@ -128,8 +140,6 @@ static inline struct bkey *bkey_idx(const struct bkey *k, unsigned int nr_keys)
 
 	return (struct bkey *) (d + nr_keys);
 }
-/* Enough for a key with 6 pointers */
-#define BKEY_PAD		8
 
 #define BKEY_PADDED(key)					\
 	union { struct bkey key; __u64 key ## _pad[BKEY_PAD]; }
@@ -352,8 +362,8 @@ struct jset {
 
 	__u64			last_seq;
 
-	BKEY_PADDED(uuid_bucket);
-	BKEY_PADDED(btree_root);
+	struct bkey_fixed	uuid_bucket;
+	struct bkey_fixed	btree_root;
 	__u16			btree_level;
 	__u16			pad[3];
 

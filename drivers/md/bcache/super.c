@@ -456,7 +456,7 @@ static void uuid_io(struct cache_set *c, blk_opf_t opf, struct bkey *k,
 
 static char *uuid_read(struct cache_set *c, struct jset *j, struct closure *cl)
 {
-	struct bkey *k = &j->uuid_bucket;
+	struct bkey *k = BKEY_FROM_FIXED(&j->uuid_bucket);
 
 	if (__bch_btree_ptr_invalid(c, k))
 		return "bad uuid pointer";
@@ -2015,7 +2015,7 @@ static int run_cache_set(struct cache_set *c)
 		 * sooner we could avoid journal replay.
 		 */
 
-		k = &j->btree_root;
+		k = BKEY_FROM_FIXED(&j->btree_root);
 
 		err = "bad btree root";
 		if (__bch_btree_ptr_invalid(c, k))
@@ -2100,7 +2100,7 @@ static int run_cache_set(struct cache_set *c)
 			goto err;
 
 		mutex_lock(&c->root->write_lock);
-		bkey_copy_key(&c->root->key, &MAX_KEY);
+		bkey_copy_key(BKEY_FROM_FIXED(&c->root->key), &MAX_KEY);
 		bch_btree_node_write(c->root, &cl);
 		mutex_unlock(&c->root->write_lock);
 

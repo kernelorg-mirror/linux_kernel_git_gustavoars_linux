@@ -2528,7 +2528,7 @@ void bch_btree_set_root(struct btree *b)
 	BUG_ON(!b->written);
 
 	for (i = 0; i < KEY_PTRS(&b->key); i++)
-		BUG_ON(PTR_BUCKET(b->c, &b->key, i)->prio != BTREE_PRIO);
+		BUG_ON(PTR_BUCKET(b->c, BKEY_FROM_FIXED(&b->key), i)->prio != BTREE_PRIO);
 
 	mutex_lock(&b->c->bucket_lock);
 	list_del_init(&b->list);
@@ -2617,9 +2617,9 @@ int bch_btree_map_keys(struct btree_op *op, struct cache_set *c,
 static inline int keybuf_cmp(struct keybuf_key *l, struct keybuf_key *r)
 {
 	/* Overlapping keys compare equal */
-	if (bkey_cmp(&l->key, &START_KEY(&r->key)) <= 0)
+	if (bkey_cmp(&l->key, &START_KEY(BKEY_FROM_FIXED(&r->key))) <= 0)
 		return -1;
-	if (bkey_cmp(&START_KEY(&l->key), &r->key) >= 0)
+	if (bkey_cmp(&START_KEY(BKEY_FROM_FIXED(&l->key)), BKEY_FROM_FIXED(&r->key)) >= 0)
 		return 1;
 	return 0;
 }
@@ -2627,7 +2627,7 @@ static inline int keybuf_cmp(struct keybuf_key *l, struct keybuf_key *r)
 static inline int keybuf_nonoverlapping_cmp(struct keybuf_key *l,
 					    struct keybuf_key *r)
 {
-	return clamp_t(int64_t, bkey_cmp(&l->key, &r->key), -1, 1);
+	return clamp_t(int64_t, bkey_cmp(BKEY_FROM_FIXED(&l->key), BKEY_FROM_FIXED(&r->key)), -1, 1);
 }
 
 struct refill {
@@ -2710,7 +2710,7 @@ void bch_refill_keybuf(struct cache_set *c, struct keybuf *buf,
 		struct keybuf_key *w;
 
 		w = RB_FIRST(&buf->keys, struct keybuf_key, node);
-		buf->start	= START_KEY(&w->key);
+		buf->start	= START_KEY(BKEY_FROM_FIXED(&w->key));
 
 		w = RB_LAST(&buf->keys, struct keybuf_key, node);
 		buf->end	= w->key;
@@ -2750,7 +2750,7 @@ bool bch_keybuf_check_overlapping(struct keybuf *buf, struct bkey *start,
 	spin_lock(&buf->lock);
 	w = RB_GREATER(&buf->keys, s, node, keybuf_nonoverlapping_cmp);
 
-	while (w && bkey_cmp(&START_KEY(&w->key), end) < 0) {
+	while (w && bkey_cmp(&START_KEY(BKEY_FROM_FIXED(&w->key)), end) < 0) {
 		p = w;
 		w = RB_NEXT(w, node);
 

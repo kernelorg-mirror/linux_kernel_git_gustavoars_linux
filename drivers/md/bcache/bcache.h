@@ -225,7 +225,7 @@ struct keybuf;
 
 struct keybuf_key {
 	struct rb_node		node;
-	BKEY_PADDED(key);
+	struct bkey_fixed	key;
 	void			*private;
 };
 
@@ -679,7 +679,7 @@ struct cache_set {
 	uint8_t			set_uuid[16];
 	unsigned int		nr_uuids;
 	struct uuid_entry	*uuids;
-	BKEY_PADDED(uuid_bucket);
+	struct bkey_fixed	uuid_bucket;
 	struct closure		uuid_write;
 	struct semaphore	uuid_write_mutex;
 
